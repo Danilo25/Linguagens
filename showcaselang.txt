@@ -1,0 +1,24 @@
+
+int main () {
+  
+  estrutura Usuario {
+    Cadeia nome;
+    Int idade;
+    Flut salario; 
+  }
+  
+  Usuario u <- { nome="pedro"; idade=32; salario=3000.0; }
+  Int x <- 1000, y <- 150;
+  
+  enquanto (x + y + u.salario < 5000) {
+    x <- x + y; 
+    y <- y * 2; 
+  };
+
+  u.salario <- x + y + u.salario;
+
+  pintef(praCadeia(u.salario)); 
+  retorne 0;
+
+};
+
