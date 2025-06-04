@@ -1,0 +1,9 @@
+Int contador;
+se (contador == 0) {
+    pintef("Contador e zero");
+} senao {
+    pintef("Contador nao e zero");
+}
+para (Int i == 0; i < 5; i == i + 1) {
+    leia(contador);
+}

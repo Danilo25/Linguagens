@@ -1,72 +1,91 @@
 %{
 #include <stdio.h>
+#include "parser.tab.h"
+
+
+int yywrap();
+
+// Definition of yywrap()
+int yywrap() {
+    return 1; 
+}
 %}
 
 %%
-"se"         { printf("IF "); }
-"senao"      { printf("ELSE "); }
-"para"       { printf("FOR "); }
-"dentre"     { printf("SWITCH "); }
-"enquanto"   { printf("WHILE "); }
-"retorne"    { printf("RETURN "); }
+"se"          { return IF; } 
+"senao"       { return ELSE; }
+"para"        { return FOR; }
+"dentre"      { return SWITCH; }
+"enquanto"    { return WHILE; }
+"retorne"     { return RETURN; }
 
-"pintef"     { printf("PRINTF"); }
-"leia"       { printf("SCANF"); }
+"pintef"      { return PRINTF; }
+"leia"        { return SCANF; }
 
-"Um"         { printf("UNIT"); }
-"Dois"       { printf("BOOL"); }
-"Int"        { printf("INT "); }
-"Flut"       { printf("FLOAT "); }
-"Estrutura"  { printf("STRUCTURE"); }
-"Tag-union"  { printf("SUM"); }
-"Cara"       { printf("CHAR "); }
-"Nat"        { printf("UNSIGNED "); }
-"Const"      { printf("CONST "); }
-"Cadeia"     { printf("STRING "); }
+"Um"          { return UNIT; }
+"Dois"        { return BOOL; }
+"Int"         { return INT; }
+"Flut"        { return FLOAT; }
+"Estrutura"   { return STRUCTURE; }
+"Tag-union"   { return SUM; }
+"Cara"        { return CHAR; }
+"Nat"         { return UNSIGNED; }
+"Const"       { return CONST; }
+"Cadeia"      { return STRING; }
 
-"pare"      { printf("BREAK "); }
-"pule"   { printf("CONTINUE "); }
-"caso"       { printf("CASE "); }
+"pare"        { return BREAK; }
+"pule"        { return CONTINUE; }
+"caso"        { return CASE; }
 
-"=="         { printf("EQ "); }
-"!="         { printf("NE "); }
-"<="         { printf("LE "); }
-">="         { printf("GE "); }
-"<"          { printf("LT "); }
-">"          { printf("GT "); }
-"&&"         { printf("AND "); }
-"||"         { printf("OR "); }
-"!"          { printf("NOT "); }
+"=="          { return EQ; }
+"!="          { return NE; }
+"<="          { return LE; }
+">="          { return GE; }
+"<"           { return LT; }
+">"           { return GT; }
+"&&"          { return AND; }
+"||"          { return OR; }
+"!"           { return NOT; }
 
-";"          { printf("SEMICOLON "); }
-","          { printf("COMMA "); }
-"("          { printf("LPAREN "); }
-")"          { printf("RPAREN "); }
-"{"          { printf("LBRACE "); }
-"}"          { printf("RBRACE "); }
-"["          { printf("LBRACKET "); }
-"]"          { printf("RBRACKET "); }
-"->"         { printf("ARROWR "); }
-"<-"         { printf("ARROWR "); }
-"&"          { printf("AMP "); }
-"|"          { printf("PIPE "); }
-"^"          { printf("CARET "); }
-"~"          { printf("TILDE "); }
-"?"          { printf("QUESTION "); }
-":"          { printf("COLON "); }
+"+"           { return PLUS; }
+"-"           { return MINUS; }
+"*"           { return TIMES; }
+"/"           { return DIVIDE; }
+"="           { return ASSIGN_OP; }
 
-[a-zA-Z][a-zA-Z0-9_]*     { printf("ID(%s) ", yytext); }
-[0-9]+\.[0-9]+         { printf("FLOAT_LIT(%s) ", yytext); }
-[0-9]+                  { printf("INT_LIT(%s) ", yytext); }
-"\""([^"\\]|\\.)*"\""   { printf("STRING_LIT(%s) ", yytext); }
-"'"([^'\\]|\\.)*"'"       { printf("CHAR_LIT(%s) ", yytext); }
-[" "]+    { }
-["\t"]+  { }
-"\r"|"\n"]+  { }
-.                           { printf("UNKNOWN(%s) ", yytext); }
-%%
+";"           { return SEMICOLON; }
+","           { return COMMA; }
+"("           { return LPAREN; }
+")"           { return RPAREN; }
+"{"           { return LBRACE; }
+"}"           { return RBRACE; }
+"["           { return LBRACKET; }
+"]"           { return RBRACKET; }
+"->"          { return ARROWR; }
+"<-"          { return ARROWR; }
+"&"           { return AMP; }
+"|"           { return PIPE; }
+"^"           { return CARET; }
+"~"           { return TILDE; }
+"?"           { return QUESTION; }
+":"           { return COLON; }
 
-int main(int argc, char **argv) {
-    yylex();
-    return 0;
+[a-zA-Z][a-zA-Z0-9_]* {
+    // If you need the string value of the ID in the parser, you'd store it in yylval here.
+    // For this example, we'll just return the token type.
+    return ID;
 }
+[0-9]+\.[0-9]+ { return FLOAT_LIT; }
+[0-9]+         { return INT_LIT; }
+"\""([^"\\]|\\.)*"\"" { return STRING_LIT; }
+"'"([^'\\]|\\.)*"'" { return CHAR_LIT; }
+
+[" "]+ { /* ignore whitespace */ }
+["\t"]+ { /* ignore tabs */ }
+["\r"|"\n"]+ { /* ignore newlines */ }
+. {
+    fprintf(stderr, "Lexical error: Unknown character '%s'\n", yytext);
+    // You might want to return an error token or exit here.
+    exit(1);
+}
+%%
