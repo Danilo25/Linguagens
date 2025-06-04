@@ -19,18 +19,27 @@ Utilize o Flex para gerar o código-fonte C a partir do arquivo de definição l
 flex scanner.l
 ```
 
-### 2. Compile o Analisador Léxico com o GCC
+### 2. Gere a tabela com o bison
 
-Compile o arquivo gerado com o GCC, garantindo que a biblioteca do Flex seja vinculada com a flag -lfl:
+Utilize o bison 
+ `parser.y`:
 
 ```bash
-gcc lex.yy.c -o scanner -lfl
+bison -d parser.y
 ```
 
-### 3. Execute o Analisador Léxico
+### 3. Compile o Analisador Léxico com o GCC
 
-Execute o analisador direcionando a entrada a partir de um arquivo. Substitua `showcaselang.txt` pelo nome do seu arquivo de entrada, se for diferente:
+Compile os arquivos com gcc:
 
 ```bash
-./scanner < showcaselang.txt
+gcc lex.yy.c parser.tab.c -o parsertest
+```
+
+### 4. Execute o arquivo
+
+Execute o analisador direcionando a entrada a partir de um arquivo. Substitua `test.txt` pelo nome do seu arquivo de entrada, se for diferente:
+
+```bash
+./parsertest.exe < test.txt
 ```
