@@ -1,0 +1,23 @@
+Int main() {
+    Struct Usuario {
+        String nome;
+        Int idade;
+        Float salario;
+    };
+
+    Usuario u <- {
+        nome = "pedro";
+        idade = 32;
+        salario = 3000.0;
+    };
+
+    Int x <- 1000, y <- 150;
+    for (x + y + u.salario < 5000) {
+        x <- x + y;
+        y <- y * 2;
+    }
+
+    u.salario <- x + y + u.salario;
+    printf(praCadeia(u.salario));
+    return 0;
+}

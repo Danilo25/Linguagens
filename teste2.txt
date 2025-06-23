@@ -1,17 +1,6 @@
-int main() {
-    int x = 10;
-    if (x > 5) {
-        printf("Maior\n");
-    } else {
-        printf("Menor\n");
-    }
-
-    while (x > 0) {
-        x = x - 1;
-    }
-
-    for (int i = 0; i < 10; i++) {
-        printf("%d", i);
-    }
-    return 0;
+Int main() {
+    Int x <- 10;
+    Int y <- 5;
+    Int z <- x + y;
+    printf(z);
 }

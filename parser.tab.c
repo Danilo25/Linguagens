@@ -576,12 +576,12 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    47,    47,    51,    52,    56,    57,    61,    61,    61,
-      61,    61,    61,    61,    61,    65,    66,    70,    71,    75,
-      79,    83,    84,    88,    89,    90,    91,    92,    93,    94,
-      95,    96,    97,   103,   107,   108,   112,   113,   114,   115,
-     116,   117,   121,   122,   123,   124,   125,   126,   127,   131,
-     132,   136,   137
+       0,    40,    40,    44,    45,    49,    50,    54,    54,    54,
+      54,    54,    54,    54,    54,    58,    59,    63,    64,    68,
+      72,    76,    77,    81,    82,    83,    84,    85,    86,    87,
+      88,    89,    90,    94,    98,    99,   103,   104,   105,   106,
+     107,   108,   112,   113,   114,   115,   116,   117,   118,   122,
+     123,   127,   128
 };
 #endif
 
@@ -1400,10 +1400,9 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 140 "parser.y"
+#line 131 "parser.y"
 
 
-/* C code section remains the same */
 void yyerror(const char *s) {
     fprintf(stderr, "Erro sintático: %s\n", s);
 }
