@@ -16,28 +16,33 @@ extern FILE *yyin;
     char* sval;
 }
 
+/* Tokens from the scanner */
 %token IF ELSE FOR SWITCH WHILE RETURN BREAK CONTINUE CASE
-%token PRINTF SCANF
 %token UNIT BOOL INT FLOAT STRUCTURE SUM CHAR UNSIGNED CONST STRING
 %token ID
 %token INT_LIT FLOAT_LIT STRING_LIT CHAR_LIT
-%token EQ NE LE GE LT GT ASSIGN ARROW_LEFT ARROW_RIGHT
-%token PLUS_ASSIGN MINUS_ASSIGN MUL_ASSIGN DIV_ASSIGN MOD_ASSIGN
+%token EQ NE LE GE LT GT
+%token ARROW_LEFT ARROW_RIGHT
 %token INCREMENT DECREMENT
 %token PLUS MINUS MUL DIV MOD DOT
 %token AND OR NOT
 %token SEMICOLON COMMA LPAREN RPAREN LBRACE RBRACE LBRACKET RBRACKET
 %token AMP PIPE CARET TILDE QUESTION COLON
+%token UNKNOWN
+
+/*
+ * Operator Precedence is now handled by the grammar structure itself.
+ * We still need to define associativity for the binary operators to resolve
+ * ambiguity in sequences like a + b + c.
+ */
+%left PLUS MINUS
+%left MUL DIV MOD
 
 %start programa
 
-%left PLUS MINUS
-%left MUL DIV MOD
-%right ASSIGN
-
 %%
 
-// Regras sintáticas da linguagem
+/* Grammar Rules */
 programa
     : declaracoes
     ;
@@ -53,20 +58,17 @@ declaracao
     ;
 
 tipo
-    : INT
-    | FLOAT
-    | CHAR
-    | STRING
-    | STRUCTURE
-    | SUM
-    | UNIT
-    | BOOL
+    : INT | FLOAT | CHAR | STRING | STRUCTURE | SUM | UNIT | BOOL
     ;
 
 parametros
+    : /* vazio */
+    | parametro_lista
+    ;
+
+parametro_lista
     : parametro
-    | parametros COMMA parametro
-    | /* vazio */
+    | parametro_lista COMMA parametro
     ;
 
 parametro
@@ -74,17 +76,12 @@ parametro
     ;
 
 bloco
-    : LBRACE comandos_opt RBRACE
-    ;
-
-comandos_opt
-    : comandos
-    | /* vazio */
+    : LBRACE comandos RBRACE
     ;
 
 comandos
-    : comandos comando
-    | comando
+    : /* vazio */
+    | comandos comando
     ;
 
 comando
@@ -97,25 +94,52 @@ comando
     | BREAK SEMICOLON
     | CONTINUE SEMICOLON
     | bloco
+    | tipo ID ARROW_LEFT expressao SEMICOLON
     ;
 
+
+/* CONFLICT-FREE EXPRESSION GRAMMAR */
 expressao
-    : ID ASSIGN expressao
-    | expressao PLUS expressao
-    | expressao MINUS expressao
-    | expressao MUL expressao
-    | expressao DIV expressao
-    | expressao MOD expressao
-    | LPAREN expressao RPAREN
-    | ID
+    : assignment_expression
+    ;
+
+assignment_expression
+    : ID ARROW_LEFT assignment_expression
+    | binary_expression
+    ;
+
+binary_expression
+    : binary_expression PLUS binary_expression
+    | binary_expression MINUS binary_expression
+    | binary_expression MUL binary_expression
+    | binary_expression DIV binary_expression
+    | binary_expression MOD binary_expression
+    | primary_expression
+    ;
+
+primary_expression
+    : ID
     | INT_LIT
     | FLOAT_LIT
     | CHAR_LIT
     | STRING_LIT
+    | ID LPAREN arg_list_opt RPAREN
+    | LPAREN expressao RPAREN
+    ;
+
+arg_list_opt
+    : /* vazio */
+    | arg_list
+    ;
+
+arg_list
+    : expressao
+    | arg_list COMMA expressao
     ;
 
 %%
 
+/* C code section remains the same */
 void yyerror(const char *s) {
     fprintf(stderr, "Erro sintático: %s\n", s);
 }
@@ -134,9 +158,7 @@ int main(int argc, char **argv) {
 
     yyin = arquivo;
     printf("Iniciando análise sintática...\n");
-
     int result = yyparse();
-
     if (result == 0) {
         printf("Análise concluída com sucesso!\n");
     } else {

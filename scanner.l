@@ -1,6 +1,11 @@
 %{
 #include "parser.tab.h"
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+extern YYSTYPE yylval;
+
 %}
 
 %%
@@ -11,9 +16,6 @@
 "switch"        { return SWITCH; }
 "while"         { return WHILE; }
 "return"        { return RETURN; }
-
-"printf"        { return PRINTF; }
-"scanf"         { return SCANF; }
 
 "Unit"          { return UNIT; }
 "Bool"          { return BOOL; }
@@ -39,6 +41,9 @@
 "&&"            { return AND; }
 "||"            { return OR; }
 "!"             { return NOT; }
+
+"<-"            { return ARROW_LEFT; }
+"->"            { return ARROW_RIGHT; }
 
 "++"            { return INCREMENT; }
 "--"            { return DECREMENT; }
@@ -66,15 +71,20 @@
 ":"             { return COLON; }
 
 
-"//".* { /* Single-line comment rule */ }
+[a-zA-Z_][a-zA-Z0-9_]* { yylval.sval = strdup(yytext); return ID; }
+[0-9]+\.[0-9]+([eE][-+]?[0-9]+)? { yylval.fval = atof(yytext); return FLOAT_LIT; }
+[0-9]+|"-"[0-9]+ { yylval.ival = atoi(yytext); return INT_LIT; }
+"\""([^"\\]|\\.)*"\"" { yylval.sval = strdup(yytext); return STRING_LIT; }
+"'"([^'\\]|\\.)*"'" { yylval.sval = strdup(yytext); return CHAR_LIT; }
 
-[a-zA-Z_][a-zA-Z0-9_]*           { printf("ID(%s) ", yytext); }
-[0-9]+\.[0-9]+([eE][-+]?[0-9]+)? { printf("FLOAT_LIT(%s) ", yytext); }
-[0-9]+|"-"[0-9]                  { printf("INT_LIT(%s) ", yytext); }
-"\""([^"\\]|\\.)*"\""            { printf("STRING_LIT(%s) ", yytext); }
-"'"([^'\\]|\\.)*"'"              { printf("CHAR_LIT(%s) ", yytext); }
-[" "]+   { }
-["\t"]+  { }
-\r\n|\r|\n   { printf("\n"); }
-.                       { printf("UNKNOWN(%s) ", yytext); }
+[ \t]+          { /* Ignore spaces and tabs */ }
+"//".* { /* Ignore single-line comments */ }
+\r\n|\r|\n      { /* Ignore newlines, or return NEWLINE if grammar needs it */ }
+
+.               { fprintf(stderr, "UNKNOWN_TOKEN: %s\n", yytext); return UNKNOWN; }
+
 %%
+
+int yywrap() {
+    return 1;
+}

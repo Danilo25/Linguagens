@@ -1,6 +1,6 @@
 Int main() {
-    int x = 10;
-    int y = 5;
-    int z = x + y;
+    Int x <- 10;
+    Int y <- 5;
+    Int z <- x + y;
     printf(z);
 }

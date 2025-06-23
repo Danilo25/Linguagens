@@ -63,62 +63,55 @@ extern int yydebug;
     BREAK = 264,                   /* BREAK  */
     CONTINUE = 265,                /* CONTINUE  */
     CASE = 266,                    /* CASE  */
-    PRINTF = 267,                  /* PRINTF  */
-    SCANF = 268,                   /* SCANF  */
-    UNIT = 269,                    /* UNIT  */
-    BOOL = 270,                    /* BOOL  */
-    INT = 271,                     /* INT  */
-    FLOAT = 272,                   /* FLOAT  */
-    STRUCTURE = 273,               /* STRUCTURE  */
-    SUM = 274,                     /* SUM  */
-    CHAR = 275,                    /* CHAR  */
-    UNSIGNED = 276,                /* UNSIGNED  */
-    CONST = 277,                   /* CONST  */
-    STRING = 278,                  /* STRING  */
-    ID = 279,                      /* ID  */
-    INT_LIT = 280,                 /* INT_LIT  */
-    FLOAT_LIT = 281,               /* FLOAT_LIT  */
-    STRING_LIT = 282,              /* STRING_LIT  */
-    CHAR_LIT = 283,                /* CHAR_LIT  */
-    EQ = 284,                      /* EQ  */
-    NE = 285,                      /* NE  */
-    LE = 286,                      /* LE  */
-    GE = 287,                      /* GE  */
-    LT = 288,                      /* LT  */
-    GT = 289,                      /* GT  */
-    ASSIGN = 290,                  /* ASSIGN  */
-    ARROW_LEFT = 291,              /* ARROW_LEFT  */
-    ARROW_RIGHT = 292,             /* ARROW_RIGHT  */
-    PLUS_ASSIGN = 293,             /* PLUS_ASSIGN  */
-    MINUS_ASSIGN = 294,            /* MINUS_ASSIGN  */
-    MUL_ASSIGN = 295,              /* MUL_ASSIGN  */
-    DIV_ASSIGN = 296,              /* DIV_ASSIGN  */
-    MOD_ASSIGN = 297,              /* MOD_ASSIGN  */
-    INCREMENT = 298,               /* INCREMENT  */
-    DECREMENT = 299,               /* DECREMENT  */
-    PLUS = 300,                    /* PLUS  */
-    MINUS = 301,                   /* MINUS  */
-    MUL = 302,                     /* MUL  */
-    DIV = 303,                     /* DIV  */
-    MOD = 304,                     /* MOD  */
-    DOT = 305,                     /* DOT  */
-    AND = 306,                     /* AND  */
-    OR = 307,                      /* OR  */
-    NOT = 308,                     /* NOT  */
-    SEMICOLON = 309,               /* SEMICOLON  */
-    COMMA = 310,                   /* COMMA  */
-    LPAREN = 311,                  /* LPAREN  */
-    RPAREN = 312,                  /* RPAREN  */
-    LBRACE = 313,                  /* LBRACE  */
-    RBRACE = 314,                  /* RBRACE  */
-    LBRACKET = 315,                /* LBRACKET  */
-    RBRACKET = 316,                /* RBRACKET  */
-    AMP = 317,                     /* AMP  */
-    PIPE = 318,                    /* PIPE  */
-    CARET = 319,                   /* CARET  */
-    TILDE = 320,                   /* TILDE  */
-    QUESTION = 321,                /* QUESTION  */
-    COLON = 322                    /* COLON  */
+    UNIT = 267,                    /* UNIT  */
+    BOOL = 268,                    /* BOOL  */
+    INT = 269,                     /* INT  */
+    FLOAT = 270,                   /* FLOAT  */
+    STRUCTURE = 271,               /* STRUCTURE  */
+    SUM = 272,                     /* SUM  */
+    CHAR = 273,                    /* CHAR  */
+    UNSIGNED = 274,                /* UNSIGNED  */
+    CONST = 275,                   /* CONST  */
+    STRING = 276,                  /* STRING  */
+    ID = 277,                      /* ID  */
+    INT_LIT = 278,                 /* INT_LIT  */
+    FLOAT_LIT = 279,               /* FLOAT_LIT  */
+    STRING_LIT = 280,              /* STRING_LIT  */
+    CHAR_LIT = 281,                /* CHAR_LIT  */
+    EQ = 282,                      /* EQ  */
+    NE = 283,                      /* NE  */
+    LE = 284,                      /* LE  */
+    GE = 285,                      /* GE  */
+    LT = 286,                      /* LT  */
+    GT = 287,                      /* GT  */
+    ARROW_LEFT = 288,              /* ARROW_LEFT  */
+    ARROW_RIGHT = 289,             /* ARROW_RIGHT  */
+    INCREMENT = 290,               /* INCREMENT  */
+    DECREMENT = 291,               /* DECREMENT  */
+    PLUS = 292,                    /* PLUS  */
+    MINUS = 293,                   /* MINUS  */
+    MUL = 294,                     /* MUL  */
+    DIV = 295,                     /* DIV  */
+    MOD = 296,                     /* MOD  */
+    DOT = 297,                     /* DOT  */
+    AND = 298,                     /* AND  */
+    OR = 299,                      /* OR  */
+    NOT = 300,                     /* NOT  */
+    SEMICOLON = 301,               /* SEMICOLON  */
+    COMMA = 302,                   /* COMMA  */
+    LPAREN = 303,                  /* LPAREN  */
+    RPAREN = 304,                  /* RPAREN  */
+    LBRACE = 305,                  /* LBRACE  */
+    RBRACE = 306,                  /* RBRACE  */
+    LBRACKET = 307,                /* LBRACKET  */
+    RBRACKET = 308,                /* RBRACKET  */
+    AMP = 309,                     /* AMP  */
+    PIPE = 310,                    /* PIPE  */
+    CARET = 311,                   /* CARET  */
+    TILDE = 312,                   /* TILDE  */
+    QUESTION = 313,                /* QUESTION  */
+    COLON = 314,                   /* COLON  */
+    UNKNOWN = 315                  /* UNKNOWN  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -133,7 +126,7 @@ union YYSTYPE
     float fval;
     char* sval;
 
-#line 137 "parser.tab.h"
+#line 130 "parser.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
