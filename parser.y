@@ -16,7 +16,6 @@ extern FILE *yyin;
     char* sval;
 }
 
-/* Tokens from the scanner */
 %token IF ELSE FOR SWITCH WHILE RETURN BREAK CONTINUE CASE
 %token UNIT BOOL INT FLOAT STRUCTURE SUM CHAR UNSIGNED CONST STRING
 %token ID
@@ -30,11 +29,6 @@ extern FILE *yyin;
 %token AMP PIPE CARET TILDE QUESTION COLON
 %token UNKNOWN
 
-/*
- * Operator Precedence is now handled by the grammar structure itself.
- * We still need to define associativity for the binary operators to resolve
- * ambiguity in sequences like a + b + c.
- */
 %left PLUS MINUS
 %left MUL DIV MOD
 
@@ -42,7 +36,6 @@ extern FILE *yyin;
 
 %%
 
-/* Grammar Rules */
 programa
     : declaracoes
     ;
@@ -97,8 +90,6 @@ comando
     | tipo ID ARROW_LEFT expressao SEMICOLON
     ;
 
-
-/* CONFLICT-FREE EXPRESSION GRAMMAR */
 expressao
     : assignment_expression
     ;
@@ -139,7 +130,6 @@ arg_list
 
 %%
 
-/* C code section remains the same */
 void yyerror(const char *s) {
     fprintf(stderr, "Erro sintático: %s\n", s);
 }
