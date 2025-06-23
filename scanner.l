@@ -5,70 +5,65 @@
 
 %%
 
-"if"            { printf("IF "); }
-"else"          { printf("ELSE "); }
-"for"           { printf("FOR "); }
-"switch"        { printf("SWITCH "); }
-"while"         { printf("WHILE "); }
-"return"        { printf("RETURN "); }
-"do"            { printf("DO "); }
+"if"            { return IF; }
+"else"          { return ELSE; }
+"for"           { return FOR; }
+"switch"        { return SWITCH; }
+"while"         { return WHILE; }
+"return"        { return RETURN; }
 
-"print"        { printf("PRINT "); }
-"scan"         { printf("SCAN "); }
+"printf"        { return PRINTF; }
+"scanf"         { return SCANF; }
 
-"Unit"          { printf("UNIT "); }
-"Bool"          { printf("BOOL "); }
-"Int"           { printf("INT "); }
-"Float"         { printf("FLOAT "); }
-"Char"          { printf("CHAR "); }
-"String"        { printf("STRING "); }
+"Unit"          { return UNIT; }
+"Bool"          { return BOOL; }
+"Int"           { return INT; }
+"Float"         { return FLOAT; }
+"Struct"        { return STRUCTURE; }
+"Tag-union"     { return SUM; }
+"Char"          { return CHAR; }
+"Unsigned"      { return UNSIGNED; }
+"Const"         { return CONST; }
+"String"        { return STRING; }
 
-"struct"        { printf("STRUCTURE "); }
-"sum"           { printf("SUM "); }
+"break"         { return BREAK; }
+"continue"      { return CONTINUE; }
+"case"          { return CASE; }
 
-"mut"         { printf("MUT"); }
+"=="            { return EQ; }
+"!="            { return NE; }
+"<="            { return LE; }
+">="            { return GE; }
+"<"             { return LT; }
+">"             { return GT; }
+"&&"            { return AND; }
+"||"            { return OR; }
+"!"             { return NOT; }
 
-"break"         { printf("BREAK "); }
-"case"          { printf("CASE "); }
+"++"            { return INCREMENT; }
+"--"            { return DECREMENT; }
 
-"skip"          { printf("SKIP"); }
-"stop"          { printf("STOP"); }
-"++"            { printf("PLUSPLUS"); }
-"--"            { printf("MINUSMINUS"); }
+"+"             { return PLUS; }
+"-"             { return MINUS; }
+"*"             { return MUL; }
+"/"             { return DIV; }
+"%"             { return MOD; }
+"."             { return DOT; }
 
-"+"             { printf("PLUS_INT "); }
-"-"             { printf("MINUS_INT "); }
-"*"             { printf("MUL_INT "); }
-"/"             { printf("DIV_INT"); }
-"%"             { printf("MOD_INT "); }
-"+."            { printf("PLUS_FLOAT "); }
-"-."            { printf("MINUS_FLOAT "); }
-"*."            { printf("MUL_FLOAT "); }
-"/."            { printf("DIV_FLOAT "); }
-"&&"            { printf("AND "); }
-"||"            { printf("OR "); }
-"not"           { printf("NOT "); }
-
-"=="            { printf("EQQ "); }
-"!="            { printf("NEQ "); }
-"<="            { printf("LE "); }
-">="            { printf("GE "); }
-"<<"            { printf("LSHIFT "); }
-">>"            { printf("RSHIFT "); }
-"<"             { printf("LT "); }
-">"             { printf("GT "); }
-"="             { printf("EQ"); }
-"<-"            { printf("ARROW_LEFT "); }
-"->"            { printf("ARROW_RIGHT "); }
-
-";"             { printf("SEMICOLON "); }
-","             { printf("COMMA "); }
-"("             { printf("LPAREN "); }
-")"             { printf("RPAREN "); }
-"{"             { printf("LBRACE "); }
-"}"             { printf("RBRACE "); }
-"["             { printf("LBRACKET "); }
-"]"             { printf("RBRACKET "); }
+";"             { return SEMICOLON; }
+","             { return COMMA; }
+"("             { return LPAREN; }
+")"             { return RPAREN; }
+"{"             { return LBRACE; }
+"}"             { return RBRACE; }
+"["             { return LBRACKET; }
+"]"             { return RBRACKET; }
+"&"             { return AMP; }
+"|"             { return PIPE; }
+"^"             { return CARET; }
+"~"             { return TILDE; }
+"?"             { return QUESTION; }
+":"             { return COLON; }
 
 
 "//".* { /* Single-line comment rule */ }
@@ -78,13 +73,8 @@
 [0-9]+|"-"[0-9]                  { printf("INT_LIT(%s) ", yytext); }
 "\""([^"\\]|\\.)*"\""            { printf("STRING_LIT(%s) ", yytext); }
 "'"([^'\\]|\\.)*"'"              { printf("CHAR_LIT(%s) ", yytext); }
-
-[ \t\r\n]+                       { /* Whitespace rule */ }
-
-.                                { fprintf(stderr, "LEXICAL ERROR: UNKNOWN TOKEN '%s'\n", yytext); }
-
+[" "]+   { }
+["\t"]+  { }
+\r\n|\r|\n   { printf("\n"); }
+.                       { printf("UNKNOWN(%s) ", yytext); }
 %%
-
-int yywrap() {
-    return 1;
-}
