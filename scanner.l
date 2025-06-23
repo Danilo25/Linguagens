@@ -3,7 +3,13 @@
 #include <stdio.h>
 %}
 
+"default"       { printf("DEFAULT "); }
+"sizeof"        { printf("SIZEOF "); }
+"goto"          { printf("GOTO "); }
+
 %%
+
+/* estruturas */
 "if"            { printf("IF "); }
 "else"          { printf("ELSE "); }
 "for"           { printf("FOR "); }
@@ -11,81 +17,64 @@
 "while"         { printf("WHILE "); }
 "return"        { printf("RETURN "); }
 "do"            { printf("DO "); }
-"goto"          { printf("GOTO "); }
-"default"       { printf("DEFAULT "); }
-"sizeof"        { printf("SIZEOF "); }
 
-"printf"        { printf("PRINTF "); }
-"scanf"         { printf("SCANF "); }
+/* IO  */
+"print"        { printf("PRINT "); }
+"scan"         { printf("SCAN "); }
 
-"unit"          { printf("UNIT "); }
-"bool"          { printf("BOOL "); }
-"int"|"Int"     { printf("INT "); }
-"float"         { printf("FLOAT "); }
-"Flut"          { printf("FLOAT "); }
+/* primitive types */
+"Unit"          { printf("UNIT "); }
+"Bool"          { printf("BOOL "); }
+"Int"           { printf("INT "); }
+"Float"         { printf("FLOAT "); }
+"Char"          { printf("CHAR "); }
+"String"        { printf("STRING "); }
+
+/* define new types structure */
 "struct"        { printf("STRUCTURE "); }
-"union"         { printf("SUM "); }
-"char"          { printf("CHAR "); }
-"unsigned"      { printf("UNSIGNED "); }
-"const"         { printf("CONST "); }
-"string"|"String" { printf("STRING "); }
-"void"          { printf("VOID "); }
-"estrutura"     { printf("STRUCTURE "); }
+"sum"           { printf("SUM "); }
 
-"short"         { printf("SHORT "); }
-"long"          { printf("LONG "); }
-"signed"        { printf("SIGNED "); }
-"double"        { printf("DOUBLE "); }
-"auto"          { printf("AUTO "); }
-"register"      { printf("REGISTER "); }
-"static"        { printf("STATIC "); }
-"extern"        { printf("EXTERN "); }
-"typedef"       { printf("TYPEDEF "); }
-"enum"          { printf("ENUM "); }
-"volatile"      { printf("VOLATILE "); }
-"restrict"      { printf("RESTRICT "); }
+/* necessary! */
+"mut"         { printf("MUT"); }
 
+/* switch things */
 "break"         { printf("BREAK "); }
-"continue"      { printf("CONTINUE "); }
 "case"          { printf("CASE "); }
 
-"=="            { printf("EQ "); }
-"!="            { printf("NE "); }
+/* loop things */
+"skip"          { printf("SKIP"); }
+"stop"          { printf("STOP"); }
+"++"            { printf("PLUSPLUS"); }
+"--"            { printf("MINUSMINUS"); }
+
+/* operations */
+"+"             { printf("PLUS_INT "); }
+"-"             { printf("MINUS_INT "); }
+"*"             { printf("MUL_INT "); }
+"/"             { printf("DIV_INT"); }
+"%"             { printf("MOD_INT "); }
+"+."            { printf("PLUS_FLOAT "); }
+"-."            { printf("MINUS_FLOAT "); }
+"*."            { printf("MUL_FLOAT "); }
+"/."            { printf("DIV_FLOAT "); }
+"&&"            { printf("AND "); }
+"||"            { printf("OR "); }
+"not"           { printf("NOT "); }
+
+/* symbols */
+"=="            { printf("EQQ "); }
+"!="            { printf("NEQ "); }
 "<="            { printf("LE "); }
 ">="            { printf("GE "); }
 "<<"            { printf("LSHIFT "); }
 ">>"            { printf("RSHIFT "); }
 "<"             { printf("LT "); }
 ">"             { printf("GT "); }
-
-"="             { printf("ASSIGN "); }
+"="             { printf("EQ"); }
 "<-"            { printf("ARROW_LEFT "); }
 "->"            { printf("ARROW_RIGHT "); }
-"+="            { printf("PLUS_ASSIGN "); }
-"-="            { printf("MINUS_ASSIGN "); }
-"*="            { printf("MUL_ASSIGN "); }
-"/="            { printf("DIV_ASSIGN "); }
-"%="            { printf("MOD_ASSIGN "); }
-"&="            { printf("BIT_AND_ASSIGN "); }
-"|="            { printf("BIT_OR_ASSIGN "); }
-"^="            { printf("BIT_XOR_ASSIGN "); }
-"<<="           { printf("LSHIFT_ASSIGN "); }
-">>="           { printf("RSHIFT_ASSIGN "); }
 
-"++"            { printf("INCREMENT "); }
-"--"            { printf("DECREMENT "); }
-
-"+"             { printf("PLUS "); }
-"-"             { printf("MINUS "); }
-"*"             { printf("MUL "); }
-"/"             { printf("DIV "); }
-"%"             { printf("MOD "); }
-"."             { printf("DOT "); }
-
-"&&"            { printf("AND "); }
-"||"            { printf("OR "); }
-"!"             { printf("NOT "); }
-
+/* just symbols :p */
 ";"             { printf("SEMICOLON "); }
 ","             { printf("COMMA "); }
 "("             { printf("LPAREN "); }
@@ -94,45 +83,22 @@
 "}"             { printf("RBRACE "); }
 "["             { printf("LBRACKET "); }
 "]"             { printf("RBRACKET "); }
-"[]"            { printf("ARRAY_TYPE "); }
 
-"&"             { printf("AMP "); }
-"|"             { printf("PIPE "); }
-"^"             { printf("CARET "); }
-"\\~"           { printf("TILDE "); }
-"?"             { printf("QUESTION "); }
-":"             { printf("COLON "); }
 
 "//".* { /* Single-line comment rule */ }
-"/*" {  /* Multi-line comment rule */
-    int c;
-    while ( (c = input()) != 0 ) {
-        if (c == '*') {
-            if ( (c = input()) == '/' ) {
-                break;
-            } else {
-                unput(c);
-            }
-        }
-    }
-}
 
-[a-zA-Z_][a-zA-Z0-9_]* { printf("ID(%s) ", yytext); }
+[a-zA-Z_][a-zA-Z0-9_]*           { printf("ID(%s) ", yytext); }
 [0-9]+\.[0-9]+([eE][-+]?[0-9]+)? { printf("FLOAT_LIT(%s) ", yytext); }
-[0-9]+                  { printf("INT_LIT(%s) ", yytext); }
-"\""([^"\\]|\\.)*"\""   { printf("STRING_LIT(%s) ", yytext); }
-"'"([^'\\]|\\.)*"'"     { printf("CHAR_LIT(%s) ", yytext); }
+[0-9]+|"-"[0-9]                  { printf("INT_LIT(%s) ", yytext); }
+"\""([^"\\]|\\.)*"\""            { printf("STRING_LIT(%s) ", yytext); }
+"'"([^'\\]|\\.)*"'"              { printf("CHAR_LIT(%s) ", yytext); }
 
-[ \t\r\n]+       { /* Whitespace rule */ }
+[ \t\r\n]+                       { /* Whitespace rule */ }
 
-.                       { fprintf(stderr, "LEXICAL ERROR: UNKNOWN TOKEN '%s'\n", yytext); }
+.                                { fprintf(stderr, "LEXICAL ERROR: UNKNOWN TOKEN '%s'\n", yytext); }
 
 %%
 
-// int main(int argc, char **argv) {
-//     yylex();
-//     return 0;
-// }
 int yywrap() {
     return 1;
 }
