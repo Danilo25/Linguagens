@@ -3,13 +3,8 @@
 #include <stdio.h>
 %}
 
-"default"       { printf("DEFAULT "); }
-"sizeof"        { printf("SIZEOF "); }
-"goto"          { printf("GOTO "); }
-
 %%
 
-/* estruturas */
 "if"            { printf("IF "); }
 "else"          { printf("ELSE "); }
 "for"           { printf("FOR "); }
@@ -18,11 +13,9 @@
 "return"        { printf("RETURN "); }
 "do"            { printf("DO "); }
 
-/* IO  */
 "print"        { printf("PRINT "); }
 "scan"         { printf("SCAN "); }
 
-/* primitive types */
 "Unit"          { printf("UNIT "); }
 "Bool"          { printf("BOOL "); }
 "Int"           { printf("INT "); }
@@ -30,24 +23,19 @@
 "Char"          { printf("CHAR "); }
 "String"        { printf("STRING "); }
 
-/* define new types structure */
 "struct"        { printf("STRUCTURE "); }
 "sum"           { printf("SUM "); }
 
-/* necessary! */
 "mut"         { printf("MUT"); }
 
-/* switch things */
 "break"         { printf("BREAK "); }
 "case"          { printf("CASE "); }
 
-/* loop things */
 "skip"          { printf("SKIP"); }
 "stop"          { printf("STOP"); }
 "++"            { printf("PLUSPLUS"); }
 "--"            { printf("MINUSMINUS"); }
 
-/* operations */
 "+"             { printf("PLUS_INT "); }
 "-"             { printf("MINUS_INT "); }
 "*"             { printf("MUL_INT "); }
@@ -61,7 +49,6 @@
 "||"            { printf("OR "); }
 "not"           { printf("NOT "); }
 
-/* symbols */
 "=="            { printf("EQQ "); }
 "!="            { printf("NEQ "); }
 "<="            { printf("LE "); }
@@ -74,7 +61,6 @@
 "<-"            { printf("ARROW_LEFT "); }
 "->"            { printf("ARROW_RIGHT "); }
 
-/* just symbols :p */
 ";"             { printf("SEMICOLON "); }
 ","             { printf("COMMA "); }
 "("             { printf("LPAREN "); }
