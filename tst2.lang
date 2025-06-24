@@ -1,14 +1,18 @@
-if (x > 0) {
-print "Positive";
-} else {
-print "Non-positive";
-}
+Unit main () {
 
-for (Int i = 0; i < 10; i++) {
-print i;
-}
+  if (x > 0) {
+  print "Positive";
+  } else {
+  print "Non-positive";
+  }
+  
+  for (Int i = 0; i < 10; i++) {
+  print i;
+  }
+  
+  while (y > 0.0) {
+  y = y - 0.5;
+  print y;
+  }
 
-while (y > 0.0) {
-y = y - 0.5;
-print y;
 }

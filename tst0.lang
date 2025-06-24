@@ -1,0 +1,16 @@
+
+Int main () {
+
+  Int x <- 10;
+  Float y = 2.5;
+  String s <- "Hello";
+  Char c = 'Z';
+  Int z <- x + 5 * 2;
+  Float w <- y +. 1.0;
+  print s;
+  print z;
+  print w;
+
+  return 0;
+
+}

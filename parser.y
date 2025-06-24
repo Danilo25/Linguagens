@@ -10,7 +10,6 @@ extern FILE *yyin;
 
 void yyerror(const char *s) {
     fprintf(stderr, "SYNTAX ERROR: %s at line %d near '%s'\n", s, yylineno, yytext);
-    exit(1);
 }
 %}
 
@@ -58,10 +57,11 @@ void yyerror(const char *s) {
 %%
 
 program : decl_list { printf("Parsing completed successfully!\n"); }
+        | /* empty */ { printf("Parsing completed successfully (empty program)!\n"); }
         ;
 
 decl_list : decl_list decl
-          | /* empty */
+          | decl
           ;
 
 decl : var_decl
@@ -72,8 +72,10 @@ decl : var_decl
 
 var_decl : type ID SEMICOLON
          | type ID EQ expr SEMICOLON
+         | type ID ARROW_LEFT expr SEMICOLON
          | MUT type ID SEMICOLON
          | MUT type ID EQ expr SEMICOLON
+         | MUT type ID ARROW_LEFT expr SEMICOLON
          ;
 
 type : UNIT         { $$ = strdup("Unit"); }
@@ -176,6 +178,7 @@ arg_list : arg_list COMMA expr
 %%
 
 int main(int argc, char **argv) {
+    printf("Iniciando análise sintática...\n");
     if (argc > 1) {
         yyin = fopen(argv[1], "r");
         if (!yyin) {

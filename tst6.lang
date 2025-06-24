@@ -1,10 +1,14 @@
-Int factorial(Int n) {
-Int result = 1;
-for (Int i = 1; i <= n; i++) {
-result = result * i;
-}
-return result;
-}
+Unit main () {
 
-Int f = factorial(5);
-print f;  // Deve imprimir 120
+Int a <- 4;
+a <- a << 1;
+print a;
+a <- a >> 1;
+print a;
+Int b <- 2;
+b++;
+print b;
+skip;
+stop;
+
+}

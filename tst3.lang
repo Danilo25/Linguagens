@@ -1,6 +1,8 @@
-Int add(Int a, Int b) {
-return a + b;
+Int soma(Int x, Int y) {
+  return x + y;
 }
 
-Int result = add(3, 4);
-print result;
+Unit main() {
+  Int res <- soma(5, 7);
+  print res;
+}

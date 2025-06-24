@@ -874,277 +874,277 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 YY_RULE_SETUP
 #line 19 "scanner.l"
-{ return IF; }
+{ printf("Token: IF\n"); return IF; }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
 #line 20 "scanner.l"
-{ return ELSE; }
+{ printf("Token: ELSE\n"); return ELSE; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
 #line 21 "scanner.l"
-{ return FOR; }
+{ printf("Token: FOR\n"); return FOR; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
 #line 22 "scanner.l"
-{ return SWITCH; }
+{ printf("Token: SWITCH\n"); return SWITCH; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
 #line 23 "scanner.l"
-{ return WHILE; }
+{ printf("Token: WHILE\n"); return WHILE; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
 #line 24 "scanner.l"
-{ return RETURN; }
+{ printf("Token: RETURN\n"); return RETURN; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
 #line 25 "scanner.l"
-{ return DO; }
+{ printf("Token: DO\n"); return DO; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
 #line 27 "scanner.l"
-{ return PRINT; }
+{ printf("Token: PRINT\n"); return PRINT; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
 #line 28 "scanner.l"
-{ return SCAN; }
+{ printf("Token: SCAN\n"); return SCAN; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
 #line 30 "scanner.l"
-{ return UNIT; }
+{ printf("Token: UNIT\n"); return UNIT; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
 #line 31 "scanner.l"
-{ return BOOL; }
+{ printf("Token: BOOL\n"); return BOOL; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
 #line 32 "scanner.l"
-{ return INT; }
+{ printf("Token: INT\n"); return INT; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
 #line 33 "scanner.l"
-{ return FLOAT; }
+{ printf("Token: FLOAT\n"); return FLOAT; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
 #line 34 "scanner.l"
-{ return CHAR; }
+{ printf("Token: CHAR\n"); return CHAR; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
 #line 35 "scanner.l"
-{ return STRING; }
+{ printf("Token: STRING\n"); return STRING; }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
 #line 37 "scanner.l"
-{ return STRUCTURE; }
+{ printf("Token: STRUCTURE\n"); return STRUCTURE; }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
 #line 38 "scanner.l"
-{ return SUM; }
+{ printf("Token: SUM\n"); return SUM; }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
 #line 40 "scanner.l"
-{ return MUT; }
+{ printf("Token: MUT\n"); return MUT; }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
 #line 42 "scanner.l"
-{ return BREAK; }
+{ printf("Token: BREAK\n"); return BREAK; }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
 #line 43 "scanner.l"
-{ return CASE; }
+{ printf("Token: CASE\n"); return CASE; }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
 #line 45 "scanner.l"
-{ return SKIP; }
+{ printf("Token: SKIP\n"); return SKIP; }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
 #line 46 "scanner.l"
-{ return STOP; }
+{ printf("Token: STOP\n"); return STOP; }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
 #line 47 "scanner.l"
-{ return PLUSPLUS; }
+{ printf("Token: PLUSPLUS\n"); return PLUSPLUS; }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
 #line 48 "scanner.l"
-{ return MINUSMINUS; }
+{ printf("Token: MINUSMINUS\n"); return MINUSMINUS; }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
 #line 50 "scanner.l"
-{ return PLUS_INT; }
+{ printf("Token: PLUS_INT\n"); return PLUS_INT; }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
 #line 51 "scanner.l"
-{ return MINUS_INT; }
+{ printf("Token: MINUS_INT\n"); return MINUS_INT; }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
 #line 52 "scanner.l"
-{ return MUL_INT; }
+{ printf("Token: MUL_INT\n"); return MUL_INT; }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
 #line 53 "scanner.l"
-{ return DIV_INT; }
+{ printf("Token: DIV_INT\n"); return DIV_INT; }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
 #line 54 "scanner.l"
-{ return MOD_INT; }
+{ printf("Token: MOD_INT\n"); return MOD_INT; }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
 #line 55 "scanner.l"
-{ return PLUS_FLOAT; }
+{ printf("Token: PLUS_FLOAT\n"); return PLUS_FLOAT; }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
 #line 56 "scanner.l"
-{ return MINUS_FLOAT; }
+{ printf("Token: MINUS_FLOAT\n"); return MINUS_FLOAT; }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
 #line 57 "scanner.l"
-{ return MUL_FLOAT; }
+{ printf("Token: MUL_FLOAT\n"); return MUL_FLOAT; }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
 #line 58 "scanner.l"
-{ return DIV_FLOAT; }
+{ printf("Token: DIV_FLOAT\n"); return DIV_FLOAT; }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
 #line 59 "scanner.l"
-{ return AND; }
+{ printf("Token: AND\n"); return AND; }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
 #line 60 "scanner.l"
-{ return OR; }
+{ printf("Token: OR\n"); return OR; }
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
 #line 61 "scanner.l"
-{ return NOT; }
+{ printf("Token: NOT\n"); return NOT; }
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
 #line 63 "scanner.l"
-{ return EQQ; }
+{ printf("Token: EQQ\n"); return EQQ; }
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
 #line 64 "scanner.l"
-{ return NEQ; }
+{ printf("Token: NEQ\n"); return NEQ; }
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
 #line 65 "scanner.l"
-{ return LE; }
+{ printf("Token: LE\n"); return LE; }
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
 #line 66 "scanner.l"
-{ return GE; }
+{ printf("Token: GE\n"); return GE; }
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
 #line 67 "scanner.l"
-{ return LSHIFT; }
+{ printf("Token: LSHIFT\n"); return LSHIFT; }
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
 #line 68 "scanner.l"
-{ return RSHIFT; }
+{ printf("Token: RSHIFT\n"); return RSHIFT; }
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
 #line 69 "scanner.l"
-{ return LT; }
+{ printf("Token: LT\n"); return LT; }
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
 #line 70 "scanner.l"
-{ return GT; }
+{ printf("Token: GT\n"); return GT; }
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
 #line 71 "scanner.l"
-{ return EQ; }
+{ printf("Token: EQ\n"); return EQ; }
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
 #line 72 "scanner.l"
-{ return ARROW_LEFT; }
+{ printf("Token: ARROW_LEFT\n"); return ARROW_LEFT; }
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
 #line 73 "scanner.l"
-{ return ARROW_RIGHT; }
+{ printf("Token: ARROW_RIGHT\n"); return ARROW_RIGHT; }
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
 #line 75 "scanner.l"
-{ return SEMICOLON; }
+{ printf("Token: SEMICOLON\n"); return SEMICOLON; }
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
 #line 76 "scanner.l"
-{ return COMMA; }
+{ printf("Token: COMMA\n"); return COMMA; }
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
 #line 77 "scanner.l"
-{ return LPAREN; }
+{ printf("Token: LPAREN\n"); return LPAREN; }
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
 #line 78 "scanner.l"
-{ return RPAREN; }
+{ printf("Token: RPAREN\n"); return RPAREN; }
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
 #line 79 "scanner.l"
-{ return LBRACE; }
+{ printf("Token: LBRACE\n"); return LBRACE; }
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
 #line 80 "scanner.l"
-{ return RBRACE; }
+{ printf("Token: RBRACE\n"); return RBRACE; }
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
 #line 81 "scanner.l"
-{ return LBRACKET; }
+{ printf("Token: LBRACKET\n"); return LBRACKET; }
 	YY_BREAK
 case 55:
 YY_RULE_SETUP
 #line 82 "scanner.l"
-{ return RBRACKET; }
+{ printf("Token: RBRACKET\n"); return RBRACKET; }
 	YY_BREAK
 case 56:
 YY_RULE_SETUP
@@ -1155,22 +1155,25 @@ case 57:
 YY_RULE_SETUP
 #line 86 "scanner.l"
 {
+    printf("Token: ID (%s)\n", yytext);
     yylval.str_val = strdup(yytext);
     return ID;
 }
 	YY_BREAK
 case 58:
 YY_RULE_SETUP
-#line 91 "scanner.l"
+#line 92 "scanner.l"
 {
+    printf("Token: FLOAT_LIT (%s)\n", yytext);
     yylval.float_val = atof(yytext);
     return FLOAT_LIT;
 }
 	YY_BREAK
 case 59:
 YY_RULE_SETUP
-#line 96 "scanner.l"
+#line 98 "scanner.l"
 {
+    printf("Token: INT_LIT (%s)\n", yytext);
     yylval.int_val = atoi(yytext);
     return INT_LIT;
 }
@@ -1178,9 +1181,10 @@ YY_RULE_SETUP
 case 60:
 /* rule 60 can match eol */
 YY_RULE_SETUP
-#line 101 "scanner.l"
+#line 104 "scanner.l"
 {
     yytext[yyleng-1] = '\0';
+    printf("Token: STRING_LIT (%s)\n", yytext + 1);
     yylval.str_val = strdup(yytext + 1);
     return STRING_LIT;
 }
@@ -1188,8 +1192,9 @@ YY_RULE_SETUP
 case 61:
 /* rule 61 can match eol */
 YY_RULE_SETUP
-#line 107 "scanner.l"
+#line 111 "scanner.l"
 {
+    printf("Token: CHAR_LIT (%c)\n", yytext[1]);
     yylval.char_val = yytext[1];
     return CHAR_LIT;
 }
@@ -1197,12 +1202,12 @@ YY_RULE_SETUP
 case 62:
 /* rule 62 can match eol */
 YY_RULE_SETUP
-#line 112 "scanner.l"
+#line 117 "scanner.l"
 { /* Ignore whitespace */ }
 	YY_BREAK
 case 63:
 YY_RULE_SETUP
-#line 114 "scanner.l"
+#line 119 "scanner.l"
 {
     fprintf(stderr, "LEXICAL ERROR: UNKNOWN TOKEN '%s' at line %d\n", yytext, yylineno);
     return 0;
@@ -1210,10 +1215,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 64:
 YY_RULE_SETUP
-#line 119 "scanner.l"
+#line 124 "scanner.l"
 ECHO;
 	YY_BREAK
-#line 1216 "lex.yy.c"
+#line 1221 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2230,6 +2235,6 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 119 "scanner.l"
+#line 124 "scanner.l"
 
 

@@ -1,4 +1,13 @@
-Int[] arr = [1, 2, 3, 4, 5];
-print arr[0];
-arr[1] = 10;
-print arr[1];
+struct Ponto {
+  Int x,
+  Float y
+}
+sum Forma {
+  Circulo,
+  Retangulo
+} 
+
+Unit main() {
+  Ponto p;
+  p.x <- 3;
+}
