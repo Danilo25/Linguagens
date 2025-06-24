@@ -1,0 +1,10 @@
+Int factorial(Int n) {
+Int result = 1;
+for (Int i = 1; i <= n; i++) {
+result = result * i;
+}
+return result;
+}
+
+Int f = factorial(5);
+print f;  // Deve imprimir 120

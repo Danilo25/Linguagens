@@ -1,148 +1,189 @@
 %{
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
-#define YYDEBUG 1
-int yydebug = 1;
-
-void yyerror(const char *s);
-int yylex();
+extern int yylex();
+extern int yylineno;
+extern char *yytext;
 extern FILE *yyin;
+
+void yyerror(const char *s) {
+    fprintf(stderr, "SYNTAX ERROR: %s at line %d near '%s'\n", s, yylineno, yytext);
+    exit(1);
+}
 %}
 
 %union {
-    int ival;
-    float fval;
-    char* sval;
+    int int_val;
+    float float_val;
+    char char_val;
+    char *str_val;
 }
 
-%token IF ELSE FOR SWITCH WHILE RETURN BREAK CONTINUE CASE
-%token PRINTF SCANF
-%token UNIT BOOL INT FLOAT STRUCTURE SUM CHAR UNSIGNED CONST STRING
-%token ID
-%token INT_LIT FLOAT_LIT STRING_LIT CHAR_LIT
-%token EQ NE LE GE LT GT ASSIGN ARROW_LEFT ARROW_RIGHT
-%token PLUS_ASSIGN MINUS_ASSIGN MUL_ASSIGN DIV_ASSIGN MOD_ASSIGN
-%token INCREMENT DECREMENT
-%token PLUS MINUS MUL DIV MOD DOT
+%token IF ELSE FOR SWITCH WHILE RETURN DO
+%token PRINT SCAN
+%token UNIT BOOL INT FLOAT CHAR STRING
+%token STRUCTURE SUM
+%token MUT
+%token BREAK CASE
+%token SKIP STOP PLUSPLUS MINUSMINUS
+%token PLUS_INT MINUS_INT MUL_INT DIV_INT MOD_INT
+%token PLUS_FLOAT MINUS_FLOAT MUL_FLOAT DIV_FLOAT
 %token AND OR NOT
+%token EQQ NEQ LE GE LSHIFT RSHIFT LT GT EQ ARROW_LEFT ARROW_RIGHT
 %token SEMICOLON COMMA LPAREN RPAREN LBRACE RBRACE LBRACKET RBRACKET
-%token AMP PIPE CARET TILDE QUESTION COLON
 
-%start programa
+%token <str_val> ID
+%token <int_val> INT_LIT
+%token <float_val> FLOAT_LIT
+%token <char_val> CHAR_LIT
+%token <str_val> STRING_LIT
 
-%left PLUS MINUS
-%left MUL DIV MOD
-%right ASSIGN
+%type <str_val> type
 
-%%
-
-// Regras sintáticas da linguagem
-programa
-    : declaracoes
-    ;
-
-declaracoes
-    : declaracoes declaracao
-    | declaracao
-    ;
-
-declaracao
-    : tipo ID LPAREN parametros RPAREN bloco
-    | tipo ID SEMICOLON
-    ;
-
-tipo
-    : INT
-    | FLOAT
-    | CHAR
-    | STRING
-    | STRUCTURE
-    | SUM
-    | UNIT
-    | BOOL
-    ;
-
-parametros
-    : parametro
-    | parametros COMMA parametro
-    | /* vazio */
-    ;
-
-parametro
-    : tipo ID
-    ;
-
-bloco
-    : LBRACE comandos_opt RBRACE
-    ;
-
-comandos_opt
-    : comandos
-    | /* vazio */
-    ;
-
-comandos
-    : comandos comando
-    | comando
-    ;
-
-comando
-    : expressao SEMICOLON
-    | RETURN expressao SEMICOLON
-    | IF LPAREN expressao RPAREN bloco
-    | IF LPAREN expressao RPAREN bloco ELSE bloco
-    | WHILE LPAREN expressao RPAREN bloco
-    | FOR LPAREN expressao SEMICOLON expressao SEMICOLON expressao RPAREN bloco
-    | BREAK SEMICOLON
-    | CONTINUE SEMICOLON
-    | bloco
-    ;
-
-expressao
-    : ID ASSIGN expressao
-    | expressao PLUS expressao
-    | expressao MINUS expressao
-    | expressao MUL expressao
-    | expressao DIV expressao
-    | expressao MOD expressao
-    | LPAREN expressao RPAREN
-    | ID
-    | INT_LIT
-    | FLOAT_LIT
-    | CHAR_LIT
-    | STRING_LIT
-    ;
+%left OR
+%left AND
+%left EQQ NEQ
+%left LT GT LE GE
+%left LSHIFT RSHIFT
+%left PLUS_INT MINUS_INT
+%left MUL_INT DIV_INT MOD_INT
+%left PLUS_FLOAT MINUS_FLOAT
+%left MUL_FLOAT DIV_FLOAT
+%right NOT
+%nonassoc PLUSPLUS MINUSMINUS
+%nonassoc EQ ARROW_LEFT
 
 %%
 
-void yyerror(const char *s) {
-    fprintf(stderr, "Erro sintático: %s\n", s);
-}
+program : decl_list { printf("Parsing completed successfully!\n"); }
+        ;
+
+decl_list : decl_list decl
+          | /* empty */
+          ;
+
+decl : var_decl
+     | func_decl
+     | struct_decl
+     | sum_decl
+     ;
+
+var_decl : type ID SEMICOLON
+         | type ID EQ expr SEMICOLON
+         | MUT type ID SEMICOLON
+         | MUT type ID EQ expr SEMICOLON
+         ;
+
+type : UNIT         { $$ = strdup("Unit"); }
+     | BOOL         { $$ = strdup("Bool"); }
+     | INT          { $$ = strdup("Int"); }
+     | FLOAT        { $$ = strdup("Float"); }
+     | CHAR         { $$ = strdup("Char"); }
+     | STRING       { $$ = strdup("String"); }
+     | ID           { $$ = strdup($1); }
+     ;
+
+func_decl : type ID LPAREN param_list RPAREN LBRACE stmt_list RBRACE
+          ;
+
+param_list : param_list COMMA type ID
+           | type ID
+           | /* empty */
+           ;
+
+struct_decl : STRUCTURE ID LBRACE field_list RBRACE
+            ;
+
+field_list : field_list COMMA type ID
+           | type ID
+           | /* empty */
+           ;
+
+sum_decl : SUM ID LBRACE variant_list RBRACE
+         ;
+
+variant_list : variant_list COMMA ID
+             | ID
+             | /* empty */
+             ;
+
+stmt_list : stmt_list stmt
+          | /* empty */
+          ;
+
+stmt : var_decl
+     | expr SEMICOLON
+     | IF LPAREN expr RPAREN LBRACE stmt_list RBRACE
+     | IF LPAREN expr RPAREN LBRACE stmt_list RBRACE ELSE LBRACE stmt_list RBRACE
+     | WHILE LPAREN expr RPAREN LBRACE stmt_list RBRACE
+     | FOR LPAREN var_decl expr SEMICOLON expr RPAREN LBRACE stmt_list RBRACE
+     | DO LBRACE stmt_list RBRACE WHILE LPAREN expr RPAREN SEMICOLON
+     | SWITCH LPAREN expr RPAREN LBRACE case_list RBRACE
+     | RETURN expr SEMICOLON
+     | RETURN SEMICOLON
+     | BREAK SEMICOLON
+     | SKIP SEMICOLON
+     | STOP SEMICOLON
+     | PRINT expr SEMICOLON
+     | SCAN ID SEMICOLON
+     ;
+
+case_list : case_list CASE expr LBRACE stmt_list RBRACE
+          | CASE expr LBRACE stmt_list RBRACE
+          ;
+
+expr : expr PLUS_INT expr
+     | expr MINUS_INT expr
+     | expr MUL_INT expr
+     | expr DIV_INT expr
+     | expr MOD_INT expr
+     | expr PLUS_FLOAT expr
+     | expr MINUS_FLOAT expr
+     | expr MUL_FLOAT expr
+     | expr DIV_FLOAT expr
+     | expr AND expr
+     | expr OR expr
+     | NOT expr
+     | expr EQQ expr
+     | expr NEQ expr
+     | expr LT expr
+     | expr GT expr
+     | expr LE expr
+     | expr GE expr
+     | expr LSHIFT expr
+     | expr RSHIFT expr
+     | ID PLUSPLUS
+     | ID MINUSMINUS
+     | ID EQ expr
+     | ID ARROW_LEFT expr
+     | ID LPAREN arg_list RPAREN
+     | ID LBRACKET expr RBRACKET
+     | ID
+     | INT_LIT
+     | FLOAT_LIT
+     | CHAR_LIT
+     | STRING_LIT
+     | LPAREN expr RPAREN
+     ;
+
+arg_list : arg_list COMMA expr
+         | expr
+         | /* empty */
+         ;
+
+%%
 
 int main(int argc, char **argv) {
-    if (argc < 2) {
-        fprintf(stderr, "Uso: %s arquivo.txt\n", argv[0]);
-        return 1;
+    if (argc > 1) {
+        yyin = fopen(argv[1], "r");
+        if (!yyin) {
+            perror("Could not open input file");
+            return 1;
+        }
     }
-
-    FILE *arquivo = fopen(argv[1], "r");
-    if (!arquivo) {
-        perror("Erro ao abrir o arquivo");
-        return 1;
-    }
-
-    yyin = arquivo;
-    printf("Iniciando análise sintática...\n");
-
-    int result = yyparse();
-
-    if (result == 0) {
-        printf("Análise concluída com sucesso!\n");
-    } else {
-        printf("Erro durante análise sintática.\n");
-    }
-
-    fclose(arquivo);
+    yyparse();
+    if (yyin != stdin) fclose(yyin);
     return 0;
 }

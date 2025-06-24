@@ -1,0 +1,6 @@
+Int x <- 5; 
+Float y <- 3.14; 
+String msg <- "Hello"; 
+print msg; 
+x <- x + 1; 
+print x;

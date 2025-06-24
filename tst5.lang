@@ -1,0 +1,2 @@
+Int x = 5
+print x;  // Falta ponto e vírgula (sugestao de amg)

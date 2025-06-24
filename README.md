@@ -1,36 +1,102 @@
-# Como Testar o Projeto - Analisador Léxico
+Manual de Uso do Analisador Sintático da Linguagem LingEL
+1. Introdução
+Este manual descreve o uso do analisador sintático para a linguagem LingEL, uma linguagem de programação simples projetada para fins educacionais. O analisador verifica se um programa fonte está sintaticamente correto conforme as regras da linguagem.
+A linguagem LingEL suporta:
 
-Este guia descreve os passos necessários para gerar, compilar e executar o analisador léxico utilizando **Flex** e **GCC**.
+Declarações de variáveis (Int, Float, String)
+Estruturas de controle (if-else, for, while)
+Funções com parâmetros e retorno
+Arrays
+Expressões aritméticas, lógicas e relacionais
 
-## Requisitos
+2. Instalação
+Para usar o analisador, instale as seguintes ferramentas:
 
-Certifique-se de ter os seguintes pacotes instalados em seu sistema:
+Flex: Gerador de analisadores léxicos
+Bison: Gerador de analisadores sintáticos
+GCC: Compilador C
 
-- [Flex](https://github.com/westes/flex)
-- [GCC](https://gcc.gnu.org/)
+No Ubuntu, use:
+sudo apt-get install flex bison gcc
 
-## Passo a Passo
+3. Compilação
+Compile o analisador com os seguintes passos:
 
-### 1. Gere o Código C com o Flex
+Gere o parser:
+bison -d parser.y
 
-Utilize o Flex para gerar o código-fonte C a partir do arquivo de definição léxica `scanner.l`:
+Isso cria parser.tab.c e parser.tab.h.
 
-```bash
+Gere o scanner:
 flex scanner.l
-```
 
-### 2. Compile o Analisador Léxico com o GCC
+Isso cria lex.yy.c.
 
-Compile o arquivo gerado com o GCC, garantindo que a biblioteca do Flex seja vinculada com a flag -lfl:
+Compile tudo:
+gcc -o parser lex.yy.c parser.tab.c -lfl
 
-```bash
-gcc lex.yy.c -o scanner -lfl
-```
+O executável parser será gerado.
 
-### 3. Execute o Analisador Léxico
 
-Execute o analisador direcionando a entrada a partir de um arquivo. Substitua `showcaselang.txt` pelo nome do seu arquivo de entrada, se for diferente:
+4. Uso
+Analise um arquivo fonte com:
+./parser arquivo.lang
 
-```bash
-./scanner < showcaselang.txt
-```
+
+Se correto, a saída será:Parsing completed successfully!
+Se houver erro, uma mensagem indicará o problema, como:SYNTAX ERROR: syntax error at line 2 near 'print'
+
+5. Exemplos
+Exemplo 1: Programa Correto
+Arquivo test1.lang:
+Int x = 5;
+print x;
+
+Comando:
+./parser test1.lang
+
+Saída:
+Parsing completed successfully!
+
+Exemplo 2: Programa com Erro
+Arquivo error.lang:
+Int x = 5
+print x;  // Falta ponto e vírgula
+
+Comando:
+./parser error.lang
+
+Saída:
+SYNTAX ERROR: syntax error at line 2 near 'print'
+
+Exemplo 3: Fatorial
+Arquivo factorial.lang:
+Int factorial(Int n) {
+    Int result = 1;
+    for (Int i = 1; i <= n; i++) {
+        result = result * i;
+    }
+    return result;
+}
+
+Int f = factorial(5);
+print f;  // Deve imprimir 120
+
+Comando:
+./parser factorial.lang
+
+Saída:
+Parsing completed successfully!
+
+6. Solução de Problemas
+
+"command not found": Verifique se o parser foi gerado. Repita a compilação.
+Erro de sintaxe: Veja a linha indicada na mensagem de erro e corrija (ex.: falta de ;).
+Erro na compilação: Confirme que lex.yy.c e parser.tab.c foram criados.
+
+7. Referência da Linguagem
+
+Variáveis: Int x = 5;, Float y = 3.14;, String z = "texto";
+Controle: if (cond) {...}, for (Int i = 0; i < n; i++) {...}, while (cond) {...}
+Funções: Int nome(tipo param) {... return valor;}
+Arrays: Int[] arr = [1, 2, 3];, arr[0] = 5;

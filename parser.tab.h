@@ -60,65 +60,60 @@ extern int yydebug;
     SWITCH = 261,                  /* SWITCH  */
     WHILE = 262,                   /* WHILE  */
     RETURN = 263,                  /* RETURN  */
-    BREAK = 264,                   /* BREAK  */
-    CONTINUE = 265,                /* CONTINUE  */
-    CASE = 266,                    /* CASE  */
-    PRINTF = 267,                  /* PRINTF  */
-    SCANF = 268,                   /* SCANF  */
-    UNIT = 269,                    /* UNIT  */
-    BOOL = 270,                    /* BOOL  */
-    INT = 271,                     /* INT  */
-    FLOAT = 272,                   /* FLOAT  */
+    DO = 264,                      /* DO  */
+    PRINT = 265,                   /* PRINT  */
+    SCAN = 266,                    /* SCAN  */
+    UNIT = 267,                    /* UNIT  */
+    BOOL = 268,                    /* BOOL  */
+    INT = 269,                     /* INT  */
+    FLOAT = 270,                   /* FLOAT  */
+    CHAR = 271,                    /* CHAR  */
+    STRING = 272,                  /* STRING  */
     STRUCTURE = 273,               /* STRUCTURE  */
     SUM = 274,                     /* SUM  */
-    CHAR = 275,                    /* CHAR  */
-    UNSIGNED = 276,                /* UNSIGNED  */
-    CONST = 277,                   /* CONST  */
-    STRING = 278,                  /* STRING  */
-    ID = 279,                      /* ID  */
-    INT_LIT = 280,                 /* INT_LIT  */
-    FLOAT_LIT = 281,               /* FLOAT_LIT  */
-    STRING_LIT = 282,              /* STRING_LIT  */
-    CHAR_LIT = 283,                /* CHAR_LIT  */
-    EQ = 284,                      /* EQ  */
-    NE = 285,                      /* NE  */
-    LE = 286,                      /* LE  */
-    GE = 287,                      /* GE  */
-    LT = 288,                      /* LT  */
-    GT = 289,                      /* GT  */
-    ASSIGN = 290,                  /* ASSIGN  */
-    ARROW_LEFT = 291,              /* ARROW_LEFT  */
-    ARROW_RIGHT = 292,             /* ARROW_RIGHT  */
-    PLUS_ASSIGN = 293,             /* PLUS_ASSIGN  */
-    MINUS_ASSIGN = 294,            /* MINUS_ASSIGN  */
-    MUL_ASSIGN = 295,              /* MUL_ASSIGN  */
-    DIV_ASSIGN = 296,              /* DIV_ASSIGN  */
-    MOD_ASSIGN = 297,              /* MOD_ASSIGN  */
-    INCREMENT = 298,               /* INCREMENT  */
-    DECREMENT = 299,               /* DECREMENT  */
-    PLUS = 300,                    /* PLUS  */
-    MINUS = 301,                   /* MINUS  */
-    MUL = 302,                     /* MUL  */
-    DIV = 303,                     /* DIV  */
-    MOD = 304,                     /* MOD  */
-    DOT = 305,                     /* DOT  */
-    AND = 306,                     /* AND  */
-    OR = 307,                      /* OR  */
-    NOT = 308,                     /* NOT  */
-    SEMICOLON = 309,               /* SEMICOLON  */
-    COMMA = 310,                   /* COMMA  */
-    LPAREN = 311,                  /* LPAREN  */
-    RPAREN = 312,                  /* RPAREN  */
-    LBRACE = 313,                  /* LBRACE  */
-    RBRACE = 314,                  /* RBRACE  */
-    LBRACKET = 315,                /* LBRACKET  */
-    RBRACKET = 316,                /* RBRACKET  */
-    AMP = 317,                     /* AMP  */
-    PIPE = 318,                    /* PIPE  */
-    CARET = 319,                   /* CARET  */
-    TILDE = 320,                   /* TILDE  */
-    QUESTION = 321,                /* QUESTION  */
-    COLON = 322                    /* COLON  */
+    MUT = 275,                     /* MUT  */
+    BREAK = 276,                   /* BREAK  */
+    CASE = 277,                    /* CASE  */
+    SKIP = 278,                    /* SKIP  */
+    STOP = 279,                    /* STOP  */
+    PLUSPLUS = 280,                /* PLUSPLUS  */
+    MINUSMINUS = 281,              /* MINUSMINUS  */
+    PLUS_INT = 282,                /* PLUS_INT  */
+    MINUS_INT = 283,               /* MINUS_INT  */
+    MUL_INT = 284,                 /* MUL_INT  */
+    DIV_INT = 285,                 /* DIV_INT  */
+    MOD_INT = 286,                 /* MOD_INT  */
+    PLUS_FLOAT = 287,              /* PLUS_FLOAT  */
+    MINUS_FLOAT = 288,             /* MINUS_FLOAT  */
+    MUL_FLOAT = 289,               /* MUL_FLOAT  */
+    DIV_FLOAT = 290,               /* DIV_FLOAT  */
+    AND = 291,                     /* AND  */
+    OR = 292,                      /* OR  */
+    NOT = 293,                     /* NOT  */
+    EQQ = 294,                     /* EQQ  */
+    NEQ = 295,                     /* NEQ  */
+    LE = 296,                      /* LE  */
+    GE = 297,                      /* GE  */
+    LSHIFT = 298,                  /* LSHIFT  */
+    RSHIFT = 299,                  /* RSHIFT  */
+    LT = 300,                      /* LT  */
+    GT = 301,                      /* GT  */
+    EQ = 302,                      /* EQ  */
+    ARROW_LEFT = 303,              /* ARROW_LEFT  */
+    ARROW_RIGHT = 304,             /* ARROW_RIGHT  */
+    SEMICOLON = 305,               /* SEMICOLON  */
+    COMMA = 306,                   /* COMMA  */
+    LPAREN = 307,                  /* LPAREN  */
+    RPAREN = 308,                  /* RPAREN  */
+    LBRACE = 309,                  /* LBRACE  */
+    RBRACE = 310,                  /* RBRACE  */
+    LBRACKET = 311,                /* LBRACKET  */
+    RBRACKET = 312,                /* RBRACKET  */
+    ID = 313,                      /* ID  */
+    INT_LIT = 314,                 /* INT_LIT  */
+    FLOAT_LIT = 315,               /* FLOAT_LIT  */
+    CHAR_LIT = 316,                /* CHAR_LIT  */
+    STRING_LIT = 317               /* STRING_LIT  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -127,13 +122,14 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 13 "parser.y"
+#line 17 "parser.y"
 
-    int ival;
-    float fval;
-    char* sval;
+    int int_val;
+    float float_val;
+    char char_val;
+    char *str_val;
 
-#line 137 "parser.tab.h"
+#line 133 "parser.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
