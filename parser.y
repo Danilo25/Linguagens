@@ -32,6 +32,7 @@ void yyerror(const char *s) {
 %token AND OR NOT
 %token EQQ NEQ LE GE LSHIFT RSHIFT LT GT EQ ARROW_LEFT ARROW_RIGHT
 %token SEMICOLON COMMA LPAREN RPAREN LBRACE RBRACE LBRACKET RBRACKET
+%token DOT
 
 %token <str_val> ID
 %token <int_val> INT_LIT
@@ -116,6 +117,7 @@ stmt_list : stmt_list stmt
           ;
 
 stmt : var_decl
+     | lvalue ARROW_LEFT expr SEMICOLON
      | expr SEMICOLON
      | IF LPAREN expr RPAREN LBRACE stmt_list RBRACE
      | IF LPAREN expr RPAREN LBRACE stmt_list RBRACE ELSE LBRACE stmt_list RBRACE
@@ -131,6 +133,10 @@ stmt : var_decl
      | PRINT expr SEMICOLON
      | SCAN ID SEMICOLON
      ;
+
+lvalue : ID
+       | expr DOT ID
+       ;
 
 case_list : case_list CASE expr LBRACE stmt_list RBRACE
           | CASE expr LBRACE stmt_list RBRACE
@@ -168,6 +174,7 @@ expr : expr PLUS_INT expr
      | CHAR_LIT
      | STRING_LIT
      | LPAREN expr RPAREN
+     | expr DOT ID
      ;
 
 arg_list : arg_list COMMA expr

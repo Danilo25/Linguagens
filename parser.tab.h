@@ -109,11 +109,12 @@ extern int yydebug;
     RBRACE = 310,                  /* RBRACE  */
     LBRACKET = 311,                /* LBRACKET  */
     RBRACKET = 312,                /* RBRACKET  */
-    ID = 313,                      /* ID  */
-    INT_LIT = 314,                 /* INT_LIT  */
-    FLOAT_LIT = 315,               /* FLOAT_LIT  */
-    CHAR_LIT = 316,                /* CHAR_LIT  */
-    STRING_LIT = 317               /* STRING_LIT  */
+    DOT = 313,                     /* DOT  */
+    ID = 314,                      /* ID  */
+    INT_LIT = 315,                 /* INT_LIT  */
+    FLOAT_LIT = 316,               /* FLOAT_LIT  */
+    CHAR_LIT = 317,                /* CHAR_LIT  */
+    STRING_LIT = 318               /* STRING_LIT  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -129,7 +130,7 @@ union YYSTYPE
     char char_val;
     char *str_val;
 
-#line 133 "parser.tab.h"
+#line 134 "parser.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

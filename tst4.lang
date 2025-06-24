@@ -10,4 +10,6 @@ sum Forma {
 Unit main() {
   Ponto p;
   p.x <- 3;
+  p.y <- 3.34; 
+  print p; 
 }

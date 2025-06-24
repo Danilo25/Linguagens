@@ -81,6 +81,8 @@ int yylex(void);
 "["             { printf("Token: LBRACKET\n"); return LBRACKET; }
 "]"             { printf("Token: RBRACKET\n"); return RBRACKET; }
 
+"."             { printf("Token: DOT\n"); return DOT; }
+
 "//".*          { /* Ignore comments */ }
 
 [a-zA-Z_][a-zA-Z0-9_]* {
