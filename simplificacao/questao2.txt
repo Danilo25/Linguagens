@@ -1,0 +1,15 @@
+Int soma(Int x, Int y){
+  Int value;
+  value <- x + y;
+  return value;
+}
+
+Unit teste() {
+  Int y <- 5;
+  Int x <- 10;
+
+  Int resultado;
+  resultado <- soma(x,y);
+
+  print resultado;
+}
