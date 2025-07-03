@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include "lib/rational.h"
 
 /* Stub de leitura */
 float read() { float v; if (scanf("%f", &v)!=1) return -1.0f; return v;}
