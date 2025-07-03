@@ -53,31 +53,32 @@ Grammar
    33     | UNIT
    34     | RATIONAL
    35     | MATRIX
+   36     | BST
 
-   36 expr: expr PLUS expr
-   37     | expr MINUS expr
-   38     | expr MUL expr
-   39     | expr DIV expr
-   40     | expr LT expr
-   41     | expr LE expr
-   42     | expr GT expr
-   43     | expr GE expr
-   44     | expr EQ expr
-   45     | expr NE expr
-   46     | LPAREN expr RPAREN
-   47     | AMPERSAND ID
-   48     | ID
-   49     | INT_LIT
-   50     | FLOAT_LIT
-   51     | func_call
+   37 expr: expr PLUS expr
+   38     | expr MINUS expr
+   39     | expr MUL expr
+   40     | expr DIV expr
+   41     | expr LT expr
+   42     | expr LE expr
+   43     | expr GT expr
+   44     | expr GE expr
+   45     | expr EQ expr
+   46     | expr NE expr
+   47     | LPAREN expr RPAREN
+   48     | AMPERSAND ID
+   49     | ID
+   50     | INT_LIT
+   51     | FLOAT_LIT
+   52     | func_call
 
-   52 func_call: ID LPAREN arg_list_opt RPAREN
+   53 func_call: ID LPAREN arg_list_opt RPAREN
 
-   53 arg_list_opt: ε
-   54             | arg_list
+   54 arg_list_opt: ε
+   55             | arg_list
 
-   55 arg_list: expr
-   56         | arg_list COMMA expr
+   56 arg_list: expr
+   57         | arg_list COMMA expr
 
 
 Terminals, with rules where they appear
@@ -89,101 +90,102 @@ Terminals, with rules where they appear
     INT (260) 31
     RATIONAL (261) 34
     MATRIX (262) 35
-    PRINT (263) 27
-    RETURN (264) 28
-    IF (265) 29
-    WHILE (266) 30
-    REF (267) 11
-    AMPERSAND (268) 47
-    ARROW_LEFT (269) 22 25
-    PLUS (270) 36
-    MINUS (271) 37
-    MUL (272) 24 38
-    DIV (273) 39
-    LT (274) 40
-    LE (275) 41
-    GT (276) 42
-    GE (277) 43
-    EQ (278) 44
-    NE (279) 45
-    SEMICOLON (280) 5 21 22 25 26 27 28
-    LPAREN (281) 4 5 29 30 46 52
-    RPAREN (282) 4 5 29 30 46 52
-    LBRACE (283) 4 29 30
-    RBRACE (284) 4 29 30
-    COMMA (285) 9 56
-    ID <str_val> (286) 4 5 10 11 21 22 23 24 47 48 52
-    INT_LIT <int_val> (287) 49
-    FLOAT_LIT <float_val> (288) 50
+    BST (263) 36
+    PRINT (264) 27
+    RETURN (265) 28
+    IF (266) 29
+    WHILE (267) 30
+    REF (268) 11
+    AMPERSAND (269) 48
+    ARROW_LEFT (270) 22 25
+    PLUS (271) 37
+    MINUS (272) 38
+    MUL (273) 24 39
+    DIV (274) 40
+    LT (275) 41
+    LE (276) 42
+    GT (277) 43
+    GE (278) 44
+    EQ (279) 45
+    NE (280) 46
+    SEMICOLON (281) 5 21 22 25 26 27 28
+    LPAREN (282) 4 5 29 30 47 53
+    RPAREN (283) 4 5 29 30 47 53
+    LBRACE (284) 4 29 30
+    RBRACE (285) 4 29 30
+    COMMA (286) 9 57
+    ID <str_val> (287) 4 5 10 11 21 22 23 24 48 49 53
+    INT_LIT <int_val> (288) 50
+    FLOAT_LIT <float_val> (289) 51
 
 
 Nonterminals, with rules where they appear
 
-    $accept (34)
+    $accept (35)
         on left: 0
-    program <rec> (35)
+    program <rec> (36)
         on left: 1
         on right: 0
-    decl_list <rec> (36)
+    decl_list <rec> (37)
         on left: 2 3
         on right: 1 3
-    func_decl <rec> (37)
+    func_decl <rec> (38)
         on left: 4 5
         on right: 2 3
-    param_list_opt <rec> (38)
+    param_list_opt <rec> (39)
         on left: 6 7
         on right: 4 5
-    param_list <rec> (39)
+    param_list <rec> (40)
         on left: 8 9
         on right: 7 9
-    param <rec> (40)
+    param <rec> (41)
         on left: 10 11
         on right: 8 9
-    stmt_list <rec> (41)
+    stmt_list <rec> (42)
         on left: 12 13
         on right: 4 13 29 30
-    stmt <rec> (42)
+    stmt <rec> (43)
         on left: 14 15 16 17 18 19 20
         on right: 13
-    var_decl_stmt <rec> (43)
+    var_decl_stmt <rec> (44)
         on left: 21 22
         on right: 14
-    lvalue <rec> (44)
+    lvalue <rec> (45)
         on left: 23 24
         on right: 25
-    assignment_stmt <rec> (45)
+    assignment_stmt <rec> (46)
         on left: 25
         on right: 15
-    func_call_stmt <rec> (46)
+    func_call_stmt <rec> (47)
         on left: 26
         on right: 18
-    print_stmt <rec> (47)
+    print_stmt <rec> (48)
         on left: 27
         on right: 16
-    return_stmt <rec> (48)
+    return_stmt <rec> (49)
         on left: 28
         on right: 17
-    if_stmt <rec> (49)
+    if_stmt <rec> (50)
         on left: 29
         on right: 19
-    while_stmt <rec> (50)
+    while_stmt <rec> (51)
         on left: 30
         on right: 20
-    type <rec> (51)
-        on left: 31 32 33 34 35
+    type <rec> (52)
+        on left: 31 32 33 34 35 36
         on right: 4 5 10 11 21 22
-    expr <rec> (52)
-        on left: 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51
-        on right: 22 25 27 28 29 30 36 37 38 39 40 41 42 43 44 45 46 55 56
-    func_call <rec> (53)
-        on left: 52
-        on right: 26 51
-    arg_list_opt <rec> (54)
-        on left: 53 54
-        on right: 52
-    arg_list <rec> (55)
-        on left: 55 56
-        on right: 54 56
+    expr <rec> (53)
+        on left: 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52
+        on right: 22 25 27 28 29 30 37 38 39 40 41 42 43 44 45 46 47 56 57
+    func_call <rec> (54)
+        on left: 53
+        on right: 26 52
+    arg_list_opt <rec> (55)
+        on left: 54 55
+        on right: 53
+    arg_list <rec> (56)
+        on left: 56 57
+        on right: 55 57
 
 
 State 0
@@ -195,11 +197,12 @@ State 0
     INT       shift, and go to state 3
     RATIONAL  shift, and go to state 4
     MATRIX    shift, and go to state 5
+    BST       shift, and go to state 6
 
-    program    go to state 6
-    decl_list  go to state 7
-    func_decl  go to state 8
-    type       go to state 9
+    program    go to state 7
+    decl_list  go to state 8
+    func_decl  go to state 9
+    type       go to state 10
 
 
 State 1
@@ -239,12 +242,19 @@ State 5
 
 State 6
 
-    0 $accept: program • $end
+   36 type: BST •
 
-    $end  shift, and go to state 10
+    $default  reduce using rule 36 (type)
 
 
 State 7
+
+    0 $accept: program • $end
+
+    $end  shift, and go to state 11
+
+
+State 8
 
     1 program: decl_list •
     3 decl_list: decl_list • func_decl
@@ -254,51 +264,52 @@ State 7
     INT       shift, and go to state 3
     RATIONAL  shift, and go to state 4
     MATRIX    shift, and go to state 5
+    BST       shift, and go to state 6
 
     $default  reduce using rule 1 (program)
 
-    func_decl  go to state 11
-    type       go to state 9
+    func_decl  go to state 12
+    type       go to state 10
 
 
-State 8
+State 9
 
     2 decl_list: func_decl •
 
     $default  reduce using rule 2 (decl_list)
 
 
-State 9
+State 10
 
     4 func_decl: type • ID LPAREN param_list_opt RPAREN LBRACE stmt_list RBRACE
     5          | type • ID LPAREN param_list_opt RPAREN SEMICOLON
 
-    ID  shift, and go to state 12
+    ID  shift, and go to state 13
 
 
-State 10
+State 11
 
     0 $accept: program $end •
 
     $default  accept
 
 
-State 11
+State 12
 
     3 decl_list: decl_list func_decl •
 
     $default  reduce using rule 3 (decl_list)
 
 
-State 12
+State 13
 
     4 func_decl: type ID • LPAREN param_list_opt RPAREN LBRACE stmt_list RBRACE
     5          | type ID • LPAREN param_list_opt RPAREN SEMICOLON
 
-    LPAREN  shift, and go to state 13
+    LPAREN  shift, and go to state 14
 
 
-State 13
+State 14
 
     4 func_decl: type ID LPAREN • param_list_opt RPAREN LBRACE stmt_list RBRACE
     5          | type ID LPAREN • param_list_opt RPAREN SEMICOLON
@@ -308,17 +319,18 @@ State 13
     INT       shift, and go to state 3
     RATIONAL  shift, and go to state 4
     MATRIX    shift, and go to state 5
-    REF       shift, and go to state 14
+    BST       shift, and go to state 6
+    REF       shift, and go to state 15
 
     $default  reduce using rule 6 (param_list_opt)
 
-    param_list_opt  go to state 15
-    param_list      go to state 16
-    param           go to state 17
-    type            go to state 18
+    param_list_opt  go to state 16
+    param_list      go to state 17
+    param           go to state 18
+    type            go to state 19
 
 
-State 14
+State 15
 
    11 param: REF • type ID
 
@@ -327,59 +339,60 @@ State 14
     INT       shift, and go to state 3
     RATIONAL  shift, and go to state 4
     MATRIX    shift, and go to state 5
+    BST       shift, and go to state 6
 
-    type  go to state 19
-
-
-State 15
-
-    4 func_decl: type ID LPAREN param_list_opt • RPAREN LBRACE stmt_list RBRACE
-    5          | type ID LPAREN param_list_opt • RPAREN SEMICOLON
-
-    RPAREN  shift, and go to state 20
+    type  go to state 20
 
 
 State 16
 
+    4 func_decl: type ID LPAREN param_list_opt • RPAREN LBRACE stmt_list RBRACE
+    5          | type ID LPAREN param_list_opt • RPAREN SEMICOLON
+
+    RPAREN  shift, and go to state 21
+
+
+State 17
+
     7 param_list_opt: param_list •
     9 param_list: param_list • COMMA param
 
-    COMMA  shift, and go to state 21
+    COMMA  shift, and go to state 22
 
     $default  reduce using rule 7 (param_list_opt)
 
 
-State 17
+State 18
 
     8 param_list: param •
 
     $default  reduce using rule 8 (param_list)
 
 
-State 18
-
-   10 param: type • ID
-
-    ID  shift, and go to state 22
-
-
 State 19
 
-   11 param: REF type • ID
+   10 param: type • ID
 
     ID  shift, and go to state 23
 
 
 State 20
 
-    4 func_decl: type ID LPAREN param_list_opt RPAREN • LBRACE stmt_list RBRACE
-    5          | type ID LPAREN param_list_opt RPAREN • SEMICOLON
+   11 param: REF type • ID
 
-    SEMICOLON  shift, and go to state 24
-    LBRACE     shift, and go to state 25
+    ID  shift, and go to state 24
 
 
 State 21
+
+    4 func_decl: type ID LPAREN param_list_opt RPAREN • LBRACE stmt_list RBRACE
+    5          | type ID LPAREN param_list_opt RPAREN • SEMICOLON
+
+    SEMICOLON  shift, and go to state 25
+    LBRACE     shift, and go to state 26
+
+
+State 22
 
     9 param_list: param_list COMMA • param
 
@@ -388,50 +401,51 @@ State 21
     INT       shift, and go to state 3
     RATIONAL  shift, and go to state 4
     MATRIX    shift, and go to state 5
-    REF       shift, and go to state 14
+    BST       shift, and go to state 6
+    REF       shift, and go to state 15
 
-    param  go to state 26
-    type   go to state 18
+    param  go to state 27
+    type   go to state 19
 
 
-State 22
+State 23
 
    10 param: type ID •
 
     $default  reduce using rule 10 (param)
 
 
-State 23
+State 24
 
    11 param: REF type ID •
 
     $default  reduce using rule 11 (param)
 
 
-State 24
+State 25
 
     5 func_decl: type ID LPAREN param_list_opt RPAREN SEMICOLON •
 
     $default  reduce using rule 5 (func_decl)
 
 
-State 25
+State 26
 
     4 func_decl: type ID LPAREN param_list_opt RPAREN LBRACE • stmt_list RBRACE
 
     $default  reduce using rule 12 (stmt_list)
 
-    stmt_list  go to state 27
+    stmt_list  go to state 28
 
 
-State 26
+State 27
 
     9 param_list: param_list COMMA param •
 
     $default  reduce using rule 9 (param_list)
 
 
-State 27
+State 28
 
     4 func_decl: type ID LPAREN param_list_opt RPAREN LBRACE stmt_list • RBRACE
    13 stmt_list: stmt_list • stmt
@@ -441,985 +455,977 @@ State 27
     INT       shift, and go to state 3
     RATIONAL  shift, and go to state 4
     MATRIX    shift, and go to state 5
-    PRINT     shift, and go to state 28
-    RETURN    shift, and go to state 29
-    IF        shift, and go to state 30
-    WHILE     shift, and go to state 31
-    MUL       shift, and go to state 32
-    RBRACE    shift, and go to state 33
-    ID        shift, and go to state 34
+    BST       shift, and go to state 6
+    PRINT     shift, and go to state 29
+    RETURN    shift, and go to state 30
+    IF        shift, and go to state 31
+    WHILE     shift, and go to state 32
+    MUL       shift, and go to state 33
+    RBRACE    shift, and go to state 34
+    ID        shift, and go to state 35
 
-    stmt             go to state 35
-    var_decl_stmt    go to state 36
-    lvalue           go to state 37
-    assignment_stmt  go to state 38
-    func_call_stmt   go to state 39
-    print_stmt       go to state 40
-    return_stmt      go to state 41
-    if_stmt          go to state 42
-    while_stmt       go to state 43
-    type             go to state 44
-    func_call        go to state 45
-
-
-State 28
-
-   27 print_stmt: PRINT • expr SEMICOLON
-
-    AMPERSAND  shift, and go to state 46
-    LPAREN     shift, and go to state 47
-    ID         shift, and go to state 48
-    INT_LIT    shift, and go to state 49
-    FLOAT_LIT  shift, and go to state 50
-
-    expr       go to state 51
-    func_call  go to state 52
+    stmt             go to state 36
+    var_decl_stmt    go to state 37
+    lvalue           go to state 38
+    assignment_stmt  go to state 39
+    func_call_stmt   go to state 40
+    print_stmt       go to state 41
+    return_stmt      go to state 42
+    if_stmt          go to state 43
+    while_stmt       go to state 44
+    type             go to state 45
+    func_call        go to state 46
 
 
 State 29
 
-   28 return_stmt: RETURN • expr SEMICOLON
+   27 print_stmt: PRINT • expr SEMICOLON
 
-    AMPERSAND  shift, and go to state 46
-    LPAREN     shift, and go to state 47
-    ID         shift, and go to state 48
-    INT_LIT    shift, and go to state 49
-    FLOAT_LIT  shift, and go to state 50
+    AMPERSAND  shift, and go to state 47
+    LPAREN     shift, and go to state 48
+    ID         shift, and go to state 49
+    INT_LIT    shift, and go to state 50
+    FLOAT_LIT  shift, and go to state 51
 
-    expr       go to state 53
-    func_call  go to state 52
+    expr       go to state 52
+    func_call  go to state 53
 
 
 State 30
 
-   29 if_stmt: IF • LPAREN expr RPAREN LBRACE stmt_list RBRACE
+   28 return_stmt: RETURN • expr SEMICOLON
 
-    LPAREN  shift, and go to state 54
+    AMPERSAND  shift, and go to state 47
+    LPAREN     shift, and go to state 48
+    ID         shift, and go to state 49
+    INT_LIT    shift, and go to state 50
+    FLOAT_LIT  shift, and go to state 51
+
+    expr       go to state 54
+    func_call  go to state 53
 
 
 State 31
 
-   30 while_stmt: WHILE • LPAREN expr RPAREN LBRACE stmt_list RBRACE
+   29 if_stmt: IF • LPAREN expr RPAREN LBRACE stmt_list RBRACE
 
     LPAREN  shift, and go to state 55
 
 
 State 32
 
-   24 lvalue: MUL • ID
+   30 while_stmt: WHILE • LPAREN expr RPAREN LBRACE stmt_list RBRACE
 
-    ID  shift, and go to state 56
+    LPAREN  shift, and go to state 56
 
 
 State 33
+
+   24 lvalue: MUL • ID
+
+    ID  shift, and go to state 57
+
+
+State 34
 
     4 func_decl: type ID LPAREN param_list_opt RPAREN LBRACE stmt_list RBRACE •
 
     $default  reduce using rule 4 (func_decl)
 
 
-State 34
+State 35
 
    23 lvalue: ID •
-   52 func_call: ID • LPAREN arg_list_opt RPAREN
+   53 func_call: ID • LPAREN arg_list_opt RPAREN
 
-    LPAREN  shift, and go to state 57
+    LPAREN  shift, and go to state 58
 
     $default  reduce using rule 23 (lvalue)
 
 
-State 35
+State 36
 
    13 stmt_list: stmt_list stmt •
 
     $default  reduce using rule 13 (stmt_list)
 
 
-State 36
+State 37
 
    14 stmt: var_decl_stmt •
 
     $default  reduce using rule 14 (stmt)
 
 
-State 37
+State 38
 
    25 assignment_stmt: lvalue • ARROW_LEFT expr SEMICOLON
 
-    ARROW_LEFT  shift, and go to state 58
+    ARROW_LEFT  shift, and go to state 59
 
 
-State 38
+State 39
 
    15 stmt: assignment_stmt •
 
     $default  reduce using rule 15 (stmt)
 
 
-State 39
+State 40
 
    18 stmt: func_call_stmt •
 
     $default  reduce using rule 18 (stmt)
 
 
-State 40
+State 41
 
    16 stmt: print_stmt •
 
     $default  reduce using rule 16 (stmt)
 
 
-State 41
+State 42
 
    17 stmt: return_stmt •
 
     $default  reduce using rule 17 (stmt)
 
 
-State 42
+State 43
 
    19 stmt: if_stmt •
 
     $default  reduce using rule 19 (stmt)
 
 
-State 43
+State 44
 
    20 stmt: while_stmt •
 
     $default  reduce using rule 20 (stmt)
 
 
-State 44
+State 45
 
    21 var_decl_stmt: type • ID SEMICOLON
    22              | type • ID ARROW_LEFT expr SEMICOLON
 
-    ID  shift, and go to state 59
-
-
-State 45
-
-   26 func_call_stmt: func_call • SEMICOLON
-
-    SEMICOLON  shift, and go to state 60
+    ID  shift, and go to state 60
 
 
 State 46
 
-   47 expr: AMPERSAND • ID
+   26 func_call_stmt: func_call • SEMICOLON
 
-    ID  shift, and go to state 61
+    SEMICOLON  shift, and go to state 61
 
 
 State 47
 
-   46 expr: LPAREN • expr RPAREN
+   48 expr: AMPERSAND • ID
 
-    AMPERSAND  shift, and go to state 46
-    LPAREN     shift, and go to state 47
-    ID         shift, and go to state 48
-    INT_LIT    shift, and go to state 49
-    FLOAT_LIT  shift, and go to state 50
-
-    expr       go to state 62
-    func_call  go to state 52
+    ID  shift, and go to state 62
 
 
 State 48
 
-   48 expr: ID •
-   52 func_call: ID • LPAREN arg_list_opt RPAREN
+   47 expr: LPAREN • expr RPAREN
 
-    LPAREN  shift, and go to state 57
+    AMPERSAND  shift, and go to state 47
+    LPAREN     shift, and go to state 48
+    ID         shift, and go to state 49
+    INT_LIT    shift, and go to state 50
+    FLOAT_LIT  shift, and go to state 51
 
-    $default  reduce using rule 48 (expr)
+    expr       go to state 63
+    func_call  go to state 53
 
 
 State 49
 
-   49 expr: INT_LIT •
+   49 expr: ID •
+   53 func_call: ID • LPAREN arg_list_opt RPAREN
+
+    LPAREN  shift, and go to state 58
 
     $default  reduce using rule 49 (expr)
 
 
 State 50
 
-   50 expr: FLOAT_LIT •
+   50 expr: INT_LIT •
 
     $default  reduce using rule 50 (expr)
 
 
 State 51
 
-   27 print_stmt: PRINT expr • SEMICOLON
-   36 expr: expr • PLUS expr
-   37     | expr • MINUS expr
-   38     | expr • MUL expr
-   39     | expr • DIV expr
-   40     | expr • LT expr
-   41     | expr • LE expr
-   42     | expr • GT expr
-   43     | expr • GE expr
-   44     | expr • EQ expr
-   45     | expr • NE expr
-
-    PLUS       shift, and go to state 63
-    MINUS      shift, and go to state 64
-    MUL        shift, and go to state 65
-    DIV        shift, and go to state 66
-    LT         shift, and go to state 67
-    LE         shift, and go to state 68
-    GT         shift, and go to state 69
-    GE         shift, and go to state 70
-    EQ         shift, and go to state 71
-    NE         shift, and go to state 72
-    SEMICOLON  shift, and go to state 73
-
-
-State 52
-
-   51 expr: func_call •
+   51 expr: FLOAT_LIT •
 
     $default  reduce using rule 51 (expr)
 
 
+State 52
+
+   27 print_stmt: PRINT expr • SEMICOLON
+   37 expr: expr • PLUS expr
+   38     | expr • MINUS expr
+   39     | expr • MUL expr
+   40     | expr • DIV expr
+   41     | expr • LT expr
+   42     | expr • LE expr
+   43     | expr • GT expr
+   44     | expr • GE expr
+   45     | expr • EQ expr
+   46     | expr • NE expr
+
+    PLUS       shift, and go to state 64
+    MINUS      shift, and go to state 65
+    MUL        shift, and go to state 66
+    DIV        shift, and go to state 67
+    LT         shift, and go to state 68
+    LE         shift, and go to state 69
+    GT         shift, and go to state 70
+    GE         shift, and go to state 71
+    EQ         shift, and go to state 72
+    NE         shift, and go to state 73
+    SEMICOLON  shift, and go to state 74
+
+
 State 53
 
-   28 return_stmt: RETURN expr • SEMICOLON
-   36 expr: expr • PLUS expr
-   37     | expr • MINUS expr
-   38     | expr • MUL expr
-   39     | expr • DIV expr
-   40     | expr • LT expr
-   41     | expr • LE expr
-   42     | expr • GT expr
-   43     | expr • GE expr
-   44     | expr • EQ expr
-   45     | expr • NE expr
+   52 expr: func_call •
 
-    PLUS       shift, and go to state 63
-    MINUS      shift, and go to state 64
-    MUL        shift, and go to state 65
-    DIV        shift, and go to state 66
-    LT         shift, and go to state 67
-    LE         shift, and go to state 68
-    GT         shift, and go to state 69
-    GE         shift, and go to state 70
-    EQ         shift, and go to state 71
-    NE         shift, and go to state 72
-    SEMICOLON  shift, and go to state 74
+    $default  reduce using rule 52 (expr)
 
 
 State 54
 
-   29 if_stmt: IF LPAREN • expr RPAREN LBRACE stmt_list RBRACE
+   28 return_stmt: RETURN expr • SEMICOLON
+   37 expr: expr • PLUS expr
+   38     | expr • MINUS expr
+   39     | expr • MUL expr
+   40     | expr • DIV expr
+   41     | expr • LT expr
+   42     | expr • LE expr
+   43     | expr • GT expr
+   44     | expr • GE expr
+   45     | expr • EQ expr
+   46     | expr • NE expr
 
-    AMPERSAND  shift, and go to state 46
-    LPAREN     shift, and go to state 47
-    ID         shift, and go to state 48
-    INT_LIT    shift, and go to state 49
-    FLOAT_LIT  shift, and go to state 50
-
-    expr       go to state 75
-    func_call  go to state 52
+    PLUS       shift, and go to state 64
+    MINUS      shift, and go to state 65
+    MUL        shift, and go to state 66
+    DIV        shift, and go to state 67
+    LT         shift, and go to state 68
+    LE         shift, and go to state 69
+    GT         shift, and go to state 70
+    GE         shift, and go to state 71
+    EQ         shift, and go to state 72
+    NE         shift, and go to state 73
+    SEMICOLON  shift, and go to state 75
 
 
 State 55
 
-   30 while_stmt: WHILE LPAREN • expr RPAREN LBRACE stmt_list RBRACE
+   29 if_stmt: IF LPAREN • expr RPAREN LBRACE stmt_list RBRACE
 
-    AMPERSAND  shift, and go to state 46
-    LPAREN     shift, and go to state 47
-    ID         shift, and go to state 48
-    INT_LIT    shift, and go to state 49
-    FLOAT_LIT  shift, and go to state 50
+    AMPERSAND  shift, and go to state 47
+    LPAREN     shift, and go to state 48
+    ID         shift, and go to state 49
+    INT_LIT    shift, and go to state 50
+    FLOAT_LIT  shift, and go to state 51
 
     expr       go to state 76
-    func_call  go to state 52
+    func_call  go to state 53
 
 
 State 56
+
+   30 while_stmt: WHILE LPAREN • expr RPAREN LBRACE stmt_list RBRACE
+
+    AMPERSAND  shift, and go to state 47
+    LPAREN     shift, and go to state 48
+    ID         shift, and go to state 49
+    INT_LIT    shift, and go to state 50
+    FLOAT_LIT  shift, and go to state 51
+
+    expr       go to state 77
+    func_call  go to state 53
+
+
+State 57
 
    24 lvalue: MUL ID •
 
     $default  reduce using rule 24 (lvalue)
 
 
-State 57
-
-   52 func_call: ID LPAREN • arg_list_opt RPAREN
-
-    AMPERSAND  shift, and go to state 46
-    LPAREN     shift, and go to state 47
-    ID         shift, and go to state 48
-    INT_LIT    shift, and go to state 49
-    FLOAT_LIT  shift, and go to state 50
-
-    $default  reduce using rule 53 (arg_list_opt)
-
-    expr          go to state 77
-    func_call     go to state 52
-    arg_list_opt  go to state 78
-    arg_list      go to state 79
-
-
 State 58
 
-   25 assignment_stmt: lvalue ARROW_LEFT • expr SEMICOLON
+   53 func_call: ID LPAREN • arg_list_opt RPAREN
 
-    AMPERSAND  shift, and go to state 46
-    LPAREN     shift, and go to state 47
-    ID         shift, and go to state 48
-    INT_LIT    shift, and go to state 49
-    FLOAT_LIT  shift, and go to state 50
+    AMPERSAND  shift, and go to state 47
+    LPAREN     shift, and go to state 48
+    ID         shift, and go to state 49
+    INT_LIT    shift, and go to state 50
+    FLOAT_LIT  shift, and go to state 51
 
-    expr       go to state 80
-    func_call  go to state 52
+    $default  reduce using rule 54 (arg_list_opt)
+
+    expr          go to state 78
+    func_call     go to state 53
+    arg_list_opt  go to state 79
+    arg_list      go to state 80
 
 
 State 59
 
-   21 var_decl_stmt: type ID • SEMICOLON
-   22              | type ID • ARROW_LEFT expr SEMICOLON
+   25 assignment_stmt: lvalue ARROW_LEFT • expr SEMICOLON
 
-    ARROW_LEFT  shift, and go to state 81
-    SEMICOLON   shift, and go to state 82
+    AMPERSAND  shift, and go to state 47
+    LPAREN     shift, and go to state 48
+    ID         shift, and go to state 49
+    INT_LIT    shift, and go to state 50
+    FLOAT_LIT  shift, and go to state 51
+
+    expr       go to state 81
+    func_call  go to state 53
 
 
 State 60
+
+   21 var_decl_stmt: type ID • SEMICOLON
+   22              | type ID • ARROW_LEFT expr SEMICOLON
+
+    ARROW_LEFT  shift, and go to state 82
+    SEMICOLON   shift, and go to state 83
+
+
+State 61
 
    26 func_call_stmt: func_call SEMICOLON •
 
     $default  reduce using rule 26 (func_call_stmt)
 
 
-State 61
-
-   47 expr: AMPERSAND ID •
-
-    $default  reduce using rule 47 (expr)
-
-
 State 62
 
-   36 expr: expr • PLUS expr
-   37     | expr • MINUS expr
-   38     | expr • MUL expr
-   39     | expr • DIV expr
-   40     | expr • LT expr
-   41     | expr • LE expr
-   42     | expr • GT expr
-   43     | expr • GE expr
-   44     | expr • EQ expr
-   45     | expr • NE expr
-   46     | LPAREN expr • RPAREN
+   48 expr: AMPERSAND ID •
 
-    PLUS    shift, and go to state 63
-    MINUS   shift, and go to state 64
-    MUL     shift, and go to state 65
-    DIV     shift, and go to state 66
-    LT      shift, and go to state 67
-    LE      shift, and go to state 68
-    GT      shift, and go to state 69
-    GE      shift, and go to state 70
-    EQ      shift, and go to state 71
-    NE      shift, and go to state 72
-    RPAREN  shift, and go to state 83
+    $default  reduce using rule 48 (expr)
 
 
 State 63
 
-   36 expr: expr PLUS • expr
+   37 expr: expr • PLUS expr
+   38     | expr • MINUS expr
+   39     | expr • MUL expr
+   40     | expr • DIV expr
+   41     | expr • LT expr
+   42     | expr • LE expr
+   43     | expr • GT expr
+   44     | expr • GE expr
+   45     | expr • EQ expr
+   46     | expr • NE expr
+   47     | LPAREN expr • RPAREN
 
-    AMPERSAND  shift, and go to state 46
-    LPAREN     shift, and go to state 47
-    ID         shift, and go to state 48
-    INT_LIT    shift, and go to state 49
-    FLOAT_LIT  shift, and go to state 50
-
-    expr       go to state 84
-    func_call  go to state 52
+    PLUS    shift, and go to state 64
+    MINUS   shift, and go to state 65
+    MUL     shift, and go to state 66
+    DIV     shift, and go to state 67
+    LT      shift, and go to state 68
+    LE      shift, and go to state 69
+    GT      shift, and go to state 70
+    GE      shift, and go to state 71
+    EQ      shift, and go to state 72
+    NE      shift, and go to state 73
+    RPAREN  shift, and go to state 84
 
 
 State 64
 
-   37 expr: expr MINUS • expr
+   37 expr: expr PLUS • expr
 
-    AMPERSAND  shift, and go to state 46
-    LPAREN     shift, and go to state 47
-    ID         shift, and go to state 48
-    INT_LIT    shift, and go to state 49
-    FLOAT_LIT  shift, and go to state 50
+    AMPERSAND  shift, and go to state 47
+    LPAREN     shift, and go to state 48
+    ID         shift, and go to state 49
+    INT_LIT    shift, and go to state 50
+    FLOAT_LIT  shift, and go to state 51
 
     expr       go to state 85
-    func_call  go to state 52
+    func_call  go to state 53
 
 
 State 65
 
-   38 expr: expr MUL • expr
+   38 expr: expr MINUS • expr
 
-    AMPERSAND  shift, and go to state 46
-    LPAREN     shift, and go to state 47
-    ID         shift, and go to state 48
-    INT_LIT    shift, and go to state 49
-    FLOAT_LIT  shift, and go to state 50
+    AMPERSAND  shift, and go to state 47
+    LPAREN     shift, and go to state 48
+    ID         shift, and go to state 49
+    INT_LIT    shift, and go to state 50
+    FLOAT_LIT  shift, and go to state 51
 
     expr       go to state 86
-    func_call  go to state 52
+    func_call  go to state 53
 
 
 State 66
 
-   39 expr: expr DIV • expr
+   39 expr: expr MUL • expr
 
-    AMPERSAND  shift, and go to state 46
-    LPAREN     shift, and go to state 47
-    ID         shift, and go to state 48
-    INT_LIT    shift, and go to state 49
-    FLOAT_LIT  shift, and go to state 50
+    AMPERSAND  shift, and go to state 47
+    LPAREN     shift, and go to state 48
+    ID         shift, and go to state 49
+    INT_LIT    shift, and go to state 50
+    FLOAT_LIT  shift, and go to state 51
 
     expr       go to state 87
-    func_call  go to state 52
+    func_call  go to state 53
 
 
 State 67
 
-   40 expr: expr LT • expr
+   40 expr: expr DIV • expr
 
-    AMPERSAND  shift, and go to state 46
-    LPAREN     shift, and go to state 47
-    ID         shift, and go to state 48
-    INT_LIT    shift, and go to state 49
-    FLOAT_LIT  shift, and go to state 50
+    AMPERSAND  shift, and go to state 47
+    LPAREN     shift, and go to state 48
+    ID         shift, and go to state 49
+    INT_LIT    shift, and go to state 50
+    FLOAT_LIT  shift, and go to state 51
 
     expr       go to state 88
-    func_call  go to state 52
+    func_call  go to state 53
 
 
 State 68
 
-   41 expr: expr LE • expr
+   41 expr: expr LT • expr
 
-    AMPERSAND  shift, and go to state 46
-    LPAREN     shift, and go to state 47
-    ID         shift, and go to state 48
-    INT_LIT    shift, and go to state 49
-    FLOAT_LIT  shift, and go to state 50
+    AMPERSAND  shift, and go to state 47
+    LPAREN     shift, and go to state 48
+    ID         shift, and go to state 49
+    INT_LIT    shift, and go to state 50
+    FLOAT_LIT  shift, and go to state 51
 
     expr       go to state 89
-    func_call  go to state 52
+    func_call  go to state 53
 
 
 State 69
 
-   42 expr: expr GT • expr
+   42 expr: expr LE • expr
 
-    AMPERSAND  shift, and go to state 46
-    LPAREN     shift, and go to state 47
-    ID         shift, and go to state 48
-    INT_LIT    shift, and go to state 49
-    FLOAT_LIT  shift, and go to state 50
+    AMPERSAND  shift, and go to state 47
+    LPAREN     shift, and go to state 48
+    ID         shift, and go to state 49
+    INT_LIT    shift, and go to state 50
+    FLOAT_LIT  shift, and go to state 51
 
     expr       go to state 90
-    func_call  go to state 52
+    func_call  go to state 53
 
 
 State 70
 
-   43 expr: expr GE • expr
+   43 expr: expr GT • expr
 
-    AMPERSAND  shift, and go to state 46
-    LPAREN     shift, and go to state 47
-    ID         shift, and go to state 48
-    INT_LIT    shift, and go to state 49
-    FLOAT_LIT  shift, and go to state 50
+    AMPERSAND  shift, and go to state 47
+    LPAREN     shift, and go to state 48
+    ID         shift, and go to state 49
+    INT_LIT    shift, and go to state 50
+    FLOAT_LIT  shift, and go to state 51
 
     expr       go to state 91
-    func_call  go to state 52
+    func_call  go to state 53
 
 
 State 71
 
-   44 expr: expr EQ • expr
+   44 expr: expr GE • expr
 
-    AMPERSAND  shift, and go to state 46
-    LPAREN     shift, and go to state 47
-    ID         shift, and go to state 48
-    INT_LIT    shift, and go to state 49
-    FLOAT_LIT  shift, and go to state 50
+    AMPERSAND  shift, and go to state 47
+    LPAREN     shift, and go to state 48
+    ID         shift, and go to state 49
+    INT_LIT    shift, and go to state 50
+    FLOAT_LIT  shift, and go to state 51
 
     expr       go to state 92
-    func_call  go to state 52
+    func_call  go to state 53
 
 
 State 72
 
-   45 expr: expr NE • expr
+   45 expr: expr EQ • expr
 
-    AMPERSAND  shift, and go to state 46
-    LPAREN     shift, and go to state 47
-    ID         shift, and go to state 48
-    INT_LIT    shift, and go to state 49
-    FLOAT_LIT  shift, and go to state 50
+    AMPERSAND  shift, and go to state 47
+    LPAREN     shift, and go to state 48
+    ID         shift, and go to state 49
+    INT_LIT    shift, and go to state 50
+    FLOAT_LIT  shift, and go to state 51
 
     expr       go to state 93
-    func_call  go to state 52
+    func_call  go to state 53
 
 
 State 73
+
+   46 expr: expr NE • expr
+
+    AMPERSAND  shift, and go to state 47
+    LPAREN     shift, and go to state 48
+    ID         shift, and go to state 49
+    INT_LIT    shift, and go to state 50
+    FLOAT_LIT  shift, and go to state 51
+
+    expr       go to state 94
+    func_call  go to state 53
+
+
+State 74
 
    27 print_stmt: PRINT expr SEMICOLON •
 
     $default  reduce using rule 27 (print_stmt)
 
 
-State 74
+State 75
 
    28 return_stmt: RETURN expr SEMICOLON •
 
     $default  reduce using rule 28 (return_stmt)
 
 
-State 75
-
-   29 if_stmt: IF LPAREN expr • RPAREN LBRACE stmt_list RBRACE
-   36 expr: expr • PLUS expr
-   37     | expr • MINUS expr
-   38     | expr • MUL expr
-   39     | expr • DIV expr
-   40     | expr • LT expr
-   41     | expr • LE expr
-   42     | expr • GT expr
-   43     | expr • GE expr
-   44     | expr • EQ expr
-   45     | expr • NE expr
-
-    PLUS    shift, and go to state 63
-    MINUS   shift, and go to state 64
-    MUL     shift, and go to state 65
-    DIV     shift, and go to state 66
-    LT      shift, and go to state 67
-    LE      shift, and go to state 68
-    GT      shift, and go to state 69
-    GE      shift, and go to state 70
-    EQ      shift, and go to state 71
-    NE      shift, and go to state 72
-    RPAREN  shift, and go to state 94
-
-
 State 76
 
-   30 while_stmt: WHILE LPAREN expr • RPAREN LBRACE stmt_list RBRACE
-   36 expr: expr • PLUS expr
-   37     | expr • MINUS expr
-   38     | expr • MUL expr
-   39     | expr • DIV expr
-   40     | expr • LT expr
-   41     | expr • LE expr
-   42     | expr • GT expr
-   43     | expr • GE expr
-   44     | expr • EQ expr
-   45     | expr • NE expr
+   29 if_stmt: IF LPAREN expr • RPAREN LBRACE stmt_list RBRACE
+   37 expr: expr • PLUS expr
+   38     | expr • MINUS expr
+   39     | expr • MUL expr
+   40     | expr • DIV expr
+   41     | expr • LT expr
+   42     | expr • LE expr
+   43     | expr • GT expr
+   44     | expr • GE expr
+   45     | expr • EQ expr
+   46     | expr • NE expr
 
-    PLUS    shift, and go to state 63
-    MINUS   shift, and go to state 64
-    MUL     shift, and go to state 65
-    DIV     shift, and go to state 66
-    LT      shift, and go to state 67
-    LE      shift, and go to state 68
-    GT      shift, and go to state 69
-    GE      shift, and go to state 70
-    EQ      shift, and go to state 71
-    NE      shift, and go to state 72
+    PLUS    shift, and go to state 64
+    MINUS   shift, and go to state 65
+    MUL     shift, and go to state 66
+    DIV     shift, and go to state 67
+    LT      shift, and go to state 68
+    LE      shift, and go to state 69
+    GT      shift, and go to state 70
+    GE      shift, and go to state 71
+    EQ      shift, and go to state 72
+    NE      shift, and go to state 73
     RPAREN  shift, and go to state 95
 
 
 State 77
 
-   36 expr: expr • PLUS expr
-   37     | expr • MINUS expr
-   38     | expr • MUL expr
-   39     | expr • DIV expr
-   40     | expr • LT expr
-   41     | expr • LE expr
-   42     | expr • GT expr
-   43     | expr • GE expr
-   44     | expr • EQ expr
-   45     | expr • NE expr
-   55 arg_list: expr •
+   30 while_stmt: WHILE LPAREN expr • RPAREN LBRACE stmt_list RBRACE
+   37 expr: expr • PLUS expr
+   38     | expr • MINUS expr
+   39     | expr • MUL expr
+   40     | expr • DIV expr
+   41     | expr • LT expr
+   42     | expr • LE expr
+   43     | expr • GT expr
+   44     | expr • GE expr
+   45     | expr • EQ expr
+   46     | expr • NE expr
 
-    PLUS   shift, and go to state 63
-    MINUS  shift, and go to state 64
-    MUL    shift, and go to state 65
-    DIV    shift, and go to state 66
-    LT     shift, and go to state 67
-    LE     shift, and go to state 68
-    GT     shift, and go to state 69
-    GE     shift, and go to state 70
-    EQ     shift, and go to state 71
-    NE     shift, and go to state 72
-
-    $default  reduce using rule 55 (arg_list)
+    PLUS    shift, and go to state 64
+    MINUS   shift, and go to state 65
+    MUL     shift, and go to state 66
+    DIV     shift, and go to state 67
+    LT      shift, and go to state 68
+    LE      shift, and go to state 69
+    GT      shift, and go to state 70
+    GE      shift, and go to state 71
+    EQ      shift, and go to state 72
+    NE      shift, and go to state 73
+    RPAREN  shift, and go to state 96
 
 
 State 78
 
-   52 func_call: ID LPAREN arg_list_opt • RPAREN
+   37 expr: expr • PLUS expr
+   38     | expr • MINUS expr
+   39     | expr • MUL expr
+   40     | expr • DIV expr
+   41     | expr • LT expr
+   42     | expr • LE expr
+   43     | expr • GT expr
+   44     | expr • GE expr
+   45     | expr • EQ expr
+   46     | expr • NE expr
+   56 arg_list: expr •
 
-    RPAREN  shift, and go to state 96
+    PLUS   shift, and go to state 64
+    MINUS  shift, and go to state 65
+    MUL    shift, and go to state 66
+    DIV    shift, and go to state 67
+    LT     shift, and go to state 68
+    LE     shift, and go to state 69
+    GT     shift, and go to state 70
+    GE     shift, and go to state 71
+    EQ     shift, and go to state 72
+    NE     shift, and go to state 73
+
+    $default  reduce using rule 56 (arg_list)
 
 
 State 79
 
-   54 arg_list_opt: arg_list •
-   56 arg_list: arg_list • COMMA expr
+   53 func_call: ID LPAREN arg_list_opt • RPAREN
 
-    COMMA  shift, and go to state 97
-
-    $default  reduce using rule 54 (arg_list_opt)
+    RPAREN  shift, and go to state 97
 
 
 State 80
 
-   25 assignment_stmt: lvalue ARROW_LEFT expr • SEMICOLON
-   36 expr: expr • PLUS expr
-   37     | expr • MINUS expr
-   38     | expr • MUL expr
-   39     | expr • DIV expr
-   40     | expr • LT expr
-   41     | expr • LE expr
-   42     | expr • GT expr
-   43     | expr • GE expr
-   44     | expr • EQ expr
-   45     | expr • NE expr
+   55 arg_list_opt: arg_list •
+   57 arg_list: arg_list • COMMA expr
 
-    PLUS       shift, and go to state 63
-    MINUS      shift, and go to state 64
-    MUL        shift, and go to state 65
-    DIV        shift, and go to state 66
-    LT         shift, and go to state 67
-    LE         shift, and go to state 68
-    GT         shift, and go to state 69
-    GE         shift, and go to state 70
-    EQ         shift, and go to state 71
-    NE         shift, and go to state 72
-    SEMICOLON  shift, and go to state 98
+    COMMA  shift, and go to state 98
+
+    $default  reduce using rule 55 (arg_list_opt)
 
 
 State 81
 
-   22 var_decl_stmt: type ID ARROW_LEFT • expr SEMICOLON
+   25 assignment_stmt: lvalue ARROW_LEFT expr • SEMICOLON
+   37 expr: expr • PLUS expr
+   38     | expr • MINUS expr
+   39     | expr • MUL expr
+   40     | expr • DIV expr
+   41     | expr • LT expr
+   42     | expr • LE expr
+   43     | expr • GT expr
+   44     | expr • GE expr
+   45     | expr • EQ expr
+   46     | expr • NE expr
 
-    AMPERSAND  shift, and go to state 46
-    LPAREN     shift, and go to state 47
-    ID         shift, and go to state 48
-    INT_LIT    shift, and go to state 49
-    FLOAT_LIT  shift, and go to state 50
-
-    expr       go to state 99
-    func_call  go to state 52
+    PLUS       shift, and go to state 64
+    MINUS      shift, and go to state 65
+    MUL        shift, and go to state 66
+    DIV        shift, and go to state 67
+    LT         shift, and go to state 68
+    LE         shift, and go to state 69
+    GT         shift, and go to state 70
+    GE         shift, and go to state 71
+    EQ         shift, and go to state 72
+    NE         shift, and go to state 73
+    SEMICOLON  shift, and go to state 99
 
 
 State 82
+
+   22 var_decl_stmt: type ID ARROW_LEFT • expr SEMICOLON
+
+    AMPERSAND  shift, and go to state 47
+    LPAREN     shift, and go to state 48
+    ID         shift, and go to state 49
+    INT_LIT    shift, and go to state 50
+    FLOAT_LIT  shift, and go to state 51
+
+    expr       go to state 100
+    func_call  go to state 53
+
+
+State 83
 
    21 var_decl_stmt: type ID SEMICOLON •
 
     $default  reduce using rule 21 (var_decl_stmt)
 
 
-State 83
-
-   46 expr: LPAREN expr RPAREN •
-
-    $default  reduce using rule 46 (expr)
-
-
 State 84
 
-   36 expr: expr • PLUS expr
-   36     | expr PLUS expr •
-   37     | expr • MINUS expr
-   38     | expr • MUL expr
-   39     | expr • DIV expr
-   40     | expr • LT expr
-   41     | expr • LE expr
-   42     | expr • GT expr
-   43     | expr • GE expr
-   44     | expr • EQ expr
-   45     | expr • NE expr
+   47 expr: LPAREN expr RPAREN •
 
-    MUL  shift, and go to state 65
-    DIV  shift, and go to state 66
-    LT   shift, and go to state 67
-    LE   shift, and go to state 68
-    GT   shift, and go to state 69
-    GE   shift, and go to state 70
-    EQ   shift, and go to state 71
-    NE   shift, and go to state 72
-
-    $default  reduce using rule 36 (expr)
+    $default  reduce using rule 47 (expr)
 
 
 State 85
 
-   36 expr: expr • PLUS expr
-   37     | expr • MINUS expr
-   37     | expr MINUS expr •
-   38     | expr • MUL expr
-   39     | expr • DIV expr
-   40     | expr • LT expr
-   41     | expr • LE expr
-   42     | expr • GT expr
-   43     | expr • GE expr
-   44     | expr • EQ expr
-   45     | expr • NE expr
+   37 expr: expr • PLUS expr
+   37     | expr PLUS expr •
+   38     | expr • MINUS expr
+   39     | expr • MUL expr
+   40     | expr • DIV expr
+   41     | expr • LT expr
+   42     | expr • LE expr
+   43     | expr • GT expr
+   44     | expr • GE expr
+   45     | expr • EQ expr
+   46     | expr • NE expr
 
-    MUL  shift, and go to state 65
-    DIV  shift, and go to state 66
-    LT   shift, and go to state 67
-    LE   shift, and go to state 68
-    GT   shift, and go to state 69
-    GE   shift, and go to state 70
-    EQ   shift, and go to state 71
-    NE   shift, and go to state 72
+    MUL  shift, and go to state 66
+    DIV  shift, and go to state 67
+    LT   shift, and go to state 68
+    LE   shift, and go to state 69
+    GT   shift, and go to state 70
+    GE   shift, and go to state 71
+    EQ   shift, and go to state 72
+    NE   shift, and go to state 73
 
     $default  reduce using rule 37 (expr)
 
 
 State 86
 
-   36 expr: expr • PLUS expr
-   37     | expr • MINUS expr
-   38     | expr • MUL expr
-   38     | expr MUL expr •
-   39     | expr • DIV expr
-   40     | expr • LT expr
-   41     | expr • LE expr
-   42     | expr • GT expr
-   43     | expr • GE expr
-   44     | expr • EQ expr
-   45     | expr • NE expr
+   37 expr: expr • PLUS expr
+   38     | expr • MINUS expr
+   38     | expr MINUS expr •
+   39     | expr • MUL expr
+   40     | expr • DIV expr
+   41     | expr • LT expr
+   42     | expr • LE expr
+   43     | expr • GT expr
+   44     | expr • GE expr
+   45     | expr • EQ expr
+   46     | expr • NE expr
 
-    LT  shift, and go to state 67
-    LE  shift, and go to state 68
-    GT  shift, and go to state 69
-    GE  shift, and go to state 70
-    EQ  shift, and go to state 71
-    NE  shift, and go to state 72
+    MUL  shift, and go to state 66
+    DIV  shift, and go to state 67
+    LT   shift, and go to state 68
+    LE   shift, and go to state 69
+    GT   shift, and go to state 70
+    GE   shift, and go to state 71
+    EQ   shift, and go to state 72
+    NE   shift, and go to state 73
 
     $default  reduce using rule 38 (expr)
 
 
 State 87
 
-   36 expr: expr • PLUS expr
-   37     | expr • MINUS expr
-   38     | expr • MUL expr
-   39     | expr • DIV expr
-   39     | expr DIV expr •
-   40     | expr • LT expr
-   41     | expr • LE expr
-   42     | expr • GT expr
-   43     | expr • GE expr
-   44     | expr • EQ expr
-   45     | expr • NE expr
+   37 expr: expr • PLUS expr
+   38     | expr • MINUS expr
+   39     | expr • MUL expr
+   39     | expr MUL expr •
+   40     | expr • DIV expr
+   41     | expr • LT expr
+   42     | expr • LE expr
+   43     | expr • GT expr
+   44     | expr • GE expr
+   45     | expr • EQ expr
+   46     | expr • NE expr
 
-    LT  shift, and go to state 67
-    LE  shift, and go to state 68
-    GT  shift, and go to state 69
-    GE  shift, and go to state 70
-    EQ  shift, and go to state 71
-    NE  shift, and go to state 72
+    LT  shift, and go to state 68
+    LE  shift, and go to state 69
+    GT  shift, and go to state 70
+    GE  shift, and go to state 71
+    EQ  shift, and go to state 72
+    NE  shift, and go to state 73
 
     $default  reduce using rule 39 (expr)
 
 
 State 88
 
-   36 expr: expr • PLUS expr
-   37     | expr • MINUS expr
-   38     | expr • MUL expr
-   39     | expr • DIV expr
-   40     | expr • LT expr
-   40     | expr LT expr •
-   41     | expr • LE expr
-   42     | expr • GT expr
-   43     | expr • GE expr
-   44     | expr • EQ expr
-   45     | expr • NE expr
+   37 expr: expr • PLUS expr
+   38     | expr • MINUS expr
+   39     | expr • MUL expr
+   40     | expr • DIV expr
+   40     | expr DIV expr •
+   41     | expr • LT expr
+   42     | expr • LE expr
+   43     | expr • GT expr
+   44     | expr • GE expr
+   45     | expr • EQ expr
+   46     | expr • NE expr
+
+    LT  shift, and go to state 68
+    LE  shift, and go to state 69
+    GT  shift, and go to state 70
+    GE  shift, and go to state 71
+    EQ  shift, and go to state 72
+    NE  shift, and go to state 73
 
     $default  reduce using rule 40 (expr)
 
 
 State 89
 
-   36 expr: expr • PLUS expr
-   37     | expr • MINUS expr
-   38     | expr • MUL expr
-   39     | expr • DIV expr
-   40     | expr • LT expr
-   41     | expr • LE expr
-   41     | expr LE expr •
-   42     | expr • GT expr
-   43     | expr • GE expr
-   44     | expr • EQ expr
-   45     | expr • NE expr
+   37 expr: expr • PLUS expr
+   38     | expr • MINUS expr
+   39     | expr • MUL expr
+   40     | expr • DIV expr
+   41     | expr • LT expr
+   41     | expr LT expr •
+   42     | expr • LE expr
+   43     | expr • GT expr
+   44     | expr • GE expr
+   45     | expr • EQ expr
+   46     | expr • NE expr
 
     $default  reduce using rule 41 (expr)
 
 
 State 90
 
-   36 expr: expr • PLUS expr
-   37     | expr • MINUS expr
-   38     | expr • MUL expr
-   39     | expr • DIV expr
-   40     | expr • LT expr
-   41     | expr • LE expr
-   42     | expr • GT expr
-   42     | expr GT expr •
-   43     | expr • GE expr
-   44     | expr • EQ expr
-   45     | expr • NE expr
+   37 expr: expr • PLUS expr
+   38     | expr • MINUS expr
+   39     | expr • MUL expr
+   40     | expr • DIV expr
+   41     | expr • LT expr
+   42     | expr • LE expr
+   42     | expr LE expr •
+   43     | expr • GT expr
+   44     | expr • GE expr
+   45     | expr • EQ expr
+   46     | expr • NE expr
 
     $default  reduce using rule 42 (expr)
 
 
 State 91
 
-   36 expr: expr • PLUS expr
-   37     | expr • MINUS expr
-   38     | expr • MUL expr
-   39     | expr • DIV expr
-   40     | expr • LT expr
-   41     | expr • LE expr
-   42     | expr • GT expr
-   43     | expr • GE expr
-   43     | expr GE expr •
-   44     | expr • EQ expr
-   45     | expr • NE expr
+   37 expr: expr • PLUS expr
+   38     | expr • MINUS expr
+   39     | expr • MUL expr
+   40     | expr • DIV expr
+   41     | expr • LT expr
+   42     | expr • LE expr
+   43     | expr • GT expr
+   43     | expr GT expr •
+   44     | expr • GE expr
+   45     | expr • EQ expr
+   46     | expr • NE expr
 
     $default  reduce using rule 43 (expr)
 
 
 State 92
 
-   36 expr: expr • PLUS expr
-   37     | expr • MINUS expr
-   38     | expr • MUL expr
-   39     | expr • DIV expr
-   40     | expr • LT expr
-   41     | expr • LE expr
-   42     | expr • GT expr
-   43     | expr • GE expr
-   44     | expr • EQ expr
-   44     | expr EQ expr •
-   45     | expr • NE expr
+   37 expr: expr • PLUS expr
+   38     | expr • MINUS expr
+   39     | expr • MUL expr
+   40     | expr • DIV expr
+   41     | expr • LT expr
+   42     | expr • LE expr
+   43     | expr • GT expr
+   44     | expr • GE expr
+   44     | expr GE expr •
+   45     | expr • EQ expr
+   46     | expr • NE expr
 
     $default  reduce using rule 44 (expr)
 
 
 State 93
 
-   36 expr: expr • PLUS expr
-   37     | expr • MINUS expr
-   38     | expr • MUL expr
-   39     | expr • DIV expr
-   40     | expr • LT expr
-   41     | expr • LE expr
-   42     | expr • GT expr
-   43     | expr • GE expr
-   44     | expr • EQ expr
-   45     | expr • NE expr
-   45     | expr NE expr •
+   37 expr: expr • PLUS expr
+   38     | expr • MINUS expr
+   39     | expr • MUL expr
+   40     | expr • DIV expr
+   41     | expr • LT expr
+   42     | expr • LE expr
+   43     | expr • GT expr
+   44     | expr • GE expr
+   45     | expr • EQ expr
+   45     | expr EQ expr •
+   46     | expr • NE expr
 
     $default  reduce using rule 45 (expr)
 
 
 State 94
 
-   29 if_stmt: IF LPAREN expr RPAREN • LBRACE stmt_list RBRACE
+   37 expr: expr • PLUS expr
+   38     | expr • MINUS expr
+   39     | expr • MUL expr
+   40     | expr • DIV expr
+   41     | expr • LT expr
+   42     | expr • LE expr
+   43     | expr • GT expr
+   44     | expr • GE expr
+   45     | expr • EQ expr
+   46     | expr • NE expr
+   46     | expr NE expr •
 
-    LBRACE  shift, and go to state 100
+    $default  reduce using rule 46 (expr)
 
 
 State 95
 
-   30 while_stmt: WHILE LPAREN expr RPAREN • LBRACE stmt_list RBRACE
+   29 if_stmt: IF LPAREN expr RPAREN • LBRACE stmt_list RBRACE
 
     LBRACE  shift, and go to state 101
 
 
 State 96
 
-   52 func_call: ID LPAREN arg_list_opt RPAREN •
+   30 while_stmt: WHILE LPAREN expr RPAREN • LBRACE stmt_list RBRACE
 
-    $default  reduce using rule 52 (func_call)
+    LBRACE  shift, and go to state 102
 
 
 State 97
 
-   56 arg_list: arg_list COMMA • expr
+   53 func_call: ID LPAREN arg_list_opt RPAREN •
 
-    AMPERSAND  shift, and go to state 46
-    LPAREN     shift, and go to state 47
-    ID         shift, and go to state 48
-    INT_LIT    shift, and go to state 49
-    FLOAT_LIT  shift, and go to state 50
-
-    expr       go to state 102
-    func_call  go to state 52
+    $default  reduce using rule 53 (func_call)
 
 
 State 98
+
+   57 arg_list: arg_list COMMA • expr
+
+    AMPERSAND  shift, and go to state 47
+    LPAREN     shift, and go to state 48
+    ID         shift, and go to state 49
+    INT_LIT    shift, and go to state 50
+    FLOAT_LIT  shift, and go to state 51
+
+    expr       go to state 103
+    func_call  go to state 53
+
+
+State 99
 
    25 assignment_stmt: lvalue ARROW_LEFT expr SEMICOLON •
 
     $default  reduce using rule 25 (assignment_stmt)
 
 
-State 99
-
-   22 var_decl_stmt: type ID ARROW_LEFT expr • SEMICOLON
-   36 expr: expr • PLUS expr
-   37     | expr • MINUS expr
-   38     | expr • MUL expr
-   39     | expr • DIV expr
-   40     | expr • LT expr
-   41     | expr • LE expr
-   42     | expr • GT expr
-   43     | expr • GE expr
-   44     | expr • EQ expr
-   45     | expr • NE expr
-
-    PLUS       shift, and go to state 63
-    MINUS      shift, and go to state 64
-    MUL        shift, and go to state 65
-    DIV        shift, and go to state 66
-    LT         shift, and go to state 67
-    LE         shift, and go to state 68
-    GT         shift, and go to state 69
-    GE         shift, and go to state 70
-    EQ         shift, and go to state 71
-    NE         shift, and go to state 72
-    SEMICOLON  shift, and go to state 103
-
-
 State 100
 
-   29 if_stmt: IF LPAREN expr RPAREN LBRACE • stmt_list RBRACE
+   22 var_decl_stmt: type ID ARROW_LEFT expr • SEMICOLON
+   37 expr: expr • PLUS expr
+   38     | expr • MINUS expr
+   39     | expr • MUL expr
+   40     | expr • DIV expr
+   41     | expr • LT expr
+   42     | expr • LE expr
+   43     | expr • GT expr
+   44     | expr • GE expr
+   45     | expr • EQ expr
+   46     | expr • NE expr
 
-    $default  reduce using rule 12 (stmt_list)
-
-    stmt_list  go to state 104
+    PLUS       shift, and go to state 64
+    MINUS      shift, and go to state 65
+    MUL        shift, and go to state 66
+    DIV        shift, and go to state 67
+    LT         shift, and go to state 68
+    LE         shift, and go to state 69
+    GT         shift, and go to state 70
+    GE         shift, and go to state 71
+    EQ         shift, and go to state 72
+    NE         shift, and go to state 73
+    SEMICOLON  shift, and go to state 104
 
 
 State 101
 
-   30 while_stmt: WHILE LPAREN expr RPAREN LBRACE • stmt_list RBRACE
+   29 if_stmt: IF LPAREN expr RPAREN LBRACE • stmt_list RBRACE
 
     $default  reduce using rule 12 (stmt_list)
 
@@ -1428,40 +1434,49 @@ State 101
 
 State 102
 
-   36 expr: expr • PLUS expr
-   37     | expr • MINUS expr
-   38     | expr • MUL expr
-   39     | expr • DIV expr
-   40     | expr • LT expr
-   41     | expr • LE expr
-   42     | expr • GT expr
-   43     | expr • GE expr
-   44     | expr • EQ expr
-   45     | expr • NE expr
-   56 arg_list: arg_list COMMA expr •
+   30 while_stmt: WHILE LPAREN expr RPAREN LBRACE • stmt_list RBRACE
 
-    PLUS   shift, and go to state 63
-    MINUS  shift, and go to state 64
-    MUL    shift, and go to state 65
-    DIV    shift, and go to state 66
-    LT     shift, and go to state 67
-    LE     shift, and go to state 68
-    GT     shift, and go to state 69
-    GE     shift, and go to state 70
-    EQ     shift, and go to state 71
-    NE     shift, and go to state 72
+    $default  reduce using rule 12 (stmt_list)
 
-    $default  reduce using rule 56 (arg_list)
+    stmt_list  go to state 106
 
 
 State 103
+
+   37 expr: expr • PLUS expr
+   38     | expr • MINUS expr
+   39     | expr • MUL expr
+   40     | expr • DIV expr
+   41     | expr • LT expr
+   42     | expr • LE expr
+   43     | expr • GT expr
+   44     | expr • GE expr
+   45     | expr • EQ expr
+   46     | expr • NE expr
+   57 arg_list: arg_list COMMA expr •
+
+    PLUS   shift, and go to state 64
+    MINUS  shift, and go to state 65
+    MUL    shift, and go to state 66
+    DIV    shift, and go to state 67
+    LT     shift, and go to state 68
+    LE     shift, and go to state 69
+    GT     shift, and go to state 70
+    GE     shift, and go to state 71
+    EQ     shift, and go to state 72
+    NE     shift, and go to state 73
+
+    $default  reduce using rule 57 (arg_list)
+
+
+State 104
 
    22 var_decl_stmt: type ID ARROW_LEFT expr SEMICOLON •
 
     $default  reduce using rule 22 (var_decl_stmt)
 
 
-State 104
+State 105
 
    13 stmt_list: stmt_list • stmt
    29 if_stmt: IF LPAREN expr RPAREN LBRACE stmt_list • RBRACE
@@ -1471,28 +1486,29 @@ State 104
     INT       shift, and go to state 3
     RATIONAL  shift, and go to state 4
     MATRIX    shift, and go to state 5
-    PRINT     shift, and go to state 28
-    RETURN    shift, and go to state 29
-    IF        shift, and go to state 30
-    WHILE     shift, and go to state 31
-    MUL       shift, and go to state 32
-    RBRACE    shift, and go to state 106
-    ID        shift, and go to state 34
+    BST       shift, and go to state 6
+    PRINT     shift, and go to state 29
+    RETURN    shift, and go to state 30
+    IF        shift, and go to state 31
+    WHILE     shift, and go to state 32
+    MUL       shift, and go to state 33
+    RBRACE    shift, and go to state 107
+    ID        shift, and go to state 35
 
-    stmt             go to state 35
-    var_decl_stmt    go to state 36
-    lvalue           go to state 37
-    assignment_stmt  go to state 38
-    func_call_stmt   go to state 39
-    print_stmt       go to state 40
-    return_stmt      go to state 41
-    if_stmt          go to state 42
-    while_stmt       go to state 43
-    type             go to state 44
-    func_call        go to state 45
+    stmt             go to state 36
+    var_decl_stmt    go to state 37
+    lvalue           go to state 38
+    assignment_stmt  go to state 39
+    func_call_stmt   go to state 40
+    print_stmt       go to state 41
+    return_stmt      go to state 42
+    if_stmt          go to state 43
+    while_stmt       go to state 44
+    type             go to state 45
+    func_call        go to state 46
 
 
-State 105
+State 106
 
    13 stmt_list: stmt_list • stmt
    30 while_stmt: WHILE LPAREN expr RPAREN LBRACE stmt_list • RBRACE
@@ -1502,35 +1518,36 @@ State 105
     INT       shift, and go to state 3
     RATIONAL  shift, and go to state 4
     MATRIX    shift, and go to state 5
-    PRINT     shift, and go to state 28
-    RETURN    shift, and go to state 29
-    IF        shift, and go to state 30
-    WHILE     shift, and go to state 31
-    MUL       shift, and go to state 32
-    RBRACE    shift, and go to state 107
-    ID        shift, and go to state 34
+    BST       shift, and go to state 6
+    PRINT     shift, and go to state 29
+    RETURN    shift, and go to state 30
+    IF        shift, and go to state 31
+    WHILE     shift, and go to state 32
+    MUL       shift, and go to state 33
+    RBRACE    shift, and go to state 108
+    ID        shift, and go to state 35
 
-    stmt             go to state 35
-    var_decl_stmt    go to state 36
-    lvalue           go to state 37
-    assignment_stmt  go to state 38
-    func_call_stmt   go to state 39
-    print_stmt       go to state 40
-    return_stmt      go to state 41
-    if_stmt          go to state 42
-    while_stmt       go to state 43
-    type             go to state 44
-    func_call        go to state 45
+    stmt             go to state 36
+    var_decl_stmt    go to state 37
+    lvalue           go to state 38
+    assignment_stmt  go to state 39
+    func_call_stmt   go to state 40
+    print_stmt       go to state 41
+    return_stmt      go to state 42
+    if_stmt          go to state 43
+    while_stmt       go to state 44
+    type             go to state 45
+    func_call        go to state 46
 
 
-State 106
+State 107
 
    29 if_stmt: IF LPAREN expr RPAREN LBRACE stmt_list RBRACE •
 
     $default  reduce using rule 29 (if_stmt)
 
 
-State 107
+State 108
 
    30 while_stmt: WHILE LPAREN expr RPAREN LBRACE stmt_list RBRACE •
 

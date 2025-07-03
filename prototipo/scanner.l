@@ -15,6 +15,7 @@
 "Int"           { return INT; }
 "Rational"      { return RATIONAL; }
 "Matrix"        { return MATRIX; }
+"BST"           { return BST; }
 "ref"           { return REF; }
 
 "print"         { return PRINT; }

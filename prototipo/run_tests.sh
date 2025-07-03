@@ -14,6 +14,7 @@ mkdir -p tests/problema2
 mkdir -p tests/problema3
 mkdir -p tests/problema4
 mkdir -p tests/problema5
+mkdir -p tests/problema6
 
 # --- ETAPA 3: Executar os testes ---
 
@@ -61,6 +62,16 @@ echo "⚙️  Gerando e compilando problema5..."
 gcc -I. tests/problema5/saida5.c lib/mdc.c -o tests/problema5/teste5.exe
 echo "📤 Executando problema5:"
 ./tests/problema5/teste5.exe
+
+# Teste do problema 6 (BST)
+echo ""
+echo "⚙️  Gerando e compilando problema6..."
+./compiler problema6.txt tests/problema6/saida6.c
+# Adicionado -I. e linkado com lib/bst.c
+gcc -I. tests/problema6/saida6.c lib/bst.c -o tests/problema6/teste6.exe
+echo "📤 Executando problema6:"
+./tests/problema6/teste6.exe
+
 
 echo ""
 echo "✅ Todos os testes executados com sucesso!"

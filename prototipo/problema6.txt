@@ -1,0 +1,26 @@
+// Script de teste para o Problema 6: Árvore Binária de Busca
+
+Unit main() {
+    // A) Cria uma árvore binária de busca a partir de uma sequência.
+    // A função 'create_bst_from_sequence' aceita um número variável de argumentos:
+    // o primeiro é a contagem de elementos, seguido pelos próprios elementos.
+    BST arvore <- create_bst_from_sequence(7, 50, 30, 70, 20, 40, 60, 80);
+
+    // D) Imprime a árvore por nível
+    print arvore;
+
+    // B) Encontra e imprime a chave mínima e seu nível
+    Int min_val <- get_min_value(arvore);
+    Int min_lvl <- get_min_level(arvore);
+    print min_val;
+    print min_lvl;
+
+    // C) Encontra e imprime a chave máxima e seu nível
+    Int max_val <- get_max_value(arvore);
+    Int max_lvl <- get_max_level(arvore);
+    print max_val;
+    print max_lvl;
+
+    // Libera a memória alocada para a árvore
+    free_bst(arvore);
+}
