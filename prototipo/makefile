@@ -15,8 +15,8 @@ LEX_SRC = scanner.l
 LEX_C   = lex.yy.c
 
 # Adicionado rational.c e matrix.c à lista de fontes da biblioteca
-LIBSRC  = ./lib/record.c ./lib/symbol_table.c ./lib/rational.c ./lib/matrix.c
-
+# Adicionado mdc.c à lista de fontes da biblioteca
+LIBSRC  = ./lib/record.c ./lib/symbol_table.c ./lib/rational.c ./lib/matrix.c ./lib/mdc.c
 # --- Regras ---
 .PHONY: all clean
 

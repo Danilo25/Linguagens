@@ -15,6 +15,7 @@
 "Int"           { return INT; }
 "Rational"      { return RATIONAL; }
 "Matrix"        { return MATRIX; }
+"ref"           { return REF; }
 
 "print"         { return PRINT; }
 "return"        { return RETURN; }
@@ -28,6 +29,7 @@
 "<"             { return LT; }
 ">"             { return GT; }
 "<-"            { return ARROW_LEFT; }
+"&"             { return AMPERSAND; }
 "+"             { return PLUS; }
 "-"             { return MINUS; }
 "*"             { return MUL; }
@@ -45,7 +47,7 @@
 [a-zA-Z_][a-zA-Z0-9_]* { yylval.str_val = strdup(yytext); return ID; }
 
 [ \t\r\n]+      { }
-"//".*          { }
+"//".* { }
 
 .               { fprintf(stderr, "ERRO LÉXICO: '%s' na linha %d\n", yytext, yylineno); exit(1); }
 

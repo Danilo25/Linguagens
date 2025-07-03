@@ -13,6 +13,7 @@ mkdir -p tests/problema1
 mkdir -p tests/problema2
 mkdir -p tests/problema3
 mkdir -p tests/problema4
+mkdir -p tests/problema5
 
 # --- ETAPA 3: Executar os testes ---
 
@@ -37,10 +38,8 @@ echo "📤 Executando problema2 com entrada2.txt:"
 # Teste do problema 3 (Matrix)
 echo ""
 echo "⚙️  Gerando e compilando problema3..."
-# 1. Usa seu compilador para traduzir problema3.txt para C
 ./compiler problema3.txt tests/problema3/saida3.c
-# 2. Compila o código C gerado, linkando com a biblioteca de matrizes
-# Adicionado -I. para que o gcc encontre os headers na pasta raiz
+# Adicionado -I. e linkado com lib/matrix.c
 gcc -I. tests/problema3/saida3.c lib/matrix.c -o tests/problema3/teste3.exe
 echo "📤 Executando problema3:"
 ./tests/problema3/teste3.exe
@@ -48,13 +47,20 @@ echo "📤 Executando problema3:"
 # Teste do problema 4 (Rational)
 echo ""
 echo "⚙️  Gerando e compilando problema4..."
-# 1. Usa seu compilador para traduzir problema4.txt para C
 ./compiler problema4.txt tests/problema4/saida4.c
-# 2. Compila o código C gerado, linkando com a biblioteca de racionais
-# Adicionado -I. para que o gcc encontre os headers na pasta raiz
+# Adicionado -I. e linkado com lib/rational.c
 gcc -I. tests/problema4/saida4.c lib/rational.c -o tests/problema4/teste4.exe
 echo "📤 Executando problema4:"
 ./tests/problema4/teste4.exe
+
+# Teste do problema 5 (MDC com Referência)
+echo ""
+echo "⚙️  Gerando e compilando problema5..."
+./compiler problema5.txt tests/problema5/saida5.c
+# Adicionado -I. e linkado com lib/mdc.c
+gcc -I. tests/problema5/saida5.c lib/mdc.c -o tests/problema5/teste5.exe
+echo "📤 Executando problema5:"
+./tests/problema5/teste5.exe
 
 echo ""
 echo "✅ Todos os testes executados com sucesso!"

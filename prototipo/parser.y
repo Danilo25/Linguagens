@@ -36,6 +36,7 @@ char *new_label() {
 
 // Declaração dos tokens
 %token UNIT FLOAT INT RATIONAL MATRIX PRINT RETURN IF WHILE
+%token REF AMPERSAND /* Adicionados para referências e ponteiros */
 %token ARROW_LEFT PLUS MINUS MUL DIV
 %token LT LE GT GE EQ NE
 %token SEMICOLON LPAREN RPAREN LBRACE RBRACE COMMA
@@ -45,7 +46,8 @@ char *new_label() {
 
 // Definição dos tipos para os não-terminais
 %type <rec> program decl_list func_decl param_list_opt param_list param
-%type <rec> stmt_list stmt var_decl_stmt assignment_stmt func_call_stmt print_stmt return_stmt if_stmt while_stmt type expr func_call arg_list_opt arg_list
+%type <rec> stmt_list stmt var_decl_stmt assignment_stmt func_call_stmt print_stmt return_stmt if_stmt while_stmt
+%type <rec> type lvalue expr func_call arg_list_opt arg_list
 
 // Definição da precedência e associatividade dos operadores
 %left PLUS MINUS
@@ -58,13 +60,12 @@ char *new_label() {
 
 program:
     decl_list {
-        // No início do código C gerado, inclui todos os headers necessários
         fprintf(yyout,
             "#include <stdio.h>\n"
             "#include <stdlib.h>\n"
             "#include <stdbool.h>\n"
             "#include \"lib/rational.h\"\n"
-            "#include \"lib/matrix.h\"\n\n" // Inclui a biblioteca de matrizes
+            "#include \"lib/matrix.h\"\n\n"
             "/* Stub de leitura */\n"
             "float read() { float v; if (scanf(\"%%f\", &v)!=1) return -1.0f; return v;}\n\n"
         );
@@ -83,12 +84,21 @@ decl_list:
 ;
 
 func_decl:
+    // Regra para uma definição de função completa (com corpo)
     type ID LPAREN param_list_opt RPAREN LBRACE stmt_list RBRACE {
         const char *rt = strcmp($2, "main")==0 ? "int" : map_type($1->code);
         char *h = cat(rt, " ", $2, "(", $4->code);
         char *b = cat(h, ") {\n", $7->code, "}\n", "");
         $$ = createRecord(b, ""); free(h); free(b);
         freeRecord($1); free($2); freeRecord($4); freeRecord($7);
+    }
+  // Regra para uma declaração de função / protótipo (sem corpo)
+  | type ID LPAREN param_list_opt RPAREN SEMICOLON {
+        const char *rt = map_type($1->code);
+        char *h = cat(rt, " ", $2, "(", $4->code);
+        char *p = cat(h, ");\n", "", "", ""); // Adiciona o ; e uma nova linha
+        $$ = createRecord(p, ""); free(h); free(p);
+        freeRecord($1); free($2); freeRecord($4);
     }
 ;
 
@@ -111,6 +121,15 @@ param:
         char *s = cat($1->code, " ", $2, "", "");
         $$ = createRecord(s, $1->opt1);
         free(s); freeRecord($1); free($2);
+    }
+  | REF type ID {
+        const char* c_type = map_type($2->code);
+        char* ptr_type = cat(c_type, "*", "", "", "");
+        char* param_decl = cat(ptr_type, " ", $3, "", "");
+        char* lang_type = cat("ref", $2->opt1, "", "", "");
+        $$ = createRecord(param_decl, lang_type);
+        free(ptr_type); free(param_decl); free(lang_type);
+        freeRecord($2); free($3);
     }
 ;
 
@@ -149,11 +168,22 @@ var_decl_stmt:
     }
 ;
 
+lvalue:
+    ID { $$ = createRecord($1, (char*)lookupSymbol($1)); free($1); }
+  | MUL ID {
+        char* deref_code = cat("*", $2, "", "", "");
+        const char* ptr_type = lookupSymbol($2);
+        char* base_type = strdup(ptr_type ? ptr_type + 3 : "Unknown");
+        $$ = createRecord(deref_code, base_type);
+        free(deref_code); free(base_type); free($2);
+    }
+;
+
 assignment_stmt:
-    ID ARROW_LEFT expr SEMICOLON {
-        char *s = cat("    ", $1, " = ", $3->code, ";");
+    lvalue ARROW_LEFT expr SEMICOLON {
+        char *s = cat("    ", $1->code, " = ", $3->code, ";");
         $$ = createRecord(s, ""); free(s);
-        free($1); freeRecord($3);
+        freeRecord($1); freeRecord($3);
     }
 ;
 
@@ -235,7 +265,14 @@ expr:
     | expr EQ expr    { char *s=cat("(", $1->code, " == ", $3->code, ")"); $$=createRecord(s,(char*)"Int"); free(s); freeRecord($1); freeRecord($3); }
     | expr NE expr    { char *s=cat("(", $1->code, " != ", $3->code, ")"); $$=createRecord(s,(char*)"Int"); free(s); freeRecord($1); freeRecord($3); }
     | LPAREN expr RPAREN { $$ = $2; }
-    | ID                { const char *t = lookupSymbol($1); $$ = createRecord($1,(char*)t); free($1); }
+    | AMPERSAND ID {
+        char* addr_expr = cat("&", $2, "", "", "");
+        const char* base_type = lookupSymbol($2);
+        char* ptr_type_name = cat("ref", base_type, "", "", "");
+        $$ = createRecord(addr_expr, ptr_type_name);
+        free(addr_expr); free(ptr_type_name); free($2);
+    }
+    | ID                { const char *t = lookupSymbol($1); $$ = createRecord($1,strdup(t)); free($1); }
     | INT_LIT           { char b[32]; sprintf(b,"%d",$1); $$=createRecord(strdup(b),(char*)"Int"); }
     | FLOAT_LIT         { char b[32]; sprintf(b,"%f",$1); $$=createRecord(strdup(b),(char*)"Float"); }
     | func_call         { $$ = $1; }
@@ -246,7 +283,6 @@ func_call:
         char *s = cat($1, "(", $3->code, ")", "");
         const char *type = "Unit"; // Tipo padrão para funções sem retorno (void)
 
-        // Lógica para determinar o tipo de retorno das funções
         if (strcmp($1, "create_rational") == 0 || strcmp($1, "add") == 0 ||
             strcmp($1, "subtract") == 0 || strcmp($1, "multiply") == 0 ||
             strcmp($1, "divide") == 0 || strcmp($1, "negate") == 0 ||
