@@ -1,0 +1,63 @@
+// Script de teste completo para o Problema 3: Operações com Matrizes
+
+Unit main() {
+    // --- Caso de Sucesso: Matrizes Compatíveis (2x2) ---
+    // A sintaxe "print" abaixo será traduzida pelo seu compilador
+    // para chamadas printf, print_matrix, etc., com base na regra print_stmt.
+    
+    // Cria e preenche a Matriz A
+    Matrix A <- create_matrix(2, 2);
+    set_element(A, 0, 0, 1.0);
+    set_element(A, 0, 1, 2.0);
+    set_element(A, 1, 0, 3.0);
+    set_element(A, 1, 1, 4.0);
+    
+    // Agora, usamos o comando 'print' para exibir a matriz
+    print A;
+
+    // Cria e preenche a Matriz B
+    Matrix B <- create_matrix(2, 2);
+    set_element(B, 0, 0, 5.0);
+    set_element(B, 0, 1, 6.0);
+    set_element(B, 1, 0, 7.0);
+    set_element(B, 1, 1, 8.0);
+    print B;
+
+    // Soma A + B e imprime o resultado
+    Matrix Soma <- add_matrices(A, B);
+    print Soma;
+
+    // Produto A * B e imprime o resultado
+    Matrix Produto <- multiply_matrices(A, B);
+    print Produto;
+
+
+    // --- Casos de Falha: Matrizes Incompatíveis ---
+    
+    // Cria uma Matriz C (3x2), incompatível para soma e produto com A
+    Matrix C <- create_matrix(3, 2);
+    set_element(C, 0, 0, 1.0);
+    set_element(C, 1, 1, 1.0);
+    set_element(C, 2, 0, 1.0);
+    print C;
+
+    // Tenta somar A (2x2) com C (3x2) - Deve falhar
+    Matrix SomaInvalida <- add_matrices(A, C);
+    // A biblioteca deve imprimir um erro. A variável SomaInvalida será nula.
+    print SomaInvalida;
+
+    // Tenta multiplicar A (2x2) por C (3x2) - Deve falhar
+    Matrix ProdutoInvalido <- multiply_matrices(A, C);
+    // A biblioteca deve imprimir um erro. A variável ProdutoInvalido será nula.
+    print ProdutoInvalido;
+
+
+    // --- Liberação de Memória ---
+    free_matrix(A);
+    free_matrix(B);
+    free_matrix(C);
+    free_matrix(Soma);
+    free_matrix(Produto);
+    free_matrix(SomaInvalida);
+    free_matrix(ProdutoInvalido);
+}

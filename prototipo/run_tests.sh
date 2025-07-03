@@ -11,6 +11,7 @@ make
 echo "📁 Preparando diretórios de teste..."
 mkdir -p tests/problema1
 mkdir -p tests/problema2
+mkdir -p tests/problema3
 mkdir -p tests/problema4
 
 # --- ETAPA 3: Executar os testes ---
@@ -32,6 +33,17 @@ echo "⚙️  Gerando e compilando problema2..."
 gcc -I. tests/problema2/saida2.c -o tests/problema2/teste2.exe
 echo "📤 Executando problema2 com entrada2.txt:"
 ./tests/problema2/teste2.exe < entrada2.txt
+
+# Teste do problema 3 (Matrix)
+echo ""
+echo "⚙️  Gerando e compilando problema3..."
+# 1. Usa seu compilador para traduzir problema3.txt para C
+./compiler problema3.txt tests/problema3/saida3.c
+# 2. Compila o código C gerado, linkando com a biblioteca de matrizes
+# Adicionado -I. para que o gcc encontre os headers na pasta raiz
+gcc -I. tests/problema3/saida3.c lib/matrix.c -o tests/problema3/teste3.exe
+echo "📤 Executando problema3:"
+./tests/problema3/teste3.exe
 
 # Teste do problema 4 (Rational)
 echo ""

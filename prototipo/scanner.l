@@ -14,6 +14,7 @@
 "Float"         { return FLOAT; }
 "Int"           { return INT; }
 "Rational"      { return RATIONAL; }
+"Matrix"        { return MATRIX; }
 
 "print"         { return PRINT; }
 "return"        { return RETURN; }
@@ -26,9 +27,7 @@
 "!="            { return NE; }
 "<"             { return LT; }
 ">"             { return GT; }
-
 "<-"            { return ARROW_LEFT; }
-
 "+"             { return PLUS; }
 "-"             { return MINUS; }
 "*"             { return MUL; }
@@ -43,11 +42,10 @@
 
 [0-9]+\.[0-9]+  { yylval.float_val = atof(yytext); return FLOAT_LIT; }
 [0-9]+          { yylval.int_val   = atoi(yytext); return INT_LIT; }
-
 [a-zA-Z_][a-zA-Z0-9_]* { yylval.str_val = strdup(yytext); return ID; }
 
 [ \t\r\n]+      { }
-"//".* { }
+"//".*          { }
 
 .               { fprintf(stderr, "ERRO LÉXICO: '%s' na linha %d\n", yytext, yylineno); exit(1); }
 

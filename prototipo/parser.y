@@ -17,7 +17,7 @@ extern int yylineno;
 extern char *yytext;
 extern FILE *yyin, *yyout;
 
-// Contador para gerar labels únicos (usado em if/while)
+// Contador para gerar labels únicos
 static int label_count = 0;
 char *new_label() {
     char buf[32];
@@ -35,7 +35,7 @@ char *new_label() {
 }
 
 // Declaração dos tokens
-%token UNIT FLOAT INT RATIONAL PRINT RETURN IF WHILE
+%token UNIT FLOAT INT RATIONAL MATRIX PRINT RETURN IF WHILE
 %token ARROW_LEFT PLUS MINUS MUL DIV
 %token LT LE GT GE EQ NE
 %token SEMICOLON LPAREN RPAREN LBRACE RBRACE COMMA
@@ -58,12 +58,13 @@ char *new_label() {
 
 program:
     decl_list {
-        // No início do código C gerado, inclui os headers necessários
+        // No início do código C gerado, inclui todos os headers necessários
         fprintf(yyout,
             "#include <stdio.h>\n"
             "#include <stdlib.h>\n"
             "#include <stdbool.h>\n"
-            "#include \"lib/rational.h\"\n\n" // Inclui a biblioteca de racionais
+            "#include \"lib/rational.h\"\n"
+            "#include \"lib/matrix.h\"\n\n" // Inclui a biblioteca de matrizes
             "/* Stub de leitura */\n"
             "float read() { float v; if (scanf(\"%%f\", &v)!=1) return -1.0f; return v;}\n\n"
         );
@@ -171,8 +172,9 @@ print_stmt:
         } else if (strcmp($2->opt1, "Int") == 0) {
             s = cat("    printf(\"%d\\n\", ", $2->code, ");", "", "");
         } else if (strcmp($2->opt1, "Rational") == 0) {
-            // Se a expressão for do tipo Rational, chama a função de impressão correta
             s = cat("    print_rational(", $2->code, ");", "", "");
+        } else if (strcmp($2->opt1, "Matrix") == 0) {
+            s = cat("    print_matrix(", $2->code, ");", "", "");
         } else {
             s = cat("    /* tipo desconhecido para print */", "", "", "", "");
         }
@@ -218,6 +220,7 @@ type:
   | FLOAT    { $$ = createRecord("float", "Float"); }
   | UNIT     { $$ = createRecord("void", "Unit"); }
   | RATIONAL { $$ = createRecord("rational_t", "Rational"); }
+  | MATRIX   { $$ = createRecord("matrix_t*", "Matrix"); }
 ;
 
 expr:
@@ -241,16 +244,19 @@ expr:
 func_call:
     ID LPAREN arg_list_opt RPAREN {
         char *s = cat($1, "(", $3->code, ")", "");
-        const char *type = "call"; // Tipo padrão para funções desconhecidas
+        const char *type = "Unit"; // Tipo padrão para funções sem retorno (void)
 
-        // Lógica para determinar o tipo de retorno das funções de rational.h
+        // Lógica para determinar o tipo de retorno das funções
         if (strcmp($1, "create_rational") == 0 || strcmp($1, "add") == 0 ||
             strcmp($1, "subtract") == 0 || strcmp($1, "multiply") == 0 ||
             strcmp($1, "divide") == 0 || strcmp($1, "negate") == 0 ||
             strcmp($1, "inverse") == 0) {
             type = "Rational";
         } else if (strcmp($1, "are_equal") == 0) {
-            type = "Int"; // are_equal retorna um booleano, que tratamos como Int (0 ou 1)
+            type = "Int";
+        } else if (strcmp($1, "create_matrix") == 0 || strcmp($1, "add_matrices") == 0 ||
+                   strcmp($1, "multiply_matrices") == 0) {
+            type = "Matrix";
         }
         
         $$ = createRecord(s, (char*)type);
@@ -291,6 +297,7 @@ const char* map_type(const char* o) {
     if (strcmp(o, "Float") == 0) return "float";
     if (strcmp(o, "Unit") == 0) return "void";
     if (strcmp(o, "Rational") == 0) return "rational_t";
+    if (strcmp(o, "Matrix") == 0) return "matrix_t*";
     return "void"; // Padrão
 }
 
