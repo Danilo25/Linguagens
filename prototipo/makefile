@@ -1,35 +1,35 @@
 # Makefile para o protótipo
 
-CC        = gcc
-FLEX      = flex
-BISON     = bison
-CFLAGS    = -Wall -g
-LDFLAGS   =
-TARGET    = compiler
+CC      = gcc
+FLEX    = flex
+BISON   = bison
+CFLAGS  = -Wall -g
+TARGET  = compiler
 
-# Fontes do analisador
-LEX_SRC   = lex.yy.c
-Y_SRC     = parser.tab.c
-Y_HDR     = parser.tab.h
+# Fontes
+Y_SRC   = parser.y
+Y_HDR   = parser.tab.h
+Y_C     = parser.tab.c
+LEX_SRC = scanner.l
+LEX_C   = lex.yy.c
 
-# Módulos auxiliares
-LIBSRC    = ./lib/record.c ./lib/symbol_table.c
+LIBSRC  = ./lib/record.c ./lib/symbol_table.c
 
 .PHONY: all clean
 
 all: $(TARGET)
 
-# Regra principal: gera o executável compiler
-$(TARGET): $(LEX_SRC) $(Y_SRC) $(LIBSRC)
-	$(CC) $(CFLAGS) $(LEX_SRC) $(Y_SRC) $(LIBSRC) -o $(TARGET)
+# 1) Gera parser.tab.c e parser.tab.h a partir de parser.y
+$(Y_C) $(Y_HDR): $(Y_SRC)
+	$(BISON) -d -v -o $(Y_C) $(Y_SRC)
 
-# Gera lex.yy.c a partir do scanner.l
-$(LEX_SRC): scanner.l
-	$(FLEX) scanner.l
+# 2) Gera lex.yy.c a partir de scanner.l, após parser.tab.h existir
+$(LEX_C): $(LEX_SRC) $(Y_HDR)
+	$(FLEX) -o $(LEX_C) $(LEX_SRC)
 
-# Gera parser.tab.c e parser.tab.h a partir do parser.y
-$(Y_SRC) $(Y_HDR): parser.y
-	$(BISON) -d -v -o parser.tab.c parser.y
+# 3) Linka tudo e gera o executável
+$(TARGET): $(Y_C) $(LEX_C) $(LIBSRC)
+	$(CC) $(CFLAGS) $(Y_C) $(LEX_C) $(LIBSRC) -o $(TARGET)
 
 clean:
-	rm -f $(LEX_SRC) $(Y_SRC) $(Y_HDR) $(TARGET) output.txt y.output
+	rm -f $(TARGET) $(Y_C) $(Y_HDR) $(LEX_C) y.output

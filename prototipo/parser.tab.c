@@ -69,6 +69,7 @@
 /* First part of user prologue.  */
 #line 1 "parser.y"
 
+#include "parser.tab.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -81,10 +82,17 @@ extern int yylineno;
 extern char *yytext;
 extern FILE *yyin, *yyout;
 
-char *cat(const char *s1, const char *s2, const char *s3, const char *s4, const char *s5);
-const char* map_type(const char* original_type);
+static int label_count = 0;
+char *new_label() {
+    char buf[32];
+    sprintf(buf, "L%d", label_count++);
+    return strdup(buf);
+}
 
-#line 88 "parser.tab.c"
+char* cat(const char *s1, const char *s2, const char *s3, const char *s4, const char *s5);
+const char* map_type(const char* o);
+
+#line 96 "parser.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -120,39 +128,49 @@ enum yysymbol_kind_t
   YYSYMBOL_INT = 5,                        /* INT  */
   YYSYMBOL_PRINT = 6,                      /* PRINT  */
   YYSYMBOL_RETURN = 7,                     /* RETURN  */
-  YYSYMBOL_ARROW_LEFT = 8,                 /* ARROW_LEFT  */
-  YYSYMBOL_SEMICOLON = 9,                  /* SEMICOLON  */
-  YYSYMBOL_LPAREN = 10,                    /* LPAREN  */
-  YYSYMBOL_RPAREN = 11,                    /* RPAREN  */
-  YYSYMBOL_LBRACE = 12,                    /* LBRACE  */
-  YYSYMBOL_RBRACE = 13,                    /* RBRACE  */
-  YYSYMBOL_COMMA = 14,                     /* COMMA  */
-  YYSYMBOL_PLUS = 15,                      /* PLUS  */
-  YYSYMBOL_MINUS = 16,                     /* MINUS  */
-  YYSYMBOL_MUL = 17,                       /* MUL  */
-  YYSYMBOL_DIV = 18,                       /* DIV  */
-  YYSYMBOL_ID = 19,                        /* ID  */
-  YYSYMBOL_INT_LIT = 20,                   /* INT_LIT  */
-  YYSYMBOL_FLOAT_LIT = 21,                 /* FLOAT_LIT  */
-  YYSYMBOL_YYACCEPT = 22,                  /* $accept  */
-  YYSYMBOL_program = 23,                   /* program  */
-  YYSYMBOL_decl_list = 24,                 /* decl_list  */
-  YYSYMBOL_func_decl = 25,                 /* func_decl  */
-  YYSYMBOL_param_list_opt = 26,            /* param_list_opt  */
-  YYSYMBOL_param_list = 27,                /* param_list  */
-  YYSYMBOL_param = 28,                     /* param  */
-  YYSYMBOL_stmt_list = 29,                 /* stmt_list  */
-  YYSYMBOL_stmt = 30,                      /* stmt  */
-  YYSYMBOL_var_decl_stmt = 31,             /* var_decl_stmt  */
-  YYSYMBOL_assignment_stmt = 32,           /* assignment_stmt  */
-  YYSYMBOL_func_call_stmt = 33,            /* func_call_stmt  */
-  YYSYMBOL_print_stmt = 34,                /* print_stmt  */
-  YYSYMBOL_return_stmt = 35,               /* return_stmt  */
-  YYSYMBOL_type = 36,                      /* type  */
-  YYSYMBOL_expr = 37,                      /* expr  */
-  YYSYMBOL_func_call = 38,                 /* func_call  */
-  YYSYMBOL_arg_list_opt = 39,              /* arg_list_opt  */
-  YYSYMBOL_arg_list = 40                   /* arg_list  */
+  YYSYMBOL_IF = 8,                         /* IF  */
+  YYSYMBOL_WHILE = 9,                      /* WHILE  */
+  YYSYMBOL_ARROW_LEFT = 10,                /* ARROW_LEFT  */
+  YYSYMBOL_PLUS = 11,                      /* PLUS  */
+  YYSYMBOL_MINUS = 12,                     /* MINUS  */
+  YYSYMBOL_MUL = 13,                       /* MUL  */
+  YYSYMBOL_DIV = 14,                       /* DIV  */
+  YYSYMBOL_LT = 15,                        /* LT  */
+  YYSYMBOL_LE = 16,                        /* LE  */
+  YYSYMBOL_GT = 17,                        /* GT  */
+  YYSYMBOL_GE = 18,                        /* GE  */
+  YYSYMBOL_EQ = 19,                        /* EQ  */
+  YYSYMBOL_NE = 20,                        /* NE  */
+  YYSYMBOL_SEMICOLON = 21,                 /* SEMICOLON  */
+  YYSYMBOL_LPAREN = 22,                    /* LPAREN  */
+  YYSYMBOL_RPAREN = 23,                    /* RPAREN  */
+  YYSYMBOL_LBRACE = 24,                    /* LBRACE  */
+  YYSYMBOL_RBRACE = 25,                    /* RBRACE  */
+  YYSYMBOL_COMMA = 26,                     /* COMMA  */
+  YYSYMBOL_ID = 27,                        /* ID  */
+  YYSYMBOL_INT_LIT = 28,                   /* INT_LIT  */
+  YYSYMBOL_FLOAT_LIT = 29,                 /* FLOAT_LIT  */
+  YYSYMBOL_YYACCEPT = 30,                  /* $accept  */
+  YYSYMBOL_program = 31,                   /* program  */
+  YYSYMBOL_decl_list = 32,                 /* decl_list  */
+  YYSYMBOL_func_decl = 33,                 /* func_decl  */
+  YYSYMBOL_param_list_opt = 34,            /* param_list_opt  */
+  YYSYMBOL_param_list = 35,                /* param_list  */
+  YYSYMBOL_param = 36,                     /* param  */
+  YYSYMBOL_stmt_list = 37,                 /* stmt_list  */
+  YYSYMBOL_stmt = 38,                      /* stmt  */
+  YYSYMBOL_var_decl_stmt = 39,             /* var_decl_stmt  */
+  YYSYMBOL_assignment_stmt = 40,           /* assignment_stmt  */
+  YYSYMBOL_func_call_stmt = 41,            /* func_call_stmt  */
+  YYSYMBOL_print_stmt = 42,                /* print_stmt  */
+  YYSYMBOL_return_stmt = 43,               /* return_stmt  */
+  YYSYMBOL_if_stmt = 44,                   /* if_stmt  */
+  YYSYMBOL_while_stmt = 45,                /* while_stmt  */
+  YYSYMBOL_type = 46,                      /* type  */
+  YYSYMBOL_expr = 47,                      /* expr  */
+  YYSYMBOL_func_call = 48,                 /* func_call  */
+  YYSYMBOL_arg_list_opt = 49,              /* arg_list_opt  */
+  YYSYMBOL_arg_list = 50                   /* arg_list  */
 };
 typedef enum yysymbol_kind_t yysymbol_kind_t;
 
@@ -480,19 +498,19 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  8
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   76
+#define YYLAST   190
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  22
+#define YYNTOKENS  30
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  19
+#define YYNNTS  21
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  40
+#define YYNRULES  50
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  69
+#define YYNSTATES  97
 
 /* YYMAXUTOK -- Last valid token kind.  */
-#define YYMAXUTOK   276
+#define YYMAXUTOK   284
 
 
 /* YYTRANSLATE(TOKEN-NUM) -- Symbol number corresponding to TOKEN-NUM
@@ -533,18 +551,20 @@ static const yytype_int8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
        5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
-      15,    16,    17,    18,    19,    20,    21
+      15,    16,    17,    18,    19,    20,    21,    22,    23,    24,
+      25,    26,    27,    28,    29
 };
 
 #if YYDEBUG
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
-static const yytype_uint8 yyrline[] =
+static const yytype_int16 yyrline[] =
 {
-       0,    42,    42,    51,    52,    60,    70,    71,    75,    76,
-      84,    93,    94,   102,   103,   104,   105,   106,   110,   116,
-     126,   134,   142,   150,   157,   158,   159,   163,   164,   165,
-     166,   167,   168,   173,   174,   175,   179,   186,   187,   191,
-     192
+       0,    51,    51,    67,    68,    78,    90,    91,    95,    96,
+     104,   114,   115,   123,   124,   125,   126,   127,   128,   129,
+     135,   141,   153,   163,   172,   182,   191,   204,   221,   222,
+     223,   229,   230,   231,   232,   233,   234,   235,   236,   237,
+     238,   239,   240,   241,   242,   243,   249,   255,   256,   260,
+     261
 };
 #endif
 
@@ -561,12 +581,14 @@ static const char *yysymbol_name (yysymbol_kind_t yysymbol) YY_ATTRIBUTE_UNUSED;
 static const char *const yytname[] =
 {
   "\"end of file\"", "error", "\"invalid token\"", "UNIT", "FLOAT", "INT",
-  "PRINT", "RETURN", "ARROW_LEFT", "SEMICOLON", "LPAREN", "RPAREN",
-  "LBRACE", "RBRACE", "COMMA", "PLUS", "MINUS", "MUL", "DIV", "ID",
-  "INT_LIT", "FLOAT_LIT", "$accept", "program", "decl_list", "func_decl",
-  "param_list_opt", "param_list", "param", "stmt_list", "stmt",
-  "var_decl_stmt", "assignment_stmt", "func_call_stmt", "print_stmt",
-  "return_stmt", "type", "expr", "func_call", "arg_list_opt", "arg_list", YY_NULLPTR
+  "PRINT", "RETURN", "IF", "WHILE", "ARROW_LEFT", "PLUS", "MINUS", "MUL",
+  "DIV", "LT", "LE", "GT", "GE", "EQ", "NE", "SEMICOLON", "LPAREN",
+  "RPAREN", "LBRACE", "RBRACE", "COMMA", "ID", "INT_LIT", "FLOAT_LIT",
+  "$accept", "program", "decl_list", "func_decl", "param_list_opt",
+  "param_list", "param", "stmt_list", "stmt", "var_decl_stmt",
+  "assignment_stmt", "func_call_stmt", "print_stmt", "return_stmt",
+  "if_stmt", "while_stmt", "type", "expr", "func_call", "arg_list_opt",
+  "arg_list", YY_NULLPTR
 };
 
 static const char *
@@ -576,7 +598,7 @@ yysymbol_name (yysymbol_kind_t yysymbol)
 }
 #endif
 
-#define YYPACT_NINF (-24)
+#define YYPACT_NINF (-41)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
@@ -588,15 +610,18 @@ yysymbol_name (yysymbol_kind_t yysymbol)
 
 /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
    STATE-NUM.  */
-static const yytype_int8 yypact[] =
+static const yytype_int16 yypact[] =
 {
-      12,   -24,   -24,   -24,    10,    12,   -24,    11,   -24,   -24,
-      36,    12,    37,    44,   -24,    40,    48,    12,   -24,   -24,
-     -24,     1,     2,     2,   -24,    21,   -24,   -24,   -24,   -24,
-     -24,   -24,    51,    60,     2,    61,   -24,   -24,    19,   -24,
-      23,     2,     2,    -7,   -24,    46,   -24,     2,     2,     2,
-       2,   -24,    34,    50,    62,    58,     2,   -24,   -24,    27,
-      27,   -24,   -24,   -24,   -24,     2,    38,    50,   -24
+      17,   -41,   -41,   -41,     3,    17,   -41,   -14,   -41,   -41,
+       6,    17,    24,    25,   -41,    32,    36,    17,   -41,   -41,
+     -41,     2,   -10,   -10,    39,    41,   -41,    -8,   -41,   -41,
+     -41,   -41,   -41,   -41,   -41,   -41,    40,    47,   -10,    48,
+     -41,   -41,   112,   -41,   123,   -10,   -10,   -10,   -10,    -6,
+     -41,    73,   -10,   -10,   -10,   -10,   -10,   -10,   -10,   -10,
+     -10,   -10,   -41,   -41,    86,    99,   134,   156,    46,    52,
+     -10,   -41,   -41,   164,   164,   170,   170,   -41,   -41,   -41,
+     -41,   -41,   -41,    51,    55,   -41,   -41,   -10,   145,   -41,
+     -41,   156,   -41,    37,    49,   -41,   -41
 };
 
 /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -604,27 +629,32 @@ static const yytype_int8 yypact[] =
    means the default is an error.  */
 static const yytype_int8 yydefact[] =
 {
-       0,    24,    25,    26,     0,     2,     3,     0,     1,     4,
+       0,    30,    29,    28,     0,     2,     3,     0,     1,     4,
        0,     6,     0,     7,     8,     0,     0,     0,    10,    11,
-       9,     0,     0,     0,     5,     0,    12,    13,    14,    17,
-      15,    16,     0,     0,     0,    32,    33,    34,     0,    35,
-       0,     0,    37,     0,    21,     0,    22,     0,     0,     0,
-       0,    23,     0,    39,     0,    38,     0,    18,    31,    27,
-      28,    29,    30,    20,    36,     0,     0,    40,    19
+       9,     0,     0,     0,     0,     0,     5,     0,    12,    13,
+      14,    17,    15,    16,    18,    19,     0,     0,     0,    42,
+      43,    44,     0,    45,     0,     0,     0,     0,    47,     0,
+      23,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,    24,    25,     0,     0,     0,    49,     0,    48,
+       0,    20,    41,    31,    32,    33,    34,    35,    36,    37,
+      38,    39,    40,     0,     0,    22,    46,     0,     0,    11,
+      11,    50,    21,     0,     0,    26,    27
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -24,   -24,   -24,    69,   -24,   -24,    59,   -24,   -24,   -24,
-     -24,   -24,   -24,   -24,    -8,   -23,    54,   -24,   -24
+     -41,   -41,   -41,    75,   -41,   -41,    64,   -40,   -41,   -41,
+     -41,   -41,   -41,   -41,   -41,   -41,    66,   -22,   -21,   -41,
+     -41
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-       0,     4,     5,     6,    12,    13,    14,    21,    26,    27,
-      28,    29,    30,    31,     7,    38,    39,    54,    55
+       0,     4,     5,     6,    12,    13,    14,    21,    28,    29,
+      30,    31,    32,    33,    34,    35,    36,    42,    43,    68,
+      69
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -632,57 +662,86 @@ static const yytype_int8 yydefgoto[] =
    number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int8 yytable[] =
 {
-      40,    56,    57,    15,     1,     2,     3,    22,    23,    15,
-       8,    45,    34,    32,    24,     1,     2,     3,    52,    53,
-      25,    35,    36,    37,    59,    60,    61,    62,    46,    41,
-      10,    42,    51,    66,    47,    48,    49,    50,    47,    48,
-      49,    50,    67,    63,    49,    50,    11,    68,    16,    47,
-      48,    49,    50,    47,    48,    49,    50,    58,    17,    18,
-      19,    47,    48,    49,    50,    47,    48,    49,    50,    44,
-      43,    42,    65,    64,     9,    33,    20
+      37,    44,    47,     8,    70,     1,     2,     3,    22,    23,
+      24,    25,    38,    10,    48,    71,    51,    39,    40,    41,
+       1,     2,     3,    64,    65,    66,    67,    26,    11,    27,
+      73,    74,    75,    76,    77,    78,    79,    80,    81,    82,
+       1,     2,     3,    22,    23,    24,    25,    16,    88,    93,
+      94,    17,     1,     2,     3,    22,    23,    24,    25,    18,
+      19,    45,    95,    46,    27,    91,     7,    49,    50,    86,
+      48,     7,    37,    37,    96,    89,    27,    15,    87,    90,
+       9,    20,     0,    15,    52,    53,    54,    55,    56,    57,
+      58,    59,    60,    61,     0,     0,    72,    52,    53,    54,
+      55,    56,    57,    58,    59,    60,    61,     0,     0,    83,
+      52,    53,    54,    55,    56,    57,    58,    59,    60,    61,
+       0,     0,    84,    52,    53,    54,    55,    56,    57,    58,
+      59,    60,    61,    62,    52,    53,    54,    55,    56,    57,
+      58,    59,    60,    61,    63,    52,    53,    54,    55,    56,
+      57,    58,    59,    60,    61,    85,    52,    53,    54,    55,
+      56,    57,    58,    59,    60,    61,    92,    52,    53,    54,
+      55,    56,    57,    58,    59,    60,    61,    54,    55,    56,
+      57,    58,    59,    60,    61,    56,    57,    58,    59,    60,
+      61
 };
 
 static const yytype_int8 yycheck[] =
 {
-      23,     8,     9,    11,     3,     4,     5,     6,     7,    17,
-       0,    34,    10,    21,    13,     3,     4,     5,    41,    42,
-      19,    19,    20,    21,    47,    48,    49,    50,     9,     8,
-      19,    10,     9,    56,    15,    16,    17,    18,    15,    16,
-      17,    18,    65,     9,    17,    18,    10,     9,    11,    15,
-      16,    17,    18,    15,    16,    17,    18,    11,    14,    19,
-      12,    15,    16,    17,    18,    15,    16,    17,    18,     9,
-      19,    10,    14,    11,     5,    21,    17
+      21,    23,    10,     0,    10,     3,     4,     5,     6,     7,
+       8,     9,    22,    27,    22,    21,    38,    27,    28,    29,
+       3,     4,     5,    45,    46,    47,    48,    25,    22,    27,
+      52,    53,    54,    55,    56,    57,    58,    59,    60,    61,
+       3,     4,     5,     6,     7,     8,     9,    23,    70,    89,
+      90,    26,     3,     4,     5,     6,     7,     8,     9,    27,
+      24,    22,    25,    22,    27,    87,     0,    27,    21,    23,
+      22,     5,    93,    94,    25,    24,    27,    11,    26,    24,
+       5,    17,    -1,    17,    11,    12,    13,    14,    15,    16,
+      17,    18,    19,    20,    -1,    -1,    23,    11,    12,    13,
+      14,    15,    16,    17,    18,    19,    20,    -1,    -1,    23,
+      11,    12,    13,    14,    15,    16,    17,    18,    19,    20,
+      -1,    -1,    23,    11,    12,    13,    14,    15,    16,    17,
+      18,    19,    20,    21,    11,    12,    13,    14,    15,    16,
+      17,    18,    19,    20,    21,    11,    12,    13,    14,    15,
+      16,    17,    18,    19,    20,    21,    11,    12,    13,    14,
+      15,    16,    17,    18,    19,    20,    21,    11,    12,    13,
+      14,    15,    16,    17,    18,    19,    20,    13,    14,    15,
+      16,    17,    18,    19,    20,    15,    16,    17,    18,    19,
+      20
 };
 
 /* YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
    state STATE-NUM.  */
 static const yytype_int8 yystos[] =
 {
-       0,     3,     4,     5,    23,    24,    25,    36,     0,    25,
-      19,    10,    26,    27,    28,    36,    11,    14,    19,    12,
-      28,    29,     6,     7,    13,    19,    30,    31,    32,    33,
-      34,    35,    36,    38,    10,    19,    20,    21,    37,    38,
-      37,     8,    10,    19,     9,    37,     9,    15,    16,    17,
-      18,     9,    37,    37,    39,    40,     8,     9,    11,    37,
-      37,    37,    37,     9,    11,    14,    37,    37,     9
+       0,     3,     4,     5,    31,    32,    33,    46,     0,    33,
+      27,    22,    34,    35,    36,    46,    23,    26,    27,    24,
+      36,    37,     6,     7,     8,     9,    25,    27,    38,    39,
+      40,    41,    42,    43,    44,    45,    46,    48,    22,    27,
+      28,    29,    47,    48,    47,    22,    22,    10,    22,    27,
+      21,    47,    11,    12,    13,    14,    15,    16,    17,    18,
+      19,    20,    21,    21,    47,    47,    47,    47,    49,    50,
+      10,    21,    23,    47,    47,    47,    47,    47,    47,    47,
+      47,    47,    47,    23,    23,    21,    23,    26,    47,    24,
+      24,    47,    21,    37,    37,    25,    25
 };
 
 /* YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr1[] =
 {
-       0,    22,    23,    24,    24,    25,    26,    26,    27,    27,
-      28,    29,    29,    30,    30,    30,    30,    30,    31,    31,
-      32,    33,    34,    35,    36,    36,    36,    37,    37,    37,
-      37,    37,    37,    37,    37,    37,    38,    39,    39,    40,
-      40
+       0,    30,    31,    32,    32,    33,    34,    34,    35,    35,
+      36,    37,    37,    38,    38,    38,    38,    38,    38,    38,
+      39,    39,    40,    41,    42,    43,    44,    45,    46,    46,
+      46,    47,    47,    47,    47,    47,    47,    47,    47,    47,
+      47,    47,    47,    47,    47,    47,    48,    49,    49,    50,
+      50
 };
 
 /* YYR2[RULE-NUM] -- Number of symbols on the right-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr2[] =
 {
        0,     2,     1,     1,     2,     8,     0,     1,     1,     3,
-       2,     0,     2,     1,     1,     1,     1,     1,     3,     5,
-       4,     2,     3,     3,     1,     1,     1,     3,     3,     3,
+       2,     0,     2,     1,     1,     1,     1,     1,     1,     1,
+       3,     5,     4,     2,     3,     3,     7,     7,     1,     1,
+       1,     3,     3,     3,     3,     3,     3,     3,     3,     3,
        3,     3,     1,     1,     1,     1,     4,     0,     1,     1,
        3
 };
@@ -1148,245 +1207,306 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* program: decl_list  */
-#line 42 "parser.y"
+#line 51 "parser.y"
               {
-        fprintf(yyout, "#include <stdio.h>\n\n");
+        fprintf(yyout,
+            "#include <stdio.h>\n"
+            "#include <stdlib.h>\n"
+            "#include <stdbool.h>\n\n"
+            "/* Stub de leitura */\n"
+            "float read() { float v; if (scanf(\"%%f\", &v)!=1) return -1.0f; return v;}\n\n"
+        );
         fprintf(yyout, "%s\n", (yyvsp[0].rec)->code);
         freeRecord((yyvsp[0].rec));
-        printf("Arquivo de saída gerado com sucesso!\n");
     }
-#line 1159 "parser.tab.c"
+#line 1223 "parser.tab.c"
     break;
 
   case 4: /* decl_list: decl_list func_decl  */
-#line 52 "parser.y"
+#line 68 "parser.y"
                           {
         char *s = cat((yyvsp[-1].rec)->code, "\n\n", (yyvsp[0].rec)->code, "", "");
-        (yyval.rec) = createRecord(s, (char*)""); free(s);
+        (yyval.rec) = createRecord(s, ""); free(s);
         freeRecord((yyvsp[-1].rec)); freeRecord((yyvsp[0].rec));
     }
-#line 1169 "parser.tab.c"
+#line 1233 "parser.tab.c"
     break;
 
   case 5: /* func_decl: type ID LPAREN param_list_opt RPAREN LBRACE stmt_list RBRACE  */
-#line 60 "parser.y"
+#line 78 "parser.y"
                                                                  {
-        const char* c_ret = strcmp((yyvsp[-6].str_val), "main")==0? "int" : map_type((yyvsp[-7].rec)->code);
-        char *h = cat((char*)c_ret, " ", (yyvsp[-6].str_val), "(", (yyvsp[-4].rec)->code);
-        char *body = cat(h, ")\n{\n", (yyvsp[-1].rec)->code, "}\n", "");
-        (yyval.rec) = createRecord(body, (char*)""); free(h); free(body);
+        const char *rt = strcmp((yyvsp[-6].str_val), "main")==0 ? "int" : map_type((yyvsp[-7].rec)->code);
+        char *h = cat(rt, " ", (yyvsp[-6].str_val), "(", (yyvsp[-4].rec)->code);
+        char *b = cat(h, ") {\n", (yyvsp[-1].rec)->code, "}\n", "");
+        (yyval.rec) = createRecord(b, ""); free(h); free(b);
         freeRecord((yyvsp[-7].rec)); free((yyvsp[-6].str_val)); freeRecord((yyvsp[-4].rec)); freeRecord((yyvsp[-1].rec));
     }
-#line 1181 "parser.tab.c"
+#line 1245 "parser.tab.c"
     break;
 
   case 6: /* param_list_opt: %empty  */
-#line 70 "parser.y"
-                  { (yyval.rec) = createRecord((char*)"", (char*)""); }
-#line 1187 "parser.tab.c"
+#line 90 "parser.y"
+                  { (yyval.rec) = createRecord("", ""); }
+#line 1251 "parser.tab.c"
     break;
 
   case 9: /* param_list: param_list COMMA param  */
-#line 76 "parser.y"
+#line 96 "parser.y"
                              {
         char *s = cat((yyvsp[-2].rec)->code, ", ", (yyvsp[0].rec)->code, "", "");
-        (yyval.rec) = createRecord(s, (char*)""); free(s);
+        (yyval.rec) = createRecord(s, ""); free(s);
         freeRecord((yyvsp[-2].rec)); freeRecord((yyvsp[0].rec));
     }
-#line 1197 "parser.tab.c"
+#line 1261 "parser.tab.c"
     break;
 
   case 10: /* param: type ID  */
-#line 84 "parser.y"
+#line 104 "parser.y"
             {
         char *s = cat((yyvsp[-1].rec)->code, " ", (yyvsp[0].str_val), "", "");
-        (yyval.rec) = createRecord(s, (char*)(yyvsp[-1].rec)->opt1);
-        free(s);
-        freeRecord((yyvsp[-1].rec)); free((yyvsp[0].str_val));
+        (yyval.rec) = createRecord(s, (yyvsp[-1].rec)->opt1);
+        free(s); freeRecord((yyvsp[-1].rec)); free((yyvsp[0].str_val));
     }
-#line 1208 "parser.tab.c"
+#line 1271 "parser.tab.c"
     break;
 
   case 11: /* stmt_list: %empty  */
-#line 93 "parser.y"
-                  { (yyval.rec) = createRecord((char*)"", (char*)""); }
-#line 1214 "parser.tab.c"
-    break;
-
-  case 12: /* stmt_list: stmt_list stmt  */
-#line 94 "parser.y"
-                     {
-        char *s = cat((yyvsp[-1].rec)->code, (yyvsp[0].rec)->code, "\n", "", "");
-        (yyval.rec) = createRecord(s, (char*)""); free(s);
-        freeRecord((yyvsp[-1].rec)); freeRecord((yyvsp[0].rec));
-    }
-#line 1224 "parser.tab.c"
-    break;
-
-  case 18: /* var_decl_stmt: type ID SEMICOLON  */
-#line 110 "parser.y"
-                      {
-        char *s = cat("\t", (yyvsp[-2].rec)->code, " ", (yyvsp[-1].str_val), ";");
-        (yyval.rec) = createRecord(s, (char*)""); free(s);
-        insertSymbol((yyvsp[-1].str_val), (yyvsp[-2].rec)->opt1);
-        freeRecord((yyvsp[-2].rec)); free((yyvsp[-1].str_val));
-    }
-#line 1235 "parser.tab.c"
-    break;
-
-  case 19: /* var_decl_stmt: type ID ARROW_LEFT expr SEMICOLON  */
-#line 116 "parser.y"
-                                      {
-        char *p = cat("\t", (yyvsp[-4].rec)->code, " ", (yyvsp[-3].str_val), " = ");
-        char *s = cat(p, (yyvsp[-1].rec)->code, ";", "", "");
-        (yyval.rec) = createRecord(s, (char*)""); free(p); free(s);
-        insertSymbol((yyvsp[-3].str_val), (yyvsp[-4].rec)->opt1);
-        freeRecord((yyvsp[-4].rec)); free((yyvsp[-3].str_val)); freeRecord((yyvsp[-1].rec));
-    }
-#line 1247 "parser.tab.c"
-    break;
-
-  case 20: /* assignment_stmt: ID ARROW_LEFT expr SEMICOLON  */
-#line 126 "parser.y"
-                                 {
-        char *s = cat("\t", (yyvsp[-3].str_val), " = ", (yyvsp[-1].rec)->code, ";");
-        (yyval.rec) = createRecord(s, (char*)""); free(s);
-        free((yyvsp[-3].str_val)); freeRecord((yyvsp[-1].rec));
-    }
-#line 1257 "parser.tab.c"
-    break;
-
-  case 21: /* func_call_stmt: func_call SEMICOLON  */
-#line 134 "parser.y"
-                        {
-        char *s = cat("\t", (yyvsp[-1].rec)->code, ";", "", "");
-        (yyval.rec) = createRecord(s, (char*)""); free(s);
-        freeRecord((yyvsp[-1].rec));
-    }
-#line 1267 "parser.tab.c"
-    break;
-
-  case 22: /* print_stmt: PRINT expr SEMICOLON  */
-#line 142 "parser.y"
-                         {
-        const char* fmt = strcmp((yyvsp[-1].rec)->opt1, "Float")==0? "%f" : "%d";
-        char *s = cat("\tprintf(\"", fmt, "\\n\", ", (yyvsp[-1].rec)->code, ");");
-        (yyval.rec) = createRecord(s, (char*)""); free(s); freeRecord((yyvsp[-1].rec));
-    }
+#line 114 "parser.y"
+                  { (yyval.rec) = createRecord("", ""); }
 #line 1277 "parser.tab.c"
     break;
 
-  case 23: /* return_stmt: RETURN expr SEMICOLON  */
-#line 150 "parser.y"
-                          {
-        char *s = cat("\treturn ", (yyvsp[-1].rec)->code, ";", "", "");
-        (yyval.rec) = createRecord(s, (char*)""); free(s); freeRecord((yyvsp[-1].rec));
+  case 12: /* stmt_list: stmt_list stmt  */
+#line 115 "parser.y"
+                     {
+        char *s = cat((yyvsp[-1].rec)->code, (yyvsp[0].rec)->code, "\n", "", "");
+        (yyval.rec) = createRecord(s, ""); free(s);
+        freeRecord((yyvsp[-1].rec)); freeRecord((yyvsp[0].rec));
     }
-#line 1286 "parser.tab.c"
+#line 1287 "parser.tab.c"
     break;
 
-  case 24: /* type: UNIT  */
-#line 157 "parser.y"
-            { (yyval.rec) = createRecord((char*)"void", (char*)"Unit"); }
-#line 1292 "parser.tab.c"
-    break;
-
-  case 25: /* type: FLOAT  */
-#line 158 "parser.y"
-            { (yyval.rec) = createRecord((char*)"float", (char*)"Float"); }
+  case 20: /* var_decl_stmt: type ID SEMICOLON  */
+#line 135 "parser.y"
+                      {
+        char *s = cat("    ", (yyvsp[-2].rec)->code, " ", (yyvsp[-1].str_val), ";"); /* Corrigido */
+        (yyval.rec) = createRecord(s, ""); free(s);
+        insertSymbol((yyvsp[-1].str_val), (yyvsp[-2].rec)->opt1);
+        freeRecord((yyvsp[-2].rec)); free((yyvsp[-1].str_val));
+    }
 #line 1298 "parser.tab.c"
     break;
 
-  case 26: /* type: INT  */
-#line 159 "parser.y"
-            { (yyval.rec) = createRecord((char*)"int", (char*)"Int"); }
-#line 1304 "parser.tab.c"
-    break;
-
-  case 27: /* expr: expr PLUS expr  */
-#line 163 "parser.y"
-                      { char *s=cat("(", (yyvsp[-2].rec)->code, " + ", (yyvsp[0].rec)->code, ")"); (yyval.rec)=createRecord(s, (char*)(yyvsp[-2].rec)->opt1); free(s); freeRecord((yyvsp[-2].rec)); freeRecord((yyvsp[0].rec)); }
+  case 21: /* var_decl_stmt: type ID ARROW_LEFT expr SEMICOLON  */
+#line 141 "parser.y"
+                                      {
+        char *p = cat("    ", (yyvsp[-4].rec)->code, " ", (yyvsp[-3].str_val), " = ");
+        char *s = cat(p, (yyvsp[-1].rec)->code, ";", "", "");
+        (yyval.rec) = createRecord(s, ""); free(p); free(s);
+        insertSymbol((yyvsp[-3].str_val), (yyvsp[-4].rec)->opt1);
+        freeRecord((yyvsp[-4].rec)); free((yyvsp[-3].str_val)); freeRecord((yyvsp[-1].rec));
+    }
 #line 1310 "parser.tab.c"
     break;
 
-  case 28: /* expr: expr MINUS expr  */
-#line 164 "parser.y"
-                      { char *s=cat("(", (yyvsp[-2].rec)->code, " - ", (yyvsp[0].rec)->code, ")"); (yyval.rec)=createRecord(s, (char*)(yyvsp[-2].rec)->opt1); free(s); freeRecord((yyvsp[-2].rec)); freeRecord((yyvsp[0].rec)); }
-#line 1316 "parser.tab.c"
-    break;
-
-  case 29: /* expr: expr MUL expr  */
-#line 165 "parser.y"
-                      { char *s=cat("(", (yyvsp[-2].rec)->code, " * ", (yyvsp[0].rec)->code, ")"); (yyval.rec)=createRecord(s, (char*)(yyvsp[-2].rec)->opt1); free(s); freeRecord((yyvsp[-2].rec)); freeRecord((yyvsp[0].rec)); }
-#line 1322 "parser.tab.c"
-    break;
-
-  case 30: /* expr: expr DIV expr  */
-#line 166 "parser.y"
-                      { char *s=cat("(", (yyvsp[-2].rec)->code, " / ", (yyvsp[0].rec)->code, ")"); (yyval.rec)=createRecord(s, (char*)(yyvsp[-2].rec)->opt1); free(s); freeRecord((yyvsp[-2].rec)); freeRecord((yyvsp[0].rec)); }
-#line 1328 "parser.tab.c"
-    break;
-
-  case 31: /* expr: LPAREN expr RPAREN  */
-#line 167 "parser.y"
-                         { (yyval.rec) = (yyvsp[-1].rec); }
-#line 1334 "parser.tab.c"
-    break;
-
-  case 32: /* expr: ID  */
-#line 168 "parser.y"
-                   {
-        const char *t = lookupSymbol((yyvsp[0].str_val));
-        (yyval.rec) = createRecord((yyvsp[0].str_val), (char*)t);
-        free((yyvsp[0].str_val));
+  case 22: /* assignment_stmt: ID ARROW_LEFT expr SEMICOLON  */
+#line 153 "parser.y"
+                                 {
+        char *s = cat("    ", (yyvsp[-3].str_val), " = ", (yyvsp[-1].rec)->code, ";");
+        (yyval.rec) = createRecord(s, ""); free(s);
+        free((yyvsp[-3].str_val)); freeRecord((yyvsp[-1].rec));
     }
-#line 1344 "parser.tab.c"
+#line 1320 "parser.tab.c"
     break;
 
-  case 33: /* expr: INT_LIT  */
-#line 173 "parser.y"
-                   { char buf[32]; sprintf(buf, "%d", (yyvsp[0].int_val)); (yyval.rec) = createRecord(strdup(buf), (char*)"Int"); }
-#line 1350 "parser.tab.c"
-    break;
-
-  case 34: /* expr: FLOAT_LIT  */
-#line 174 "parser.y"
-                   { char buf[32]; sprintf(buf, "%f", (yyvsp[0].float_val)); (yyval.rec) = createRecord(strdup(buf), (char*)"Float"); }
-#line 1356 "parser.tab.c"
-    break;
-
-  case 35: /* expr: func_call  */
-#line 175 "parser.y"
-                   { (yyval.rec) = (yyvsp[0].rec); }
-#line 1362 "parser.tab.c"
-    break;
-
-  case 36: /* func_call: ID LPAREN arg_list_opt RPAREN  */
-#line 179 "parser.y"
-                                  {
-        char *s = cat((yyvsp[-3].str_val), "(", (yyvsp[-1].rec)->code, ")", "");
-        (yyval.rec) = createRecord(s, (char*)"call"); free(s); free((yyvsp[-3].str_val)); freeRecord((yyvsp[-1].rec));
+  case 23: /* func_call_stmt: func_call SEMICOLON  */
+#line 163 "parser.y"
+                        {
+        char *s = cat("    ", (yyvsp[-1].rec)->code, ";", "", "");
+        (yyval.rec) = createRecord(s, ""); free(s); freeRecord((yyvsp[-1].rec));
     }
-#line 1371 "parser.tab.c"
+#line 1329 "parser.tab.c"
     break;
 
-  case 37: /* arg_list_opt: %empty  */
-#line 186 "parser.y"
-                  { (yyval.rec) = createRecord((char*)"", (char*)""); }
-#line 1377 "parser.tab.c"
+  case 24: /* print_stmt: PRINT expr SEMICOLON  */
+#line 172 "parser.y"
+                         {
+        const char *fmt = strcmp((yyvsp[-1].rec)->opt1, "Float")==0 ? "%f" : "%d";
+        char *s = cat("    printf(\"", fmt, "\\n\", ", (yyvsp[-1].rec)->code, ");");
+        (yyval.rec) = createRecord(s, ""); free(s); freeRecord((yyvsp[-1].rec));
+    }
+#line 1339 "parser.tab.c"
     break;
 
-  case 40: /* arg_list: arg_list COMMA expr  */
-#line 192 "parser.y"
+  case 25: /* return_stmt: RETURN expr SEMICOLON  */
+#line 182 "parser.y"
                           {
-        char *s = cat((yyvsp[-2].rec)->code, ", ", (yyvsp[0].rec)->code, "", "");
-        (yyval.rec) = createRecord(s, (char*)""); free(s); freeRecord((yyvsp[-2].rec)); freeRecord((yyvsp[0].rec));
+        char *s = cat("    return ", (yyvsp[-1].rec)->code, ";", "", "");
+        (yyval.rec) = createRecord(s, ""); free(s); freeRecord((yyvsp[-1].rec));
     }
-#line 1386 "parser.tab.c"
+#line 1348 "parser.tab.c"
+    break;
+
+  case 26: /* if_stmt: IF LPAREN expr RPAREN LBRACE stmt_list RBRACE  */
+#line 191 "parser.y"
+                                                  {
+        char *lend = new_label();
+        char *cond = cat("    if (!(", (yyvsp[-4].rec)->code, ")) goto ", lend, ";");
+        char *body = (yyvsp[-1].rec)->code;
+        char *code = cat(cond, "\n", body, "\n", lend);
+        code = cat(code, ":", "", "", "");
+        (yyval.rec) = createRecord(code, ""); free(cond); free(lend); freeRecord((yyvsp[-4].rec)); freeRecord((yyvsp[-1].rec));
+    }
+#line 1361 "parser.tab.c"
+    break;
+
+  case 27: /* while_stmt: WHILE LPAREN expr RPAREN LBRACE stmt_list RBRACE  */
+#line 204 "parser.y"
+                                                     {
+        char *lbegin = new_label();
+        char *lend   = new_label();
+        char *start = cat(lbegin, ":\n", "", "", "");
+        char *cond  = cat("    if (!(", (yyvsp[-4].rec)->code, ")) goto ", lend, ";");
+        char *body  = (yyvsp[-1].rec)->code;
+        char *back  = cat("    goto ", lbegin, ";", "", "");
+        char *end   = cat(lend, ":", "", "", "");
+        char *tmp   = cat(start, cond, "\n", body, "\n");
+        tmp = cat(tmp, back, "\n", end, "");
+        (yyval.rec) = createRecord(tmp, ""); free(tmp); freeRecord((yyvsp[-4].rec)); freeRecord((yyvsp[-1].rec));
+    }
+#line 1378 "parser.tab.c"
+    break;
+
+  case 28: /* type: INT  */
+#line 221 "parser.y"
+        { (yyval.rec) = createRecord("int", "Int"); }
+#line 1384 "parser.tab.c"
+    break;
+
+  case 29: /* type: FLOAT  */
+#line 222 "parser.y"
+          { (yyval.rec) = createRecord("float", "Float"); }
+#line 1390 "parser.tab.c"
+    break;
+
+  case 30: /* type: UNIT  */
+#line 223 "parser.y"
+         { (yyval.rec) = createRecord("void", "Unit"); }
+#line 1396 "parser.tab.c"
+    break;
+
+  case 31: /* expr: expr PLUS expr  */
+#line 229 "parser.y"
+                      { char *s=cat("(", (yyvsp[-2].rec)->code, " + ", (yyvsp[0].rec)->code, ")"); (yyval.rec)=createRecord(s,(yyvsp[-2].rec)->opt1); free(s); freeRecord((yyvsp[-2].rec)); freeRecord((yyvsp[0].rec)); }
+#line 1402 "parser.tab.c"
+    break;
+
+  case 32: /* expr: expr MINUS expr  */
+#line 230 "parser.y"
+                      { char *s=cat("(", (yyvsp[-2].rec)->code, " - ", (yyvsp[0].rec)->code, ")"); (yyval.rec)=createRecord(s,(yyvsp[-2].rec)->opt1); free(s); freeRecord((yyvsp[-2].rec)); freeRecord((yyvsp[0].rec)); }
+#line 1408 "parser.tab.c"
+    break;
+
+  case 33: /* expr: expr MUL expr  */
+#line 231 "parser.y"
+                      { char *s=cat("(", (yyvsp[-2].rec)->code, " * ", (yyvsp[0].rec)->code, ")"); (yyval.rec)=createRecord(s,(yyvsp[-2].rec)->opt1); free(s); freeRecord((yyvsp[-2].rec)); freeRecord((yyvsp[0].rec)); }
+#line 1414 "parser.tab.c"
+    break;
+
+  case 34: /* expr: expr DIV expr  */
+#line 232 "parser.y"
+                      { char *s=cat("(", (yyvsp[-2].rec)->code, " / ", (yyvsp[0].rec)->code, ")"); (yyval.rec)=createRecord(s,(yyvsp[-2].rec)->opt1); free(s); freeRecord((yyvsp[-2].rec)); freeRecord((yyvsp[0].rec)); }
+#line 1420 "parser.tab.c"
+    break;
+
+  case 35: /* expr: expr LT expr  */
+#line 233 "parser.y"
+                      { char *s=cat("(", (yyvsp[-2].rec)->code, " < ",  (yyvsp[0].rec)->code, ")"); (yyval.rec)=createRecord(s,(char*)"Int"); free(s); freeRecord((yyvsp[-2].rec)); freeRecord((yyvsp[0].rec)); }
+#line 1426 "parser.tab.c"
+    break;
+
+  case 36: /* expr: expr LE expr  */
+#line 234 "parser.y"
+                      { char *s=cat("(", (yyvsp[-2].rec)->code, " <= ", (yyvsp[0].rec)->code, ")"); (yyval.rec)=createRecord(s,(char*)"Int"); free(s); freeRecord((yyvsp[-2].rec)); freeRecord((yyvsp[0].rec)); }
+#line 1432 "parser.tab.c"
+    break;
+
+  case 37: /* expr: expr GT expr  */
+#line 235 "parser.y"
+                      { char *s=cat("(", (yyvsp[-2].rec)->code, " > ",  (yyvsp[0].rec)->code, ")"); (yyval.rec)=createRecord(s,(char*)"Int"); free(s); freeRecord((yyvsp[-2].rec)); freeRecord((yyvsp[0].rec)); }
+#line 1438 "parser.tab.c"
+    break;
+
+  case 38: /* expr: expr GE expr  */
+#line 236 "parser.y"
+                      { char *s=cat("(", (yyvsp[-2].rec)->code, " >= ", (yyvsp[0].rec)->code, ")"); (yyval.rec)=createRecord(s,(char*)"Int"); free(s); freeRecord((yyvsp[-2].rec)); freeRecord((yyvsp[0].rec)); }
+#line 1444 "parser.tab.c"
+    break;
+
+  case 39: /* expr: expr EQ expr  */
+#line 237 "parser.y"
+                      { char *s=cat("(", (yyvsp[-2].rec)->code, " == ", (yyvsp[0].rec)->code, ")"); (yyval.rec)=createRecord(s,(char*)"Int"); free(s); freeRecord((yyvsp[-2].rec)); freeRecord((yyvsp[0].rec)); }
+#line 1450 "parser.tab.c"
+    break;
+
+  case 40: /* expr: expr NE expr  */
+#line 238 "parser.y"
+                      { char *s=cat("(", (yyvsp[-2].rec)->code, " != ", (yyvsp[0].rec)->code, ")"); (yyval.rec)=createRecord(s,(char*)"Int"); free(s); freeRecord((yyvsp[-2].rec)); freeRecord((yyvsp[0].rec)); }
+#line 1456 "parser.tab.c"
+    break;
+
+  case 41: /* expr: LPAREN expr RPAREN  */
+#line 239 "parser.y"
+                         { (yyval.rec) = (yyvsp[-1].rec); }
+#line 1462 "parser.tab.c"
+    break;
+
+  case 42: /* expr: ID  */
+#line 240 "parser.y"
+                       { const char *t = lookupSymbol((yyvsp[0].str_val)); (yyval.rec) = createRecord((yyvsp[0].str_val),(char*)t); free((yyvsp[0].str_val)); }
+#line 1468 "parser.tab.c"
+    break;
+
+  case 43: /* expr: INT_LIT  */
+#line 241 "parser.y"
+                       { char b[32]; sprintf(b,"%d",(yyvsp[0].int_val)); (yyval.rec)=createRecord(strdup(b),(char*)"Int"); }
+#line 1474 "parser.tab.c"
+    break;
+
+  case 44: /* expr: FLOAT_LIT  */
+#line 242 "parser.y"
+                       { char b[32]; sprintf(b,"%f",(yyvsp[0].float_val)); (yyval.rec)=createRecord(strdup(b),(char*)"Float"); }
+#line 1480 "parser.tab.c"
+    break;
+
+  case 45: /* expr: func_call  */
+#line 243 "parser.y"
+                       { (yyval.rec) = (yyvsp[0].rec); }
+#line 1486 "parser.tab.c"
+    break;
+
+  case 46: /* func_call: ID LPAREN arg_list_opt RPAREN  */
+#line 249 "parser.y"
+                                  {
+        char *s = cat((yyvsp[-3].str_val), "(", (yyvsp[-1].rec)->code, ")", ""); (yyval.rec) = createRecord(s,(char*)"call"); free(s); free((yyvsp[-3].str_val)); freeRecord((yyvsp[-1].rec));
+    }
+#line 1494 "parser.tab.c"
+    break;
+
+  case 47: /* arg_list_opt: %empty  */
+#line 255 "parser.y"
+                  { (yyval.rec) = createRecord("", ""); }
+#line 1500 "parser.tab.c"
+    break;
+
+  case 50: /* arg_list: arg_list COMMA expr  */
+#line 261 "parser.y"
+                          { char *s=cat((yyvsp[-2].rec)->code, ", ", (yyvsp[0].rec)->code, "", ""); (yyval.rec)=createRecord(s,""); free(s); freeRecord((yyvsp[-2].rec)); freeRecord((yyvsp[0].rec)); }
+#line 1506 "parser.tab.c"
     break;
 
 
-#line 1390 "parser.tab.c"
+#line 1510 "parser.tab.c"
 
       default: break;
     }
@@ -1579,7 +1699,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 198 "parser.y"
+#line 264 "parser.y"
 
 
 void yyerror(const char *s) {
@@ -1603,14 +1723,11 @@ const char* map_type(const char* o) {
 
 int main(int argc, char **argv) {
     if (argc != 3) { fprintf(stderr, "Uso: %s <in> <out>\n", argv[0]); return 1; }
-    if (!(yyin = fopen(argv[1], "r"))) { perror("abertura"); return 1; }
-    if (!(yyout = fopen(argv[2], "w"))) { perror("abertura"); fclose(yyin); return 1; }
-
+    yyin = fopen(argv[1], "r"); if (!yyin) { perror("fopen"); return 1; }
+    yyout = fopen(argv[2], "w"); if (!yyout) { perror("fopen"); fclose(yyin); return 1; }
     initSymbolTable();
-    printf("Iniciando compilação...\n");
     yyparse();
     freeSymbolTable();
-
     fclose(yyin);
     fclose(yyout);
     return 0;

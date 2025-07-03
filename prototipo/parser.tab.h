@@ -59,20 +59,28 @@ extern int yydebug;
     INT = 260,                     /* INT  */
     PRINT = 261,                   /* PRINT  */
     RETURN = 262,                  /* RETURN  */
-    ARROW_LEFT = 263,              /* ARROW_LEFT  */
-    SEMICOLON = 264,               /* SEMICOLON  */
-    LPAREN = 265,                  /* LPAREN  */
-    RPAREN = 266,                  /* RPAREN  */
-    LBRACE = 267,                  /* LBRACE  */
-    RBRACE = 268,                  /* RBRACE  */
-    COMMA = 269,                   /* COMMA  */
-    PLUS = 270,                    /* PLUS  */
-    MINUS = 271,                   /* MINUS  */
-    MUL = 272,                     /* MUL  */
-    DIV = 273,                     /* DIV  */
-    ID = 274,                      /* ID  */
-    INT_LIT = 275,                 /* INT_LIT  */
-    FLOAT_LIT = 276                /* FLOAT_LIT  */
+    IF = 263,                      /* IF  */
+    WHILE = 264,                   /* WHILE  */
+    ARROW_LEFT = 265,              /* ARROW_LEFT  */
+    PLUS = 266,                    /* PLUS  */
+    MINUS = 267,                   /* MINUS  */
+    MUL = 268,                     /* MUL  */
+    DIV = 269,                     /* DIV  */
+    LT = 270,                      /* LT  */
+    LE = 271,                      /* LE  */
+    GT = 272,                      /* GT  */
+    GE = 273,                      /* GE  */
+    EQ = 274,                      /* EQ  */
+    NE = 275,                      /* NE  */
+    SEMICOLON = 276,               /* SEMICOLON  */
+    LPAREN = 277,                  /* LPAREN  */
+    RPAREN = 278,                  /* RPAREN  */
+    LBRACE = 279,                  /* LBRACE  */
+    RBRACE = 280,                  /* RBRACE  */
+    COMMA = 281,                   /* COMMA  */
+    ID = 282,                      /* ID  */
+    INT_LIT = 283,                 /* INT_LIT  */
+    FLOAT_LIT = 284                /* FLOAT_LIT  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -81,14 +89,14 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 18 "parser.y"
+#line 26 "parser.y"
 
     int int_val;
     float float_val;
     char *str_val;
     struct record *rec;
 
-#line 92 "parser.tab.h"
+#line 100 "parser.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
