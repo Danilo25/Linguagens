@@ -3,197 +3,260 @@
 #include <stdlib.h>
 #include <string.h>
 
+/* Tabela de símbolos para variáveis */
+#define MAX_SYMBOLS 100
+struct symbol {
+    char *name;
+    char *type;
+    int value;
+} symbols[MAX_SYMBOLS];
+int sym_count = 0;
+
+/* Pilha de escopos */
+#define MAX_STACK 100
+char *scope_stack[MAX_STACK];
+int stack_top = -1;
+
+/* Funções para gerenciar escopo */
+void push_scope(char *scope) {
+    if (stack_top < MAX_STACK - 1) {
+        scope_stack[++stack_top] = strdup(scope);
+    } else {
+        fprintf(stderr, "Erro: Pilha de escopos cheia\n");
+        exit(1);
+    }
+}
+
+void pop_scope() {
+    if (stack_top >= 0) {
+        free(scope_stack[stack_top--]);
+    }
+}
+
+char* top_scope() {
+    return stack_top >= 0 ? scope_stack[stack_top] : "global";
+}
+
+/* Funções para tabela de símbolos */
+int lookup_symbol(char *name, char **type) {
+    for (int i = 0; i < sym_count; i++) {
+        if (strcmp(symbols[i].name, name) == 0) {
+            *type = symbols[i].type;
+            return symbols[i].value;
+        }
+    }
+    return -1; /* Não encontrado */
+}
+
+void set_symbol(char *name, char *type, int value) {
+    for (int i = 0; i < sym_count; i++) {
+        if (strcmp(symbols[i].name, name) == 0) {
+            symbols[i].value = value;
+            symbols[i].type = strdup(type);
+            return;
+        }
+    }
+    if (sym_count < MAX_SYMBOLS) {
+        symbols[sym_count].name = strdup(name);
+        symbols[sym_count].type = strdup(type);
+        symbols[sym_count].value = value;
+        sym_count++;
+    } else {
+        fprintf(stderr, "Erro: Tabela de símbolos cheia\n");
+        exit(1);
+    }
+}
+
+/* Verificação de compatibilidade de tipos */
+int compativel(char *tipo1, char *tipo2) {
+    return strcmp(tipo1, tipo2) == 0; /* Simplificação: tipos iguais são compatíveis */
+}
+
+/* Declarações do lexer */
 extern int yylex();
 extern int yylineno;
 extern char *yytext;
 extern FILE *yyin;
 
 void yyerror(const char *s) {
-    fprintf(stderr, "SYNTAX ERROR: %s at line %d near '%s'\n", s, yylineno, yytext);
+    fprintf(stderr, "Erro de sintaxe: %s na linha %d perto de '%s'\n", s, yylineno, yytext);
+    exit(1);
 }
 %}
 
+/* Definição da união */
 %union {
     int int_val;
-    float float_val;
-    char char_val;
     char *str_val;
+    struct { char *text; char *type; int value; } expr_val;
 }
 
-%token IF ELSE FOR SWITCH WHILE RETURN DO
-%token PRINT SCAN
-%token UNIT BOOL INT FLOAT CHAR STRING
-%token STRUCTURE SUM
-%token MUT
-%token BREAK CASE
-%token SKIP STOP PLUSPLUS MINUSMINUS
-%token PLUS_INT MINUS_INT MUL_INT DIV_INT MOD_INT
-%token PLUS_FLOAT MINUS_FLOAT MUL_FLOAT DIV_FLOAT
-%token AND OR NOT
-%token EQQ NEQ LE GE LSHIFT RSHIFT LT GT EQ ARROW_LEFT ARROW_RIGHT
-%token SEMICOLON COMMA LPAREN RPAREN LBRACE RBRACE LBRACKET RBRACKET
-%token DOT
-
+/* Tokens do lexer */
 %token <str_val> ID
 %token <int_val> INT_LIT
-%token <float_val> FLOAT_LIT
-%token <char_val> CHAR_LIT
-%token <str_val> STRING_LIT
+%token PLUS_INT MINUS_INT MUL_INT DIV_INT
+%token EQ SEMICOLON LPAREN RPAREN LBRACE RBRACE
+%token INT FLOAT CHAR STRING
+%token RETURN INICIO FIM
 
+/* Tipos das produções */
 %type <str_val> type
+%type <expr_val> expr
 
-%left OR
-%left AND
-%left EQQ NEQ
-%left LT GT LE GE
-%left LSHIFT RSHIFT
+/* Precedência dos operadores */
 %left PLUS_INT MINUS_INT
-%left MUL_INT DIV_INT MOD_INT
-%left PLUS_FLOAT MINUS_FLOAT
-%left MUL_FLOAT DIV_FLOAT
-%right NOT
-%nonassoc PLUSPLUS MINUSMINUS
-%nonassoc EQ ARROW_LEFT
+%left MUL_INT DIV_INT
 
 %%
 
-program : decl_list { printf("Parsing completed successfully!\n"); }
-        | /* empty */ { printf("Parsing completed successfully (empty program)!\n"); }
+/* Programa principal */
+program : { push_scope("global"); } decl_list subprogram_list INICIO stmt_list FIM { pop_scope(); printf("Programa executado com sucesso!\n"); }
         ;
 
+/* Declarações */
 decl_list : decl_list decl
-          | decl
+          | /* vazio */
           ;
 
-decl : var_decl
-     | func_decl
-     | struct_decl
-     | sum_decl
+decl : type id_list SEMICOLON { }
      ;
 
-var_decl : type ID SEMICOLON
-         | type ID EQ expr SEMICOLON
-         | type ID ARROW_LEFT expr SEMICOLON
-         | MUT type ID SEMICOLON
-         | MUT type ID EQ expr SEMICOLON
-         | MUT type ID ARROW_LEFT expr SEMICOLON
-         ;
+id_list : ID { set_symbol($1, $<str_val>0, 0); } /* Inicializa variável com valor 0 */
+        | id_list COMMA ID { set_symbol($3, $<str_val>0, 0); }
+        ;
 
-type : UNIT         { $$ = strdup("Unit"); }
-     | BOOL         { $$ = strdup("Bool"); }
-     | INT          { $$ = strdup("Int"); }
-     | FLOAT        { $$ = strdup("Float"); }
-     | CHAR         { $$ = strdup("Char"); }
-     | STRING       { $$ = strdup("String"); }
-     | ID           { $$ = strdup($1); }
-     ;
+/* Subprogramas */
+subprogram_list : subprogram_list subprogram
+                | /* vazio */
+                ;
 
-func_decl : type ID LPAREN param_list RPAREN LBRACE stmt_list RBRACE
-          ;
-
-param_list : param_list COMMA type ID
-           | type ID
-           | /* empty */
+subprogram : type ID LPAREN { push_scope($2); } decl_list RPAREN LBRACE stmt_list RBRACE { pop_scope(); }
            ;
 
-struct_decl : STRUCTURE ID LBRACE field_list RBRACE
-            ;
-
-field_list : field_list COMMA type ID
-           | type ID
-           | /* empty */
-           ;
-
-sum_decl : SUM ID LBRACE variant_list RBRACE
-         ;
-
-variant_list : variant_list COMMA ID
-             | ID
-             | /* empty */
-             ;
-
+/* Comandos */
 stmt_list : stmt_list stmt
-          | /* empty */
+          | /* vazio */
           ;
 
-stmt : var_decl
-     | lvalue ARROW_LEFT expr SEMICOLON
-     | expr SEMICOLON
-     | IF LPAREN expr RPAREN LBRACE stmt_list RBRACE
-     | IF LPAREN expr RPAREN LBRACE stmt_list RBRACE ELSE LBRACE stmt_list RBRACE
-     | WHILE LPAREN expr RPAREN LBRACE stmt_list RBRACE
-     | FOR LPAREN var_decl expr SEMICOLON expr RPAREN LBRACE stmt_list RBRACE
-     | DO LBRACE stmt_list RBRACE WHILE LPAREN expr RPAREN SEMICOLON
-     | SWITCH LPAREN expr RPAREN LBRACE case_list RBRACE
-     | RETURN expr SEMICOLON
-     | RETURN SEMICOLON
-     | BREAK SEMICOLON
-     | SKIP SEMICOLON
-     | STOP SEMICOLON
-     | PRINT expr SEMICOLON
-     | SCAN ID SEMICOLON
+stmt : decl
+     | RETURN expr SEMICOLON {
+         char *sub_type = top_scope();
+         if (compativel(sub_type, $2.type)) {
+             printf("Retornando valor: %d\n", $2.value);
+         } else {
+             yyerror("Tipos incompatíveis no retorno");
+         }
+     }
+     | ID EQ expr SEMICOLON {
+         char *var_type;
+         if (lookup_symbol($1, &var_type) != -1) {
+             if (compativel(var_type, $3.type)) {
+                 set_symbol($1, var_type, $3.value);
+                 printf("Atribuído %d a %s\n", $3.value, $1);
+             } else {
+                 yyerror("Tipos incompatíveis na atribuição");
+             }
+         } else {
+             yyerror("Variável não declarada");
+         }
+     }
      ;
 
-lvalue : ID
-       | expr DOT ID
-       ;
-
-case_list : case_list CASE expr LBRACE stmt_list RBRACE
-          | CASE expr LBRACE stmt_list RBRACE
-          ;
-
-expr : expr PLUS_INT expr
-     | expr MINUS_INT expr
-     | expr MUL_INT expr
-     | expr DIV_INT expr
-     | expr MOD_INT expr
-     | expr PLUS_FLOAT expr
-     | expr MINUS_FLOAT expr
-     | expr MUL_FLOAT expr
-     | expr DIV_FLOAT expr
-     | expr AND expr
-     | expr OR expr
-     | NOT expr
-     | expr EQQ expr
-     | expr NEQ expr
-     | expr LT expr
-     | expr GT expr
-     | expr LE expr
-     | expr GE expr
-     | expr LSHIFT expr
-     | expr RSHIFT expr
-     | ID PLUSPLUS
-     | ID MINUSMINUS
-     | ID EQ expr
-     | ID ARROW_LEFT expr
-     | ID LPAREN arg_list RPAREN
-     | ID LBRACKET expr RBRACKET
-     | ID
-     | INT_LIT
-     | FLOAT_LIT
-     | CHAR_LIT
-     | STRING_LIT
-     | LPAREN expr RPAREN
-     | expr DOT ID
+/* Tipos */
+type : INT    { $$ = strdup("Int"); }
+     | FLOAT  { $$ = strdup("Float"); }
+     | CHAR   { $$ = strdup("Char"); }
+     | STRING { $$ = strdup("String"); }
      ;
 
-arg_list : arg_list COMMA expr
-         | expr
-         | /* empty */
-         ;
+/* Expressões */
+expr : expr PLUS_INT expr {
+         if (compativel($1.type, $3.type)) {
+             $$.value = $1.value + $3.value;
+             $$.text = malloc(strlen($1.text) + strlen("+") + strlen($3.text) + 1);
+             sprintf($$.text, "%s+%s", $1.text, $3.text);
+             $$.type = $1.type;
+         } else {
+             yyerror("Tipos incompatíveis na soma");
+         }
+     }
+     | expr MINUS_INT expr {
+         if (compativel($1.type, $3.type)) {
+             $$.value = $1.value - $3.value;
+             $$.text = malloc(strlen($1.text) + strlen("-") + strlen($3.text) + 1);
+             sprintf($$.text, "%s-%s", $1.text, $3.text);
+             $$.type = $1.type;
+         } else {
+             yyerror("Tipos incompatíveis na subtração");
+         }
+     }
+     | expr MUL_INT expr {
+         if (compativel($1.type, $3.type)) {
+             $$.value = $1.value * $3.value;
+             $$.text = malloc(strlen($1.text) + strlen("*") + strlen($3.text) + 1);
+             sprintf($$.text, "%s*%s", $1.text, $3.text);
+             $$.type = $1.type;
+         } else {
+             yyerror("Tipos incompatíveis na multiplicação");
+         }
+     }
+     | expr DIV_INT expr {
+         if (compativel($1.type, $3.type)) {
+             if ($3.value != 0) {
+                 $$.value = $1.value / $3.value;
+                 $$.text = malloc(strlen($1.text) + strlen("/") + strlen($3.text) + 1);
+                 sprintf($$.text, "%s/%s", $1.text, $3.text);
+                 $$.type = $1.type;
+             } else {
+                 yyerror("Divisão por zero");
+             }
+         } else {
+             yyerror("Tipos incompatíveis na divisão");
+         }
+     }
+     | ID {
+         char *type;
+         int value = lookup_symbol($1, &type);
+         if (value != -1) {
+             $$.value = value;
+             $$.text = strdup($1);
+             $$.type = type;
+         } else {
+             yyerror("Variável não declarada");
+         }
+     }
+     | INT_LIT {
+         $$.value = $1;
+         $$.text = malloc(20);
+         sprintf($$.text, "%d", $1);
+         $$.type = strdup("Int");
+     }
+     ;
 
 %%
 
+/* Função principal */
 int main(int argc, char **argv) {
-    printf("Iniciando análise sintática...\n");
+    printf("Iniciando o interpretador...\n");
+
+    /* Abre o arquivo de entrada */
     if (argc > 1) {
         yyin = fopen(argv[1], "r");
         if (!yyin) {
-            perror("Could not open input file");
+            perror("Erro ao abrir o arquivo de entrada");
             return 1;
         }
+    } else {
+        yyin = stdin;
     }
+
+    /* Executa o parser */
     yyparse();
-    if (yyin != stdin) fclose(yyin);
+
+    /* Fecha o arquivo */
+    if (yyin != stdin) {
+        fclose(yyin);
+    }
+
     return 0;
 }
