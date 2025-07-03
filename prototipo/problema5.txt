@@ -1,0 +1,22 @@
+// Script de teste para o Problema 5: MDC com passagem por referência
+
+// Declara o PROTÓTIPO da função 'mdc', indicando que sua implementação
+// está em uma biblioteca externa. Note o ponto e vírgula no final.
+Unit mdc(Int n, Int m, ref Int r);
+
+Unit main() {
+    // Declara a variável que receberá o resultado
+    Int resultado <- 0;
+
+    // --- Teste 1: MDC de 48 e 18 ---
+    mdc(48, 18, &resultado);
+    print resultado; // Output esperado: 6
+
+    // --- Teste 2: MDC de 101 e 10 ---
+    mdc(101, 10, &resultado);
+    print resultado; // Output esperado: 1
+
+    // --- Teste 3: MDC de 50 e 25 ---
+    mdc(50, 25, &resultado);
+    print resultado; // Output esperado: 25
+}

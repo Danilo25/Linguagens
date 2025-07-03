@@ -8,11 +8,16 @@
 /* Stub de leitura */
 float read() { float v; if (scanf("%f", &v)!=1) return -1.0f; return v;}
 
+void mdc(int n, int m, void* r);
+
+
 int main() {
-    float x = 2.500000;
-    float y = 1.200000;
-    int c = 3;
-    float resultado = (((x * x) - y) + c);
-    printf("%f\n", resultado);
+    int resultado = 0;
+    mdc(48, 18, &resultado);
+    printf("%d\n", resultado);
+    mdc(101, 10, &resultado);
+    printf("%d\n", resultado);
+    mdc(50, 25, &resultado);
+    printf("%d\n", resultado);
 }
 

@@ -14,8 +14,8 @@ Y_C     = parser.tab.c
 LEX_SRC = scanner.l
 LEX_C   = lex.yy.c
 
-# Adicionado rational.c à lista de fontes da biblioteca
-LIBSRC  = ./lib/record.c ./lib/symbol_table.c ./lib/rational.c
+# Adicionado bst.c à lista de fontes da biblioteca
+LIBSRC  = ./lib/record.c ./lib/symbol_table.c ./lib/rational.c ./lib/matrix.c ./lib/mdc.c ./lib/bst.c
 
 # --- Regras ---
 .PHONY: all clean
