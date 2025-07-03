@@ -72,16 +72,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "./lib/record.h"
+#include "./lib/symbol_table.h"
 
-// Protótipos para funções do Flex e a função de erro do Bison
-extern int yylex();
+int yylex(void);
+void yyerror(const char *s);
 extern int yylineno;
 extern char *yytext;
-extern FILE *yyin;
+extern FILE *yyin, *yyout;
 
-void yyerror(const char *s);
+char *cat(const char *s1, const char *s2, const char *s3, const char *s4, const char *s5);
+const char* map_type(const char* original_type);
 
-#line 85 "parser.tab.c"
+#line 88 "parser.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -537,11 +540,11 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    47,    47,    53,    54,    60,    66,    67,    74,    75,
-      82,    86,    87,    92,    93,    94,    95,    96,   104,   105,
-     111,   117,   123,   130,   134,   135,   136,   141,   142,   143,
-     144,   145,   146,   147,   148,   149,   156,   162,   163,   169,
-     170
+       0,    42,    42,    51,    52,    60,    70,    71,    75,    76,
+      84,    93,    94,   102,   103,   104,   105,   106,   110,   116,
+     126,   134,   142,   150,   157,   158,   159,   163,   164,   165,
+     166,   167,   168,   173,   174,   175,   179,   186,   187,   191,
+     192
 };
 #endif
 
@@ -602,9 +605,9 @@ static const yytype_int8 yypact[] =
 static const yytype_int8 yydefact[] =
 {
        0,    24,    25,    26,     0,     2,     3,     0,     1,     4,
-       0,     6,     0,     7,     8,     0,     0,     0,    10,    12,
-       9,     0,     0,     0,     5,     0,    11,    13,    14,    17,
-      15,    16,     0,     0,     0,    32,    34,    33,     0,    35,
+       0,     6,     0,     7,     8,     0,     0,     0,    10,    11,
+       9,     0,     0,     0,     5,     0,    12,    13,    14,    17,
+      15,    16,     0,     0,     0,    32,    33,    34,     0,    35,
        0,     0,    37,     0,    21,     0,    22,     0,     0,     0,
        0,    23,     0,    39,     0,    38,     0,    18,    31,    27,
       28,    29,    30,    20,    36,     0,     0,    40,    19
@@ -678,7 +681,7 @@ static const yytype_int8 yyr1[] =
 static const yytype_int8 yyr2[] =
 {
        0,     2,     1,     1,     2,     8,     0,     1,     1,     3,
-       2,     2,     0,     1,     1,     1,     1,     1,     3,     5,
+       2,     0,     2,     1,     1,     1,     1,     1,     3,     5,
        4,     2,     3,     3,     1,     1,     1,     3,     3,     3,
        3,     3,     1,     1,     1,     1,     4,     0,     1,     1,
        3
@@ -1145,15 +1148,245 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* program: decl_list  */
-#line 48 "parser.y"
-        { 
-            printf("Análise sintática concluída com sucesso!\n"); 
-        }
-#line 1153 "parser.tab.c"
+#line 42 "parser.y"
+              {
+        fprintf(yyout, "#include <stdio.h>\n\n");
+        fprintf(yyout, "%s\n", (yyvsp[0].rec)->code);
+        freeRecord((yyvsp[0].rec));
+        printf("Arquivo de saída gerado com sucesso!\n");
+    }
+#line 1159 "parser.tab.c"
+    break;
+
+  case 4: /* decl_list: decl_list func_decl  */
+#line 52 "parser.y"
+                          {
+        char *s = cat((yyvsp[-1].rec)->code, "\n\n", (yyvsp[0].rec)->code, "", "");
+        (yyval.rec) = createRecord(s, (char*)""); free(s);
+        freeRecord((yyvsp[-1].rec)); freeRecord((yyvsp[0].rec));
+    }
+#line 1169 "parser.tab.c"
+    break;
+
+  case 5: /* func_decl: type ID LPAREN param_list_opt RPAREN LBRACE stmt_list RBRACE  */
+#line 60 "parser.y"
+                                                                 {
+        const char* c_ret = strcmp((yyvsp[-6].str_val), "main")==0? "int" : map_type((yyvsp[-7].rec)->code);
+        char *h = cat((char*)c_ret, " ", (yyvsp[-6].str_val), "(", (yyvsp[-4].rec)->code);
+        char *body = cat(h, ")\n{\n", (yyvsp[-1].rec)->code, "}\n", "");
+        (yyval.rec) = createRecord(body, (char*)""); free(h); free(body);
+        freeRecord((yyvsp[-7].rec)); free((yyvsp[-6].str_val)); freeRecord((yyvsp[-4].rec)); freeRecord((yyvsp[-1].rec));
+    }
+#line 1181 "parser.tab.c"
+    break;
+
+  case 6: /* param_list_opt: %empty  */
+#line 70 "parser.y"
+                  { (yyval.rec) = createRecord((char*)"", (char*)""); }
+#line 1187 "parser.tab.c"
+    break;
+
+  case 9: /* param_list: param_list COMMA param  */
+#line 76 "parser.y"
+                             {
+        char *s = cat((yyvsp[-2].rec)->code, ", ", (yyvsp[0].rec)->code, "", "");
+        (yyval.rec) = createRecord(s, (char*)""); free(s);
+        freeRecord((yyvsp[-2].rec)); freeRecord((yyvsp[0].rec));
+    }
+#line 1197 "parser.tab.c"
+    break;
+
+  case 10: /* param: type ID  */
+#line 84 "parser.y"
+            {
+        char *s = cat((yyvsp[-1].rec)->code, " ", (yyvsp[0].str_val), "", "");
+        (yyval.rec) = createRecord(s, (char*)(yyvsp[-1].rec)->opt1);
+        free(s);
+        freeRecord((yyvsp[-1].rec)); free((yyvsp[0].str_val));
+    }
+#line 1208 "parser.tab.c"
+    break;
+
+  case 11: /* stmt_list: %empty  */
+#line 93 "parser.y"
+                  { (yyval.rec) = createRecord((char*)"", (char*)""); }
+#line 1214 "parser.tab.c"
+    break;
+
+  case 12: /* stmt_list: stmt_list stmt  */
+#line 94 "parser.y"
+                     {
+        char *s = cat((yyvsp[-1].rec)->code, (yyvsp[0].rec)->code, "\n", "", "");
+        (yyval.rec) = createRecord(s, (char*)""); free(s);
+        freeRecord((yyvsp[-1].rec)); freeRecord((yyvsp[0].rec));
+    }
+#line 1224 "parser.tab.c"
+    break;
+
+  case 18: /* var_decl_stmt: type ID SEMICOLON  */
+#line 110 "parser.y"
+                      {
+        char *s = cat("\t", (yyvsp[-2].rec)->code, " ", (yyvsp[-1].str_val), ";");
+        (yyval.rec) = createRecord(s, (char*)""); free(s);
+        insertSymbol((yyvsp[-1].str_val), (yyvsp[-2].rec)->opt1);
+        freeRecord((yyvsp[-2].rec)); free((yyvsp[-1].str_val));
+    }
+#line 1235 "parser.tab.c"
+    break;
+
+  case 19: /* var_decl_stmt: type ID ARROW_LEFT expr SEMICOLON  */
+#line 116 "parser.y"
+                                      {
+        char *p = cat("\t", (yyvsp[-4].rec)->code, " ", (yyvsp[-3].str_val), " = ");
+        char *s = cat(p, (yyvsp[-1].rec)->code, ";", "", "");
+        (yyval.rec) = createRecord(s, (char*)""); free(p); free(s);
+        insertSymbol((yyvsp[-3].str_val), (yyvsp[-4].rec)->opt1);
+        freeRecord((yyvsp[-4].rec)); free((yyvsp[-3].str_val)); freeRecord((yyvsp[-1].rec));
+    }
+#line 1247 "parser.tab.c"
+    break;
+
+  case 20: /* assignment_stmt: ID ARROW_LEFT expr SEMICOLON  */
+#line 126 "parser.y"
+                                 {
+        char *s = cat("\t", (yyvsp[-3].str_val), " = ", (yyvsp[-1].rec)->code, ";");
+        (yyval.rec) = createRecord(s, (char*)""); free(s);
+        free((yyvsp[-3].str_val)); freeRecord((yyvsp[-1].rec));
+    }
+#line 1257 "parser.tab.c"
+    break;
+
+  case 21: /* func_call_stmt: func_call SEMICOLON  */
+#line 134 "parser.y"
+                        {
+        char *s = cat("\t", (yyvsp[-1].rec)->code, ";", "", "");
+        (yyval.rec) = createRecord(s, (char*)""); free(s);
+        freeRecord((yyvsp[-1].rec));
+    }
+#line 1267 "parser.tab.c"
+    break;
+
+  case 22: /* print_stmt: PRINT expr SEMICOLON  */
+#line 142 "parser.y"
+                         {
+        const char* fmt = strcmp((yyvsp[-1].rec)->opt1, "Float")==0? "%f" : "%d";
+        char *s = cat("\tprintf(\"", fmt, "\\n\", ", (yyvsp[-1].rec)->code, ");");
+        (yyval.rec) = createRecord(s, (char*)""); free(s); freeRecord((yyvsp[-1].rec));
+    }
+#line 1277 "parser.tab.c"
+    break;
+
+  case 23: /* return_stmt: RETURN expr SEMICOLON  */
+#line 150 "parser.y"
+                          {
+        char *s = cat("\treturn ", (yyvsp[-1].rec)->code, ";", "", "");
+        (yyval.rec) = createRecord(s, (char*)""); free(s); freeRecord((yyvsp[-1].rec));
+    }
+#line 1286 "parser.tab.c"
+    break;
+
+  case 24: /* type: UNIT  */
+#line 157 "parser.y"
+            { (yyval.rec) = createRecord((char*)"void", (char*)"Unit"); }
+#line 1292 "parser.tab.c"
+    break;
+
+  case 25: /* type: FLOAT  */
+#line 158 "parser.y"
+            { (yyval.rec) = createRecord((char*)"float", (char*)"Float"); }
+#line 1298 "parser.tab.c"
+    break;
+
+  case 26: /* type: INT  */
+#line 159 "parser.y"
+            { (yyval.rec) = createRecord((char*)"int", (char*)"Int"); }
+#line 1304 "parser.tab.c"
+    break;
+
+  case 27: /* expr: expr PLUS expr  */
+#line 163 "parser.y"
+                      { char *s=cat("(", (yyvsp[-2].rec)->code, " + ", (yyvsp[0].rec)->code, ")"); (yyval.rec)=createRecord(s, (char*)(yyvsp[-2].rec)->opt1); free(s); freeRecord((yyvsp[-2].rec)); freeRecord((yyvsp[0].rec)); }
+#line 1310 "parser.tab.c"
+    break;
+
+  case 28: /* expr: expr MINUS expr  */
+#line 164 "parser.y"
+                      { char *s=cat("(", (yyvsp[-2].rec)->code, " - ", (yyvsp[0].rec)->code, ")"); (yyval.rec)=createRecord(s, (char*)(yyvsp[-2].rec)->opt1); free(s); freeRecord((yyvsp[-2].rec)); freeRecord((yyvsp[0].rec)); }
+#line 1316 "parser.tab.c"
+    break;
+
+  case 29: /* expr: expr MUL expr  */
+#line 165 "parser.y"
+                      { char *s=cat("(", (yyvsp[-2].rec)->code, " * ", (yyvsp[0].rec)->code, ")"); (yyval.rec)=createRecord(s, (char*)(yyvsp[-2].rec)->opt1); free(s); freeRecord((yyvsp[-2].rec)); freeRecord((yyvsp[0].rec)); }
+#line 1322 "parser.tab.c"
+    break;
+
+  case 30: /* expr: expr DIV expr  */
+#line 166 "parser.y"
+                      { char *s=cat("(", (yyvsp[-2].rec)->code, " / ", (yyvsp[0].rec)->code, ")"); (yyval.rec)=createRecord(s, (char*)(yyvsp[-2].rec)->opt1); free(s); freeRecord((yyvsp[-2].rec)); freeRecord((yyvsp[0].rec)); }
+#line 1328 "parser.tab.c"
+    break;
+
+  case 31: /* expr: LPAREN expr RPAREN  */
+#line 167 "parser.y"
+                         { (yyval.rec) = (yyvsp[-1].rec); }
+#line 1334 "parser.tab.c"
+    break;
+
+  case 32: /* expr: ID  */
+#line 168 "parser.y"
+                   {
+        const char *t = lookupSymbol((yyvsp[0].str_val));
+        (yyval.rec) = createRecord((yyvsp[0].str_val), (char*)t);
+        free((yyvsp[0].str_val));
+    }
+#line 1344 "parser.tab.c"
+    break;
+
+  case 33: /* expr: INT_LIT  */
+#line 173 "parser.y"
+                   { char buf[32]; sprintf(buf, "%d", (yyvsp[0].int_val)); (yyval.rec) = createRecord(strdup(buf), (char*)"Int"); }
+#line 1350 "parser.tab.c"
+    break;
+
+  case 34: /* expr: FLOAT_LIT  */
+#line 174 "parser.y"
+                   { char buf[32]; sprintf(buf, "%f", (yyvsp[0].float_val)); (yyval.rec) = createRecord(strdup(buf), (char*)"Float"); }
+#line 1356 "parser.tab.c"
+    break;
+
+  case 35: /* expr: func_call  */
+#line 175 "parser.y"
+                   { (yyval.rec) = (yyvsp[0].rec); }
+#line 1362 "parser.tab.c"
+    break;
+
+  case 36: /* func_call: ID LPAREN arg_list_opt RPAREN  */
+#line 179 "parser.y"
+                                  {
+        char *s = cat((yyvsp[-3].str_val), "(", (yyvsp[-1].rec)->code, ")", "");
+        (yyval.rec) = createRecord(s, (char*)"call"); free(s); free((yyvsp[-3].str_val)); freeRecord((yyvsp[-1].rec));
+    }
+#line 1371 "parser.tab.c"
+    break;
+
+  case 37: /* arg_list_opt: %empty  */
+#line 186 "parser.y"
+                  { (yyval.rec) = createRecord((char*)"", (char*)""); }
+#line 1377 "parser.tab.c"
+    break;
+
+  case 40: /* arg_list: arg_list COMMA expr  */
+#line 192 "parser.y"
+                          {
+        char *s = cat((yyvsp[-2].rec)->code, ", ", (yyvsp[0].rec)->code, "", "");
+        (yyval.rec) = createRecord(s, (char*)""); free(s); freeRecord((yyvsp[-2].rec)); freeRecord((yyvsp[0].rec));
+    }
+#line 1386 "parser.tab.c"
     break;
 
 
-#line 1157 "parser.tab.c"
+#line 1390 "parser.tab.c"
 
       default: break;
     }
@@ -1346,32 +1579,39 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 173 "parser.y"
- /* Fim das Regras */
+#line 198 "parser.y"
 
-// Função de erro customizada
+
 void yyerror(const char *s) {
     fprintf(stderr, "ERRO DE SINTAXE: %s na linha %d perto de '%s'\n", s, yylineno, yytext);
 }
 
-// Função principal para iniciar a análise
+char* cat(const char *s1, const char *s2, const char *s3, const char *s4, const char *s5) {
+    size_t len = strlen(s1) + strlen(s2) + strlen(s3) + strlen(s4) + strlen(s5) + 1;
+    char *o = malloc(len);
+    if (!o) { fprintf(stderr, "Erro de malloc!\n"); exit(1); }
+    sprintf(o, "%s%s%s%s%s", s1, s2, s3, s4, s5);
+    return o;
+}
+
+const char* map_type(const char* o) {
+    if (strcmp(o, "Int") == 0) return "int";
+    if (strcmp(o, "Float") == 0) return "float";
+    if (strcmp(o, "Unit") == 0) return "void";
+    return "void";
+}
+
 int main(int argc, char **argv) {
-    if (argc > 1) {
-        yyin = fopen(argv[1], "r");
-        if (!yyin) {
-            perror("Não foi possível abrir o arquivo de entrada");
-            return 1;
-        }
-    } else {
-        printf("Usando entrada padrão (stdin)...\n");
-        yyin = stdin;
-    }
-    
-    printf("Iniciando análise sintática...\n");
+    if (argc != 3) { fprintf(stderr, "Uso: %s <in> <out>\n", argv[0]); return 1; }
+    if (!(yyin = fopen(argv[1], "r"))) { perror("abertura"); return 1; }
+    if (!(yyout = fopen(argv[2], "w"))) { perror("abertura"); fclose(yyin); return 1; }
+
+    initSymbolTable();
+    printf("Iniciando compilação...\n");
     yyparse();
-    
-    if (yyin && yyin != stdin) {
-        fclose(yyin);
-    }
+    freeSymbolTable();
+
+    fclose(yyin);
+    fclose(yyout);
     return 0;
 }

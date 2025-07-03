@@ -1,13 +1,35 @@
-all: compilador
+# Makefile para o protótipo
 
-compilador: lex.yy.c y.tab.c 
-	gcc lex.yy.c y.tab.c ./lib/record.c -o compiler
+CC        = gcc
+FLEX      = flex
+BISON     = bison
+CFLAGS    = -Wall -g
+LDFLAGS   =
+TARGET    = compiler
 
-lex.yy.c: scanner.l
-	flex scanner.l
+# Fontes do analisador
+LEX_SRC   = lex.yy.c
+Y_SRC     = parser.tab.c
+Y_HDR     = parser.tab.h
 
-y.tab.c: parser.y  
-	bison parser.y -d -v -o y.tab.c
+# Módulos auxiliares
+LIBSRC    = ./lib/record.c ./lib/symbol_table.c
+
+.PHONY: all clean
+
+all: $(TARGET)
+
+# Regra principal: gera o executável compiler
+$(TARGET): $(LEX_SRC) $(Y_SRC) $(LIBSRC)
+	$(CC) $(CFLAGS) $(LEX_SRC) $(Y_SRC) $(LIBSRC) -o $(TARGET)
+
+# Gera lex.yy.c a partir do scanner.l
+$(LEX_SRC): scanner.l
+	$(FLEX) scanner.l
+
+# Gera parser.tab.c e parser.tab.h a partir do parser.y
+$(Y_SRC) $(Y_HDR): parser.y
+	$(BISON) -d -v -o parser.tab.c parser.y
 
 clean:
-	rm -rf lex.yy.c y.tab.* compiler output.txt y.output
+	rm -f $(LEX_SRC) $(Y_SRC) $(Y_HDR) $(TARGET) output.txt y.output
