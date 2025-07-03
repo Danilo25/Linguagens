@@ -1,0 +1,35 @@
+Unit main () {
+    Int c1 <- 0;
+    Int c2 <- 0;
+    Int c3 <- 0;
+    Int c4 <- 0;
+
+    Float in <- read();
+
+    while (in >= 0) {
+        if (in <= 25) {
+            c1 <- c1 + 1;
+        }
+        if (in > 25) {
+            if (in <= 50) {
+                c2 <- c2 + 1;
+            }
+        }
+        if (in > 50) {
+            if (in <= 75) {
+                c3 <- c3 + 1;
+            }
+        }
+        if (in > 75) {
+            if (in <= 100) {
+                c4 <- c4 + 1;
+            }
+        }
+        in <- read();
+    }
+
+    print c1;
+    print c2;
+    print c3;
+    print c4;
+}

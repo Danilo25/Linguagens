@@ -1,5 +1,7 @@
 %{
 #include "parser.tab.h"
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 %}
 
@@ -11,44 +13,42 @@
 "Unit"          { return UNIT; }
 "Float"         { return FLOAT; }
 "Int"           { return INT; }
+"Rational"      { return RATIONAL; }
+
 "print"         { return PRINT; }
 "return"        { return RETURN; }
+"if"            { return IF; }
+"while"         { return WHILE; }
+
+"<="            { return LE; }
+">="            { return GE; }
+"=="            { return EQ; }
+"!="            { return NE; }
+"<"             { return LT; }
+">"             { return GT; }
 
 "<-"            { return ARROW_LEFT; }
+
 "+"             { return PLUS; }
 "-"             { return MINUS; }
 "*"             { return MUL; }
 "/"             { return DIV; }
 
 ";"             { return SEMICOLON; }
+","             { return COMMA; }
 "("             { return LPAREN; }
 ")"             { return RPAREN; }
 "{"             { return LBRACE; }
 "}"             { return RBRACE; }
-","             { return COMMA; }
 
+[0-9]+\.[0-9]+  { yylval.float_val = atof(yytext); return FLOAT_LIT; }
+[0-9]+          { yylval.int_val   = atoi(yytext); return INT_LIT; }
 
-[0-9]+\.[0-9]+ {
-    yylval.float_val = atof(yytext);
-    return FLOAT_LIT;
-}
+[a-zA-Z_][a-zA-Z0-9_]* { yylval.str_val = strdup(yytext); return ID; }
 
-[0-9]+ {
-    yylval.int_val = atoi(yytext);
-    return INT_LIT;
-}
+[ \t\r\n]+      { }
+"//".* { }
 
-[a-zA-Z_][a-zA-Z0-9_]* {
-    yylval.str_val = strdup(yytext);
-    return ID;
-}
-
-"//".* { /* Ignora comentários de linha */ }
-[ \t\r\n]+      { /* Ignora espaços em branco */ }
-
-.               {
-    fprintf(stderr, "ERRO LÉXICO: Token desconhecido '%s' na linha %d\n", yytext, yylineno);
-    return 0;
-}
+.               { fprintf(stderr, "ERRO LÉXICO: '%s' na linha %d\n", yytext, yylineno); exit(1); }
 
 %%
