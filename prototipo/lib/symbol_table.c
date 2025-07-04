@@ -4,42 +4,78 @@
 #include <string.h>
 #include <stdio.h>
 
-// Uma lista simples de pares nome→tipo
-typedef struct Sym {
-    char *name;
-    char *type;
-    struct Sym *next;
-} Sym;
-
 static Sym *symbols = NULL;
+static int current_scope = 0;
 
 void initSymbolTable(void) {
     symbols = NULL;
+    current_scope = 0;
 }
 
-void insertSymbol(const char *name, const char *type) {
-    Sym *s = malloc(sizeof *s);
-    s->name = strdup(name);
-    s->type = strdup(type);
-    s->next = symbols;
-    symbols = s;
+void enter_scope() {
+    current_scope++;
 }
 
-const char *lookupSymbol(const char *name) {
-    for (Sym *s = symbols; s; s = s->next) {
-        if (strcmp(s->name, name) == 0) {
-            return s->type;
-        }
+void exit_scope() {
+    Sym *current = symbols;
+    while (current != NULL && current->scope == current_scope) {
+        Sym *temp = current;
+        current = current->next;
+        free(temp->name);
+        free(temp->type);
+        free(temp);
     }
-    return "Int"; // default ou erro
+    symbols = current;
+    current_scope--;
+}
+
+int insertSymbol(const char *name, const char *type, int line) {
+    Sym *current = symbols;
+    // Verifica se a variável já foi declarada no escopo atual.
+    while (current != NULL && current->scope == current_scope) {
+        if (strcmp(current->name, name) == 0) {
+            fprintf(stderr, "Erro Semântico (linha %d): Variável '%s' já declarada neste escopo.\n", line, name);
+            return 0; // Retorna 0 em caso de falha.
+        }
+        current = current->next;
+    }
+
+    Sym *new_symbol = (Sym *)malloc(sizeof(Sym));
+    if (!new_symbol) {
+        fprintf(stderr, "Falha ao alocar memória para novo símbolo.\n");
+        exit(1);
+    }
+
+    new_symbol->name = strdup(name);
+    new_symbol->type = strdup(type);
+    new_symbol->scope = current_scope;
+    new_symbol->line = line;
+    new_symbol->next = symbols;
+    symbols = new_symbol;
+    
+    return 1; // Retorna 1 em caso de sucesso.
+}
+
+// Corrigido o tipo do parâmetro 'name' de 'Sym*' para 'const char*'.
+Sym *lookupSymbol(const char *name) {
+    Sym *current = symbols;
+    while (current != NULL) {
+        if (strcmp(current->name, name) == 0) {
+            return current;
+        }
+        current = current->next;
+    }
+    return NULL;
 }
 
 void freeSymbolTable(void) {
-    while (symbols) {
-        Sym *next = symbols->next;
-        free(symbols->name);
-        free(symbols->type);
-        free(symbols);
-        symbols = next;
+    Sym *current = symbols;
+    while (current != NULL) {
+        Sym *temp = current;
+        current = current->next;
+        free(temp->name);
+        free(temp->type);
+        free(temp);
     }
+    symbols = NULL;
 }

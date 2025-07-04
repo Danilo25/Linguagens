@@ -2,7 +2,7 @@ Unit main () {
   
   // Declarando as variáveis
   Float x <- 2.5;
-  Float y <- 1.2;
+  Int y <- 1.2;
   Int c <- 3;
 
   // Calcula x² – y + c
