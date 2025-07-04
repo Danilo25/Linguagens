@@ -14,7 +14,7 @@ Y_C     = parser.tab.c
 LEX_SRC = scanner.l
 LEX_C   = lex.yy.c
 
-# Adicionado bst.c à lista de fontes da biblioteca
+# Lista de todas as bibliotecas auxiliares
 LIBSRC  = ./lib/record.c ./lib/symbol_table.c ./lib/rational.c ./lib/matrix.c ./lib/mdc.c ./lib/bst.c
 
 # --- Regras ---
@@ -24,8 +24,9 @@ LIBSRC  = ./lib/record.c ./lib/symbol_table.c ./lib/rational.c ./lib/matrix.c ./
 all: $(TARGET)
 
 # 1) Gera o parser (parser.tab.c e parser.tab.h) a partir do arquivo .y
+#    A regra foi ajustada para tratar avisos de conflito como erros fatais.
 $(Y_C) $(Y_HDR): $(Y_SRC)
-	$(BISON) -d -v -o $(Y_C) $(Y_SRC)
+	$(BISON) -d -o $(Y_C) $(Y_SRC) -Werror=conflicts-sr -Werror=conflicts-rr
 
 # 2) Gera o scanner (lex.yy.c) a partir do arquivo .l
 #    Depende do header do parser para os tokens.
