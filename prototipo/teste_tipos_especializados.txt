@@ -1,0 +1,13 @@
+// Teste de tipos básicos e especializados simplificado
+Unit main() {
+    // Teste com tipos básicos
+    Int x <- 5;
+    Float y <- 3.14;
+    
+    print x;
+    print y;
+    
+    // Teste de operações
+    Int resultado <- x + 10;
+    print resultado;
+}

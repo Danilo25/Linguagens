@@ -1,0 +1,18 @@
+// Teste de precedência de operadores
+Unit main() {
+    Int a <- 2;
+    Int b <- 3;
+    Int c <- 4;
+    
+    // Deve resolver como: a + (b * c) = 2 + 12 = 14
+    Int resultado1 <- a + b * c;
+    print resultado1;
+    
+    // Deve resolver como: (a + b) * c = 5 * 4 = 20
+    Int resultado2 <- (a + b) * c;
+    print resultado2;
+    
+    // Teste simples
+    Int resultado3 <- a + b + c;
+    print resultado3;
+}

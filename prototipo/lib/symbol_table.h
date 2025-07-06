@@ -5,6 +5,8 @@
 void initSymbolTable(void);
 void insertSymbol(const char *name, const char *type);
 const char *lookupSymbol(const char *name);
+int symbolExists(const char *name);
+int symbolAlreadyDeclared(const char *name);
 void freeSymbolTable(void);
 
 #endif

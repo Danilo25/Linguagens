@@ -31,7 +31,27 @@ const char *lookupSymbol(const char *name) {
             return s->type;
         }
     }
-    return "Int"; // default ou erro
+    return "Int"; // default ou erro - LIMITAÇÃO: deveria retornar erro
+}
+
+// Função para verificar se um símbolo existe (para detecção de erros)
+int symbolExists(const char *name) {
+    for (Sym *s = symbols; s; s = s->next) {
+        if (strcmp(s->name, name) == 0) {
+            return 1; // Encontrado
+        }
+    }
+    return 0; // Não encontrado
+}
+
+// Função para verificar se um símbolo já foi declarado (para detecção de duplicações)
+int symbolAlreadyDeclared(const char *name) {
+    for (Sym *s = symbols; s; s = s->next) {
+        if (strcmp(s->name, name) == 0) {
+            return 1; // Já declarado
+        }
+    }
+    return 0; // Não declarado ainda
 }
 
 void freeSymbolTable(void) {

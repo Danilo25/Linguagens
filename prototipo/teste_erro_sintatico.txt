@@ -1,0 +1,5 @@
+// Teste de erro sintático - expressão incompleta
+Unit main() {
+    Int x <- ;  // Erro: expressão incompleta após <-
+    print x;
+}

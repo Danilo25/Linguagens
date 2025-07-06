@@ -168,7 +168,19 @@ var_decl_stmt:
 ;
 
 lvalue:
-    ID { $$ = createRecord($1, (char*)lookupSymbol($1)); free($1); }
+    ID { 
+        const char* type = lookupSymbol($1);
+        // Se o tipo começa com "ref", é um parâmetro por referência
+        if (strncmp(type, "ref", 3) == 0) {
+            char* deref_code = cat("*", $1, "", "", "");
+            char* base_type = strdup(type + 3); // Remove "ref" do início
+            $$ = createRecord(deref_code, base_type);
+            free(deref_code); free(base_type);
+        } else {
+            $$ = createRecord($1, strdup(type));
+        }
+        free($1); 
+    }
   | MUL ID {
         char* deref_code = cat("*", $2, "", "", "");
         const char* ptr_type = lookupSymbol($2);
@@ -274,7 +286,19 @@ expr:
         $$ = createRecord(addr_expr, ptr_type_name);
         free(addr_expr); free(ptr_type_name); free($2);
     }
-    | ID                { const char *t = lookupSymbol($1); $$ = createRecord($1,strdup(t)); free($1); }
+    | ID                { 
+        const char *t = lookupSymbol($1); 
+        // Se o tipo começa com "ref", é um parâmetro por referência
+        if (strncmp(t, "ref", 3) == 0) {
+            char* deref_code = cat("*", $1, "", "", "");
+            char* base_type = strdup(t + 3); // Remove "ref" do início
+            $$ = createRecord(deref_code, base_type);
+            free(deref_code); free(base_type);
+        } else {
+            $$ = createRecord($1, strdup(t));
+        }
+        free($1); 
+    }
     | INT_LIT           { char b[32]; sprintf(b,"%d",$1); $$=createRecord(strdup(b),(char*)"Int"); }
     | FLOAT_LIT         { char b[32]; sprintf(b,"%f",$1); $$=createRecord(strdup(b),(char*)"Float"); }
     | func_call         { $$ = $1; }
@@ -324,6 +348,7 @@ arg_list:
 
 void yyerror(const char *s) {
     fprintf(stderr, "ERRO DE SINTAXE: %s na linha %d perto de '%s'\n", s, yylineno, yytext);
+    exit(1); // Termina o programa com erro
 }
 
 // Concatena até 5 strings

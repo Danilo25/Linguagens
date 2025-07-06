@@ -1,0 +1,11 @@
+// Teste básico de funções (passagem por referência não suportada no analisador atual)
+Unit teste() {
+    Int x <- 10;
+    print x;
+}
+
+Unit main() {
+    Int a <- 5;
+    print a;
+    teste();
+}

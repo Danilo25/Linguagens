@@ -1,0 +1,21 @@
+// Teste de estruturas de controle
+Unit main() {
+    Int i <- 1;
+    
+    // Teste básico sem comparadores complexos
+    print i;
+    
+    // Incremento simples
+    i <- i + 1;
+    print i;
+    
+    i <- i + 1;
+    print i;
+    
+    // Teste de variáveis
+    Int x <- 10;
+    Int y <- 20;
+    
+    print x;
+    print y;
+}
